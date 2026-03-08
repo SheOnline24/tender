@@ -1,95 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Random Face Chat</title>
+<title>Dating</title>
+
 <style>
-  * {margin:0; padding:0; box-sizing:border-box;}
-  body, html {width:100%; height:100%; font-family:Arial, sans-serif; overflow:hidden;}
-  
-  /* Фон на весь экран */
-  #background {
-    position:fixed;
-    top:0; left:0; width:100%; height:100%;
-    object-fit:cover;
-    z-index:-1;
-  }
 
-  /* Слой с текстом */
-  #overlay {
-    position:fixed;
-    top:0; left:0; width:100%; height:100%;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    color:white;
-    text-shadow: 0 0 12px rgba(0,0,0,0.7);
-    font-size:24px;
-    text-align:center;
-    pointer-events:none;
-  }
+body{
+margin:0;
+height:100vh;
+background-size:cover;
+background-position:center;
+font-family:Arial;
+}
 
-  /* Кнопка */
-  #btn {
-    position:fixed;
-    bottom:30px;
-    right:30px;
-    padding:14px 28px;
-    font-size:18px;
-    border:none;
-    border-radius:30px;
-    cursor:pointer;
-    color:white;
-    background: linear-gradient(45deg,#ff2e63,#ff7a18);
-    box-shadow:0 0 15px rgba(255,46,99,0.7);
-    transition:0.3s;
-    pointer-events:auto;
-  }
-  #btn:hover { transform:scale(1.05); box-shadow:0 0 25px rgba(255,46,99,1); }
+.overlay{
+position:absolute;
+bottom:40px;
+right:40px;
+}
+
+.btn{
+background:#ff2a6d;
+color:white;
+padding:18px 30px;
+font-size:20px;
+border-radius:40px;
+text-decoration:none;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+transition:0.3s;
+}
+
+.btn:hover{
+transform:scale(1.1);
+background:#ff0f5a;
+}
+
 </style>
 </head>
+
 <body>
 
-<img id="background">
-<div id="overlay">
-  <div id="name"></div>
-  <div id="chatText" style="margin-top:8px;font-size:20px;"></div>
+<div class="overlay">
+<a class="btn" href="https://ТВОЯ-ПАРТНЕРКА" target="_blank">
+💬 Перейти к знакомству
+</a>
 </div>
-<button id="btn">Start Chat ❤️</button>
 
 <script>
-// ===== LINKS =====
-const DATING="https://kfl2prr.datelovelygirls.com/vv6pzuc?s1=Online24";
 
-// ===== RANDOM NAME =====
-const names=["Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina"];
-let girl=names[Math.floor(Math.random()*names.length)];
-document.getElementById("name").innerText = girl;
+const girls = [
 
-// ===== RANDOM CHAT TEXT =====
-const texts=[
-  "Hey 😉 I saw you here...",
-  "Hi beautiful 😘 Want to chat privately?",
-  "Hello 😇 You caught my attention!",
-  "Hey handsome 😏 Can we talk in private?",
-  "Hi 😘 I’m feeling a little lonely…"
+"https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
+"https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
+"https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg",
+"https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg",
+"https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg",
+"https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
+"https://images.pexels.com/photos/936229/pexels-photo-936229.jpeg",
+"https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg"
+
 ];
-let chatText = texts[Math.floor(Math.random()*texts.length)];
-document.getElementById("chatText").innerText = chatText;
 
-// ===== RANDOM FACE BACKGROUND =====
-function randomFace() {
-  // Используем randomuser.me для надежной загрузки
-  return "https://randomuser.me/api/portraits/women/" + Math.floor(Math.random()*90) + ".jpg";
-}
-document.getElementById("background").src = randomFace();
+const randomGirl = girls[Math.floor(Math.random()*girls.length)];
 
-// ===== BUTTON =====
-document.getElementById("btn").onclick = ()=>{
-  window.location.href = DATING;
-}
+document.body.style.backgroundImage = "url("+randomGirl+")";
+
+document.body.onclick = () => {
+window.location.href="https://ТВОЯ-ПАРТНЕРКА";
+};
+
 </script>
 
 </body>
