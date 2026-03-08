@@ -12,22 +12,32 @@ height:100vh;
 background-size:cover;
 background-position:center;
 font-family:Arial;
+cursor:pointer;
 }
 
-.overlay{
+/* затемнение для читаемости */
+.overlay-bg{
 position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.25);
+}
+
+/* кнопка */
+.btn{
+position:fixed;
 bottom:40px;
 right:40px;
-}
-
-.btn{
 background:#ff2a6d;
 color:white;
-padding:18px 30px;
+padding:18px 32px;
 font-size:20px;
-border-radius:40px;
+border-radius:50px;
 text-decoration:none;
 box-shadow:0 10px 25px rgba(0,0,0,0.3);
+z-index:10;
 transition:0.3s;
 }
 
@@ -41,24 +51,22 @@ background:#ff0f5a;
 
 <body>
 
-<div class="overlay">
-<a class="btn" href="https://ТВОЯ-ПАРТНЕРКА" target="_blank">
-💬 Перейти к знакомству
+<div class="overlay-bg"></div>
+
+<a class="btn" href="ТВОЙ_СМАРТЛИНК" target="_blank">
+💬 Смотреть анкеты
 </a>
-</div>
 
 <script>
 
+/* быстрые оптимизированные фото */
 const girls = [
 
-"https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
-"https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
-"https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg",
-"https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg",
-"https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg",
-"https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
-"https://images.pexels.com/photos/936229/pexels-photo-936229.jpeg",
-"https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg"
+"https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1200",
+"https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1200",
+"https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1200",
+"https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=1200",
+"https://images.pexels.com/photos/936229/pexels-photo-936229.jpeg?auto=compress&cs=tinysrgb&w=1200"
 
 ];
 
@@ -66,9 +74,14 @@ const randomGirl = girls[Math.floor(Math.random()*girls.length)];
 
 document.body.style.backgroundImage = "url("+randomGirl+")";
 
-document.body.onclick = () => {
-window.location.href="https://ТВОЯ-ПАРТНЕРКА";
-};
+/* клик по странице */
+document.body.addEventListener("click", function(e){
+
+if(!e.target.classList.contains("btn")){
+window.location.href="ТВОЙ_СМАРТЛИНК";
+}
+
+});
 
 </script>
 
