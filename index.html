@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,44 +22,46 @@ body{
   background:rgba(0,0,0,0.25);
 }
 
-/* контейнер кнопок */
-.bottom-bar{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  display:flex;
-  z-index:10;
-}
-
 /* кнопки */
-.bottom-bar a{
-  flex:1;
-  padding:18px 0;
-  font-size:20px;
+.bottom-btn{
+  position:fixed;
+  padding:12px 18px;
+  font-size:16px;
   text-align:center;
   text-decoration:none;
   color:white;
+  border-radius:8px;
+  backdrop-filter:blur(6px);
+  background:rgba(255,255,255,0.15);
+  box-shadow:0 -2px 10px rgba(0,0,0,0.4);
   transition:0.3s;
-  box-shadow:0 -2px 15px rgba(0,0,0,0.4);
+  animation:pulse 2s infinite alternate;
+  z-index:10;
 }
-.bottom-bar a:hover{
+.bottom-btn:hover{
   transform:scale(1.05);
-  box-shadow:0 -2px 25px rgba(0,0,0,0.5);
+  box-shadow:0 -2px 25px rgba(0,0,0,0.6);
 }
 
-/* правая кнопка анкеты */
-.dating{
-  background:linear-gradient(45deg,#ff2a6d,#ff7a18);
-  border-top-left-radius:0;
-  border-top-right-radius:0;
+/* расположение */
+#datingBtn{
+  bottom:15px;
+  right:15px;
+}
+#casinoBtn{
+  bottom:15px;
+  left:15px;
 }
 
-/* левая кнопка казино */
-.casino-btn{
-  background:linear-gradient(45deg,#222,#444);
-  border-top-left-radius:0;
-  border-top-right-radius:0;
+/* цвета */
+#datingBtn{background:linear-gradient(45deg, rgba(255,42,109,0.6), rgba(255,122,24,0.6));}
+#casinoBtn{background:linear-gradient(45deg, rgba(255,0,0,0.6), rgba(255,80,0,0.6)); display:none;}
+
+/* анимация пульса */
+@keyframes pulse{
+  0%{transform:scale(1); opacity:0.8;}
+  50%{transform:scale(1.05); opacity:1;}
+  100%{transform:scale(1); opacity:0.8;}
 }
 </style>
 </head>
@@ -66,10 +69,8 @@ body{
 
 <div class="overlay"></div>
 
-<div class="bottom-bar">
-  <a class="casino-btn" id="casinoBtn" href="#" target="_blank">🎰 Казино</a>
-  <a class="dating" href="https://prev.affomelody.com/click?pid=6350&offer_id=25" target="_blank">❤️ Смотреть анкеты</a>
-</div>
+<a id="datingBtn" class="bottom-btn" href="#" target="_blank"></a>
+<a id="casinoBtn" class="bottom-btn" href="#" target="_blank"></a>
 
 <script>
 // ===== список фото =====
@@ -85,23 +86,63 @@ const girls=[
 "https://n.uguu.se/PRjDynHd.jpg",
 "https://o.uguu.se/ONQdZWkt.jpg"
 ];
-let g=girls[Math.floor(Math.random()*girls.length)];
-document.body.style.backgroundImage="url("+g+")";
+document.body.style.backgroundImage = "url("+girls[Math.floor(Math.random()*girls.length)]+")";
 
-// ===== казино кнопка =====
+// ===== языки и тексты =====
+const userLang=navigator.language.slice(0,2);
+
+const texts={
+  datingBtn:{
+    en:"❤️ View profiles",
+    ru:"❤️ Смотреть анкеты",
+    de:"❤️ Profile ansehen",
+    es:"❤️ Ver perfiles",
+    fr:"❤️ Voir profils",
+    it:"❤️ Guarda profili",
+    pt:"❤️ Ver perfis",
+    nl:"❤️ Bekijk profielen",
+    sv:"❤️ Visa profiler",
+    ja:"❤️ プロフィールを見る"
+  },
+  casinoBtn:{
+    en:"🎰 Casino Bonus",
+    ru:"🎰 Казино",
+    de:"🎰 Casino Bonus",
+    es:"🎰 Bonificación Casino",
+    fr:"🎰 Bonus Casino",
+    it:"🎰 Bonus Casinò",
+    pt:"🎰 Bônus Casino",
+    nl:"🎰 Casino Bonus",
+    sv:"🎰 Casino Bonus",
+    ja:"🎰 カジノボーナス"
+  }
+};
+
+// ===== ссылки =====
+const DATING="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
+
+// ===== кнопки =====
+const datingBtn=document.getElementById("datingBtn");
 const casinoBtn=document.getElementById("casinoBtn");
-casinoBtn.style.display="none"; // прячем сначала
 
+// выставляем текст кнопок с учетом языка
+datingBtn.innerText = texts.datingBtn[userLang] || texts.datingBtn["en"];
+casinoBtn.innerText = texts.casinoBtn[userLang] || texts.casinoBtn["en"];
+
+// смарт-линк сразу
+datingBtn.href = DATING;
+
+// кнопка казино через 15 секунд
 setTimeout(()=>{
-  casinoBtn.href=CASINO;
+  casinoBtn.href = CASINO;
   casinoBtn.style.display="block";
-},12000); // появляется через 12 сек
+},15000);
 
-// ===== клик по экрану (кроме ссылок) =====
+// клик по экрану (кроме ссылок) ведет на смарт-линк
 document.body.addEventListener("click",function(e){
   if(!e.target.closest("a")){
-    window.location.href="https://prev.affomelody.com/click?pid=6350&offer_id=25";
+    window.location.href=DATING;
   }
 });
 </script>
