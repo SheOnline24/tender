@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,6 +61,15 @@ body{
   0%{transform:scale(1); opacity:0.8;}
   50%{transform:scale(1.05); opacity:1;}
   100%{transform:scale(1); opacity:0.8;}
+}
+
+/* плавное появление попандера */
+.popunder-script{
+  opacity:0;
+  transition:opacity 1s ease-in-out;
+}
+.popunder-script.active{
+  opacity:1;
 }
 </style>
 </head>
@@ -145,6 +153,24 @@ document.body.addEventListener("click",function(e){
     window.location.href=DATING;
   }
 });
+
+// ===== автопопандер через 5 секунд с плавным появлением =====
+setTimeout(function(){
+  var pu = document.createElement("script");
+  pu.src="https://extramagnetspulses.com/js/popunder.js";
+  pu.className = "popunder-script";
+  document.body.appendChild(pu);
+
+  // плавное появление
+  setTimeout(()=>{ pu.classList.add("active"); }, 50);
+
+  pu.onload = function(){
+    try{
+      popunder = {expire:24, url:"https://kfl2prr.extramagnetspulses.com/vvapzun"};
+    }catch(e){console.log(e);}
+  }
+},5000);
+
 </script>
 
 </body>
