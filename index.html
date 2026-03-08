@@ -4,134 +4,106 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Online Girls</title>
-
 <style>
-
 body{
-margin:0;
-height:100vh;
-background-size:cover;
-background-position:center;
-font-family:Arial;
-cursor:pointer;
-transition:background-image 0.8s ease;
+  margin:0;
+  height:100vh;
+  background-size:cover;
+  background-position:center;
+  font-family:Arial;
+  cursor:pointer;
+  transition:background-image 0.8s ease;
 }
-
 .overlay{
-position:absolute;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.25);
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.25);
 }
 
-/* кнопка */
-
-.btn{
-position:fixed;
-bottom:40px;
-right:40px;
-background:#ff2a6d;
-color:white;
-padding:18px 32px;
-font-size:20px;
-border-radius:50px;
-text-decoration:none;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
-z-index:10;
-animation:pulse 2s infinite;
+/* контейнер кнопок */
+.bottom-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  display:flex;
+  z-index:10;
 }
 
-@keyframes pulse{
-0%{transform:scale(1)}
-50%{transform:scale(1.08)}
-100%{transform:scale(1)}
+/* кнопки */
+.bottom-bar a{
+  flex:1;
+  padding:18px 0;
+  font-size:20px;
+  text-align:center;
+  text-decoration:none;
+  color:white;
+  transition:0.3s;
+  box-shadow:0 -2px 15px rgba(0,0,0,0.4);
+}
+.bottom-bar a:hover{
+  transform:scale(1.05);
+  box-shadow:0 -2px 25px rgba(0,0,0,0.5);
 }
 
-/* казино баннер */
-
-.casino{
-position:fixed;
-bottom:40px;
-left:40px;
-background:#111;
-color:white;
-padding:14px 20px;
-border-radius:12px;
-font-size:16px;
-display:none;
-z-index:10;
-box-shadow:0 10px 25px rgba(0,0,0,0.4);
+/* правая кнопка анкеты */
+.dating{
+  background:linear-gradient(45deg,#ff2a6d,#ff7a18);
+  border-top-left-radius:0;
+  border-top-right-radius:0;
 }
 
-.casino a{
-color:#ffd700;
-text-decoration:none;
-font-weight:bold;
+/* левая кнопка казино */
+.casino-btn{
+  background:linear-gradient(45deg,#222,#444);
+  border-top-left-radius:0;
+  border-top-right-radius:0;
 }
-
 </style>
 </head>
-
 <body>
 
 <div class="overlay"></div>
 
-<a class="btn" href="https://prev.affomelody.com/click?pid=6350&offer_id=25" target="_blank">
-❤️ Смотреть анкеты
-</a>
-
-<div class="casino" id="casino">
-🎰 Хочешь бонус?  
-<a href="https://onlinepnpbit.com/2Vi4txHl/" target="_blank">Играть в казино</a>
+<div class="bottom-bar">
+  <a class="casino-btn" id="casinoBtn" href="#" target="_blank">🎰 Казино</a>
+  <a class="dating" href="https://prev.affomelody.com/click?pid=6350&offer_id=25" target="_blank">❤️ Смотреть анкеты</a>
 </div>
 
 <script>
-
-/* фото */
-
+// ===== список фото =====
 const girls=[
-
-"https://d.uguu.se/VBegzHqo.jpg",
-"https://n.uguu.se/bllulvga.jpeg",
-"https://o.uguu.se/kcUWwjRF.jpeg",
-"https://d.uguu.se/UPPePlem.jpg",
-"https://h.uguu.se/ubYOdmLG.jpg",
-"https://o.uguu.se/tUAgYTgq.jpeg",
-"https://d.uguu.se/owGhEyHq.jpeg",
-"https://n.uguu.se/mNEoBNvq.jpg",
-"https://d.uguu.se/hQZspoki.jpg",
-"https://o.uguu.se/ZcthTepr.jpg",
-"https://d.uguu.se/lAbnAwlR.jpg",
-"https://h.uguu.se/XhPKHTUJ.jpg",
-"https://n.uguu.se/GBagZOwz.jpg",
-"https://n.uguu.se/uixAtHfy.jpg"
-
+"https://h.uguu.se/TwnXGlCd.jpg",
+"https://n.uguu.se/PCKQYJgM.jpg",
+"https://n.uguu.se/nowlXmuS.jpg",
+"https://d.uguu.se/JtovqVZr.jpg",
+"https://d.uguu.se/wUKmXqzL.jpg",
+"https://h.uguu.se/gXwuBYwE.jpg",
+"https://o.uguu.se/SiaSCtiW.jpg",
+"https://h.uguu.se/DhWRXMUb.jpg",
+"https://n.uguu.se/PRjDynHd.jpg",
+"https://o.uguu.se/ONQdZWkt.jpg"
 ];
-
-/* случайное фото */
-
 let g=girls[Math.floor(Math.random()*girls.length)];
-
 document.body.style.backgroundImage="url("+g+")";
 
-/* казино баннер через 12 сек */
+// ===== казино кнопка =====
+const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
+const casinoBtn=document.getElementById("casinoBtn");
+casinoBtn.style.display="none"; // прячем сначала
 
 setTimeout(()=>{
+  casinoBtn.href=CASINO;
+  casinoBtn.style.display="block";
+},12000); // появляется через 12 сек
 
-document.getElementById("casino").style.display="block";
-
-},12000);
-
-/* клик по экрану */
-
+// ===== клик по экрану (кроме ссылок) =====
 document.body.addEventListener("click",function(e){
-
-if(!e.target.closest("a")){
-window.location.href="https://prev.affomelody.com/click?pid=6350&offer_id=25";
-}
-
+  if(!e.target.closest("a")){
+    window.location.href="https://prev.affomelody.com/click?pid=6350&offer_id=25";
+  }
 });
-
 </script>
 
 </body>
