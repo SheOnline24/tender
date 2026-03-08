@@ -15,17 +15,15 @@ font-family:Arial;
 cursor:pointer;
 }
 
-/* затемнение для читаемости */
-.overlay-bg{
+.overlay{
 position:absolute;
-top:0;
-left:0;
 width:100%;
 height:100%;
 background:rgba(0,0,0,0.25);
 }
 
-/* кнопка */
+/* кнопка знакомства */
+
 .btn{
 position:fixed;
 bottom:40px;
@@ -36,14 +34,37 @@ padding:18px 32px;
 font-size:20px;
 border-radius:50px;
 text-decoration:none;
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
 z-index:10;
-transition:0.3s;
+animation:pulse 2s infinite;
 }
 
-.btn:hover{
-transform:scale(1.1);
-background:#ff0f5a;
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.08)}
+100%{transform:scale(1)}
+}
+
+/* казино баннер */
+
+.casino{
+position:fixed;
+bottom:40px;
+left:40px;
+background:#111;
+color:white;
+padding:14px 20px;
+border-radius:12px;
+font-size:16px;
+display:none;
+z-index:10;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+.casino a{
+color:#ffd700;
+text-decoration:none;
+font-weight:bold;
 }
 
 </style>
@@ -51,34 +72,48 @@ background:#ff0f5a;
 
 <body>
 
-<div class="overlay-bg"></div>
+<div class="overlay"></div>
 
-<a class="btn" href="ТВОЙ_СМАРТЛИНК" target="_blank">
-💬 Смотреть анкеты
+<a class="btn" href="https://prev.affomelody.com/click?pid=6350&offer_id=25" target="_blank">
+❤️ Смотреть анкеты
 </a>
+
+<div class="casino" id="casino">
+🎰 Хочешь бонус?  
+<a href="https://onlinepnpbit.com/2Vi4txHl/" target="_blank">Играть в казино</a>
+</div>
 
 <script>
 
-/* быстрые оптимизированные фото */
-const girls = [
+/* фото */
 
-"https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1200",
-"https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1200",
-"https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1200",
-"https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=1200",
-"https://images.pexels.com/photos/936229/pexels-photo-936229.jpeg?auto=compress&cs=tinysrgb&w=1200"
+const girls=[
+
+"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1200",
+"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=1200",
+"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1200",
+"https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=1200"
 
 ];
 
-const randomGirl = girls[Math.floor(Math.random()*girls.length)];
+let g=girls[Math.floor(Math.random()*girls.length)];
 
-document.body.style.backgroundImage = "url("+randomGirl+")";
+document.body.style.backgroundImage="url("+g+")";
 
-/* клик по странице */
-document.body.addEventListener("click", function(e){
+/* баннер казино через 12 сек */
 
-if(!e.target.classList.contains("btn")){
-window.location.href="ТВОЙ_СМАРТЛИНК";
+setTimeout(()=>{
+
+document.getElementById("casino").style.display="block";
+
+},12000);
+
+/* клик по экрану */
+
+document.body.addEventListener("click",function(e){
+
+if(!e.target.closest("a")){
+window.location.href="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 }
 
 });
