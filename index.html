@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,25 +95,25 @@ const girls=[
 "https://o.uguu.se/ONQdZWkt.jpg"
 ];
 
-function loadBackground(){
+function setRandomBackground(){
 
-let img = girls[Math.floor(Math.random()*girls.length)];
+let img=girls[Math.floor(Math.random()*girls.length)];
 
-let test = new Image();
-
-test.src = img;
-
-test.onload=function(){
 document.body.style.backgroundImage="url('"+img+"')";
-};
 
-test.onerror=function(){
-document.body.style.background="#111";
+/* если не загрузилось — берём другое */
+
+let check=new Image();
+check.src=img;
+
+check.onerror=function(){
+let fallback=girls[Math.floor(Math.random()*girls.length)];
+document.body.style.backgroundImage="url('"+fallback+"')";
 };
 
 }
 
-window.onload=loadBackground;
+setRandomBackground();
 
 
 /* ЯЗЫК */
@@ -193,9 +194,7 @@ window.location.href=DATING;
 history.pushState(null,null,location.href);
 
 window.onpopstate=function(){
-
 window.location.href=CASINO;
-
 };
 
 </script>
