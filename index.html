@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+};<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -65,19 +66,19 @@ body{
 <a id="casinoBtn" class="bottom-btn" href="#" target="_blank"></a>
 
 <script>
-// ===== Ссылки на фото =====
+// ===== Массив прямых ссылок на фото =====
 const girls = [
-"https://i.postimg.cc/LYddVPq6/Bjk-Ds-Gg-d.webp",
-"https://i.postimg.cc/dLSJyL98/15-650x813.jpg",
-"https://i.postimg.cc/N5PQH5xk/3e4f84970bb204e55eff6f1a60e63112.jpg",
-"https://i.postimg.cc/gnBGZnK8/49104b43418d8d9aee9b4362bba4c49c.jpg",
-"https://i.postimg.cc/D8Y7X8c6/740full-maria-shuwalkina.jpg",
-"https://i.postimg.cc/D8Y7X8cr/AFvg-Uk9e-Ts-A.jpg",
-"https://i.postimg.cc/ZCDJdCLV/bezymyannyjekpen.jpg",
-"https://i.postimg.cc/HVPTyVt5/R.jpg"
+"https://i.postimg.cc/bJrzpHpb/Bjk-Ds-Gg-d.webp",
+"https://i.postimg.cc/x198BmJF/15-650x813.jpg",
+"https://i.postimg.cc/dVJ3gCkp/3e4f84970bb204e55eff6f1a60e63112.jpg",
+"https://i.postimg.cc/HkTnFMcZ/49104b43418d8d9aee9b4362bba4c49c.jpg",
+"https://i.postimg.cc/9Qc0s9R6/740full-maria-shuwalkina.jpg",
+"https://i.postimg.cc/P5dJ0DpR/AFvg-Uk9e-Ts-A.jpg",
+"https://i.postimg.cc/3x3NzG05/bezymyannyjekpen.jpg",
+"https://i.postimg.cc/6pBqFZ2H/R.jpg"
 ];
 
-// ===== Функция для смены фона каждые 5 секунд =====
+// ===== Смена фона каждые 5 секунд с плавным зумом =====
 let currentIndex = Math.floor(Math.random() * girls.length);
 function changeBackground() {
   document.body.style.backgroundImage = `url('${girls[currentIndex]}')`;
@@ -87,7 +88,7 @@ function changeBackground() {
 }
 window.addEventListener("load", () => {
   changeBackground();
-  setInterval(changeBackground, 5000); // каждые 5 секунд
+  setInterval(changeBackground, 5000);
 });
 
 // ===== Язык кнопок =====
@@ -138,6 +139,9 @@ history.pushState(null,null,location.href);
 window.onpopstate = function(){
   window.location.href = CASINO;
 };
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
