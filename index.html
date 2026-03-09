@@ -1,5 +1,4 @@
-
-};<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -21,6 +20,7 @@ body{
   width:100%;
   height:100%;
   background:rgba(0,0,0,0.25);
+  pointer-events:none; /* overlay не блокирует клики */
 }
 .bottom-btn{
   position:fixed;
@@ -60,13 +60,14 @@ body{
 </style>
 </head>
 <body>
+
 <div class="overlay"></div>
 
 <a id="datingBtn" class="bottom-btn" href="#" target="_blank"></a>
 <a id="casinoBtn" class="bottom-btn" href="#" target="_blank"></a>
 
 <script>
-// ===== Массив прямых ссылок на фото =====
+// ===== ФОТО =====
 const girls = [
 "https://i.postimg.cc/bJrzpHpb/Bjk-Ds-Gg-d.webp",
 "https://i.postimg.cc/x198BmJF/15-650x813.jpg",
@@ -78,7 +79,7 @@ const girls = [
 "https://i.postimg.cc/6pBqFZ2H/R.jpg"
 ];
 
-// ===== Смена фона каждые 5 секунд с плавным зумом =====
+// ===== Смена фона каждые 5 секунд с лёгким зумом =====
 let currentIndex = Math.floor(Math.random() * girls.length);
 function changeBackground() {
   document.body.style.backgroundImage = `url('${girls[currentIndex]}')`;
@@ -91,7 +92,7 @@ window.addEventListener("load", () => {
   setInterval(changeBackground, 5000);
 });
 
-// ===== Язык кнопок =====
+// ===== ЯЗЫК КНОПОК =====
 const userLang = navigator.language.slice(0,2);
 const texts = {
   datingBtn:{
@@ -108,11 +109,11 @@ const texts = {
   }
 };
 
-// ===== Ссылки =====
+// ===== ССЫЛКИ =====
 const DATING="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-// ===== Кнопки =====
+// ===== КНОПКИ =====
 const datingBtn = document.getElementById("datingBtn");
 const casinoBtn = document.getElementById("casinoBtn");
 
@@ -121,27 +122,25 @@ casinoBtn.innerText = texts.casinoBtn[userLang] || texts.casinoBtn["en"];
 
 datingBtn.href = DATING;
 
-// ===== Кнопка казино через 15 секунд =====
+// ===== КНОПКА КАЗИНО ЧЕРЕЗ 15 СЕК =====
 setTimeout(()=>{
   casinoBtn.href = CASINO;
   casinoBtn.style.display="block";
 },15000);
 
-// ===== Клик по экрану (кроме кнопок) =====
+// ===== КЛИК ПО ФОНУ → смарт-линк =====
 document.body.addEventListener("click", function(e){
   if(!e.target.closest("a")){
     window.location.href = DATING;
   }
 });
 
-// ===== Анти-back: при возврате → казино =====
+// ===== BACK BUTTON REDIRECT → КАЗИНО =====
 history.pushState(null,null,location.href);
-window.onpopstate = function(){
+window.addEventListener("popstate", function(){
   window.location.href = CASINO;
-};
+});
 </script>
-</body>
-</html>
-</script>
+
 </body>
 </html>
