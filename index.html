@@ -1,153 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Online Girls</title>
+<title>18+</title>
 <style>
 body{
   margin:0;
-  height:100vh;
-  background-size:cover;
-  background-position:center;
-  background-color:#111;
-  font-family:Arial;
-  cursor:pointer;
-  transition: background-image 1s ease, transform 0.5s ease;
-}
-.overlay{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.25);
-  pointer-events:none;
-}
-.bottom-btn{
-  position:fixed;
-  padding:12px 18px;
-  font-size:16px;
+  padding:0;
+  background:#000;
   text-align:center;
-  text-decoration:none;
-  color:white;
+  font-family:Arial;
+}
+
+img{
+  width:100%;
+  max-width:600px;
+  display:block;
+  margin:auto;
+  margin-bottom:10px;
   border-radius:8px;
-  backdrop-filter:blur(6px);
-  background:rgba(255,255,255,0.15);
-  box-shadow:0 -2px 10px rgba(0,0,0,0.4);
-  transition:0.3s;
-  animation:pulse 2s infinite alternate;
-  z-index:10;
 }
-.bottom-btn:hover{
-  transform:scale(1.05);
-  box-shadow:0 -2px 25px rgba(0,0,0,0.6);
-}
-#datingBtn{
-  bottom:15px;
-  right:15px;
-  background:linear-gradient(45deg, rgba(255,42,109,0.6), rgba(255,122,24,0.6));
-}
-#casinoBtn{
-  bottom:15px;
-  left:15px;
-  background:linear-gradient(45deg, rgba(255,0,0,0.6), rgba(255,80,0,0.6));
-  display:none;
-}
-@keyframes pulse{
-  0%{transform:scale(1); opacity:0.8;}
-  50%{transform:scale(1.05); opacity:1;}
-  100%{transform:scale(1); opacity:0.8;}
+
+.button{
+  display:block;
+  width:90%;
+  max-width:400px;
+  margin:20px auto;
+  padding:18px;
+  background:red;
+  color:white;
+  font-size:22px;
+  text-decoration:none;
+  border-radius:10px;
+  font-weight:bold;
 }
 </style>
 </head>
 <body>
 
-<div class="overlay"></div>
+<!-- Фото будут подставляться через JS -->
+<div id="gallery"></div>
 
-<a id="datingBtn" class="bottom-btn" href="#" target="_blank"></a>
-<a id="casinoBtn" class="bottom-btn" href="#" target="_blank"></a>
+<!-- Кнопка -->
+<a class="button" href="https://prev.affomelody.com/click?pid=6350&offer_id=25" target="_blank">
+СМОТРЕТЬ
+</a>
 
 <script>
-// ===== НОВЫЕ ФОТО =====
+// ==== Настройки ====
+const datingLink = "https://prev.affomelody.com/click?pid=6350&offer_id=25";
+const casinoLink = "https://onlinepnpbit.com/2Vi4txHl/";
+
+// ==== Фото ====
 const girls = [
-"https://i.postimg.cc/9X8t1WDX/IMG-20260309-061848-965.jpg",
-"https://i.postimg.cc/c19MTsvH/IMG-20260309-075128-325.jpg",
-"https://i.postimg.cc/05WdZ8zy/IMG-20260309-075130-800.jpg",
-"https://i.postimg.cc/J76cK1st/IMG-20260309-075133-235.jpg",
-"https://i.postimg.cc/xjxyg0X8/IMG-20260309-075138-403.jpg",
-"https://i.postimg.cc/VsGB4YJS/IMG-20260309-075141-356.jpg",
-"https://i.postimg.cc/HWZ43pr7/IMG-20260309-075143-800.jpg",
-"https://i.postimg.cc/HWZ43pry/IMG-20260309-075145-345.jpg",
-"https://i.postimg.cc/597qpxXz/IMG-20260309-075147-869.jpg",
-"https://i.postimg.cc/VsGB4YJX/IMG-20260309-075150-337.jpg",
-"https://i.postimg.cc/bYCHLzZQ/IMG-20260309-075152-672.jpg"
+  "https://i.postimg.cc/9X8t1WDX/IMG-20260309-061848-965.jpg",
+  "https://i.postimg.cc/c19MTsvH/IMG-20260309-075128-325.jpg",
+  "https://i.postimg.cc/05WdZ8zy/IMG-20260309-075130-800.jpg",
+  "https://i.postimg.cc/J76cK1st/IMG-20260309-075133-235.jpg",
+  "https://i.postimg.cc/xjxyg0X8/IMG-20260309-075138-403.jpg",
+  "https://i.postimg.cc/VsGB4YJS/IMG-20260309-075141-356.jpg",
+  "https://i.postimg.cc/HWZ43pr7/IMG-20260309-075143-800.jpg",
+  "https://i.postimg.cc/HWZ43pry/IMG-20260309-075145-345.jpg",
+  "https://i.postimg.cc/597qpxXz/IMG-20260309-075147-869.jpg",
+  "https://i.postimg.cc/VsGB4YJX/IMG-20260309-075150-337.jpg",
+  "https://i.postimg.cc/bYCHLzZQ/IMG-20260309-075152-672.jpg"
 ];
 
-// ===== Смена фона каждые 5 секунд с лёгким зумом =====
-let currentIndex = Math.floor(Math.random() * girls.length);
-function changeBackground() {
-  document.body.style.backgroundImage = `url('${girls[currentIndex]}')`;
-  document.body.style.transform = "scale(1.02)";
-  setTimeout(()=>{document.body.style.transform = "scale(1)";}, 500);
-  currentIndex = (currentIndex + 1) % girls.length;
+// ==== Функция перемешивания ====
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
 }
-window.addEventListener("load", () => {
-  changeBackground();
-  setInterval(changeBackground, 5000);
+
+// ==== Отображение фото ====
+const gallery = document.getElementById("gallery");
+const shuffled = shuffle(girls);
+
+shuffled.forEach(src => {
+  const a = document.createElement("a");
+  a.href = datingLink;
+  a.target = "_blank";
+  
+  const img = document.createElement("img");
+  img.src = src;
+  
+  a.appendChild(img);
+  gallery.appendChild(a);
 });
 
-// ===== ЯЗЫК КНОПОК =====
-const userLang = navigator.language.slice(0,2);
-const texts = {
-  datingBtn:{
-    en:"❤️ View profiles", ru:"❤️ Смотреть анкеты", de:"❤️ Profile ansehen",
-    es:"❤️ Ver perfiles", fr:"❤️ Voir profils", it:"❤️ Guarda profili",
-    pt:"❤️ Ver perfis", nl:"❤️ Bekijk profielen", sv:"❤️ Visa profiler",
-    ja:"❤️ プロフィールを見る"
-  },
-  casinoBtn:{
-    en:"🎰 Casino Bonus", ru:"🎰 Казино", de:"🎰 Casino Bonus",
-    es:"🎰 Bonificación Casino", fr:"🎰 Bonus Casino", it:"🎰 Bonus Casinò",
-    pt:"🎰 Bônus Casino", nl:"🎰 Casino Bonus", sv:"🎰 Casino Bonus",
-    ja:"🎰 カジノボーナス"
-  }
-};
-
-// ===== ССЫЛКИ =====
-const DATING="https://prev.affomelody.com/click?pid=6350&offer_id=25";
-const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
-
-// ===== КНОПКИ =====
-const datingBtn = document.getElementById("datingBtn");
-const casinoBtn = document.getElementById("casinoBtn");
-
-datingBtn.innerText = texts.datingBtn[userLang] || texts.datingBtn["en"];
-casinoBtn.innerText = texts.casinoBtn[userLang] || texts.casinoBtn["en"];
-
-// ===== ОБЯЗАТЕЛЬНО НА СМАРТ-ЛИНК =====
-datingBtn.href = DATING;
-datingBtn.addEventListener("click", (e)=>{
-  e.stopPropagation(); // чтобы клик по кнопке не срабатывал на body
-  window.location.href = DATING;
-});
-
-// ===== КНОПКА КАЗИНО ЧЕРЕЗ 15 СЕК =====
-setTimeout(()=>{
-  casinoBtn.href = CASINO;
-  casinoBtn.style.display="block";
-},15000);
-
-// ===== КЛИК ПО ФОНУ → смарт-линк =====
-document.body.addEventListener("click", function(e){
-  if(!e.target.closest("a")){
-    window.location.href = DATING;
-  }
-});
-
-// ===== BACK BUTTON REDIRECT → КАЗИНО =====
+// ==== BACK BUTTON REDIRECT ====
 history.pushState(null,null,location.href);
-window.addEventListener("popstate", function(){
-  window.location.href = CASINO;
-});
+window.onpopstate = function () {
+  location.href = casinoLink;
+};
 </script>
 
 </body>
