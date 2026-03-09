@@ -3,92 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>18+</title>
+<title>Online Girls</title>
 <style>
-body{
+body, html {
   margin:0;
   padding:0;
+  height:100%;
   background:#000;
-  text-align:center;
   font-family:Arial;
 }
 
-img{
-  width:100%;
-  max-width:600px;
-  display:block;
-  margin:auto;
-  margin-bottom:10px;
-  border-radius:8px;
+/* Галерея */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-auto-rows: 220px;
+  gap:6px;
+  padding:6px;
 }
 
-.button{
-  display:block;
-  width:90%;
-  max-width:400px;
-  margin:20px auto;
-  padding:18px;
-  background:red;
-  color:white;
-  font-size:22px;
-  text-decoration:none;
-  border-radius:10px;
-  font-weight:bold;
+.gallery a {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s, filter 0.3s;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+  cursor: pointer;
+}
+
+/* Кнопка поверх фото */
+.overlay-text {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,0,0,0.7);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  pointer-events: none;
+  transition: background 0.3s;
+}
+
+.gallery a:hover .overlay-text {
+  background: rgba(255,0,0,0.9);
 }
 </style>
 </head>
 <body>
 
-<!-- Фото будут подставляться через JS -->
-<div id="gallery"></div>
-
-<!-- Кнопка -->
-<a class="button" href="https://prev.affomelody.com/click?pid=6350&offer_id=25" target="_blank">
-СМОТРЕТЬ
-</a>
+<div class="gallery" id="gallery"></div>
 
 <script>
-// ==== Настройки ====
+// ===== ССЫЛКИ =====
 const datingLink = "https://prev.affomelody.com/click?pid=6350&offer_id=25";
 const casinoLink = "https://onlinepnpbit.com/2Vi4txHl/";
 
-// ==== Фото ====
+// ===== ФОТО =====
 const girls = [
-  "https://i.postimg.cc/9X8t1WDX/IMG-20260309-061848-965.jpg",
-  "https://i.postimg.cc/c19MTsvH/IMG-20260309-075128-325.jpg",
-  "https://i.postimg.cc/05WdZ8zy/IMG-20260309-075130-800.jpg",
-  "https://i.postimg.cc/J76cK1st/IMG-20260309-075133-235.jpg",
-  "https://i.postimg.cc/xjxyg0X8/IMG-20260309-075138-403.jpg",
-  "https://i.postimg.cc/VsGB4YJS/IMG-20260309-075141-356.jpg",
-  "https://i.postimg.cc/HWZ43pr7/IMG-20260309-075143-800.jpg",
-  "https://i.postimg.cc/HWZ43pry/IMG-20260309-075145-345.jpg",
-  "https://i.postimg.cc/597qpxXz/IMG-20260309-075147-869.jpg",
-  "https://i.postimg.cc/VsGB4YJX/IMG-20260309-075150-337.jpg",
-  "https://i.postimg.cc/bYCHLzZQ/IMG-20260309-075152-672.jpg"
+"https://i.postimg.cc/9X8t1WDX/IMG-20260309-061848-965.jpg",
+"https://i.postimg.cc/c19MTsvH/IMG-20260309-075128-325.jpg",
+"https://i.postimg.cc/05WdZ8zy/IMG-20260309-075130-800.jpg",
+"https://i.postimg.cc/J76cK1st/IMG-20260309-075133-235.jpg",
+"https://i.postimg.cc/xjxyg0X8/IMG-20260309-075138-403.jpg",
+"https://i.postimg.cc/VsGB4YJS/IMG-20260309-075141-356.jpg",
+"https://i.postimg.cc/HWZ43pr7/IMG-20260309-075143-800.jpg",
+"https://i.postimg.cc/HWZ43pry/IMG-20260309-075145-345.jpg",
+"https://i.postimg.cc/597qpxXz/IMG-20260309-075147-869.jpg",
+"https://i.postimg.cc/VsGB4YJX/IMG-20260309-075150-337.jpg",
+"https://i.postimg.cc/bYCHLzZQ/IMG-20260309-075152-672.jpg"
 ];
 
-// ==== Функция перемешивания ====
-function shuffle(array) {
-  return array.sort(() => Math.random() - 0.5);
-}
+// ===== МУЛЬТИЯЗЫЧНЫЕ КНОПКИ =====
+const userLang = navigator.language.slice(0,2);
 
-// ==== Отображение фото ====
+const btnText = {
+  en: "❤️ View",
+  ru: "❤️ Смотреть",
+  de: "❤️ Ansehen",
+  es: "❤️ Ver",
+  fr: "❤️ Voir",
+  it: "❤️ Guarda",
+  pt: "❤️ Ver",
+  nl: "❤️ Bekijken",
+  sv: "❤️ Visa",
+  ja: "❤️ 見る"
+};
+
+const buttonLabel = btnText[userLang] || btnText.en;
+
+// ===== РАСКЛАДКА =====
 const gallery = document.getElementById("gallery");
-const shuffled = shuffle(girls);
 
-shuffled.forEach(src => {
+// Перемешиваем фото
+girls.sort(() => Math.random() - 0.5);
+
+// Добавляем фото в галерею
+girls.forEach(src => {
   const a = document.createElement("a");
   a.href = datingLink;
   a.target = "_blank";
-  
+
   const img = document.createElement("img");
   img.src = src;
-  
+
+  const overlay = document.createElement("div");
+  overlay.className = "overlay-text";
+  overlay.innerText = buttonLabel;
+
   a.appendChild(img);
+  a.appendChild(overlay);
   gallery.appendChild(a);
 });
 
-// ==== BACK BUTTON REDIRECT ====
+// ===== REDIRECT назад → казино =====
 history.pushState(null,null,location.href);
 window.onpopstate = function () {
   location.href = casinoLink;
