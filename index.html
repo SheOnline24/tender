@@ -42,11 +42,6 @@ animation:pulse 2s infinite alternate;
 z-index:10;
 }
 
-.bottom-btn:hover{
-transform:scale(1.05);
-box-shadow:0 -2px 25px rgba(0,0,0,0.6);
-}
-
 #datingBtn{
 bottom:15px;
 right:15px;
@@ -154,6 +149,7 @@ pointer-events:none;
 
 // ===== ФОТО =====
 const girls = [
+
 "https://i.postimg.cc/K8bpdspR/22ya-N2kn3IZ73ut-Zvn1VJ2Gadkk-Hxb-UFCMTBc7-0B618fqrtran-MWy-z-Z1j-D7np-Z793V9y-N9sk-WOi-Z5f4e-ROEQ-X.jpg",
 "https://i.postimg.cc/8cWwYhhB/2BL7u7-ky-NUpu6Dru-Yfe-IUr-T56ua-KEdjmb3X4Ua-Cu6G6x-Tj-JWz5PGvu-SNc-QLMj7I3Ydb1sa-ABQj1Jlo1zniege8s.jpg",
 "https://i.postimg.cc/26g2THBz/41KY0z8NL54Xt-HQg-S0Hh-K-xhks-A-e-NJ1eowdmvf-Ltkt18aemx-CSRed-E3vd-Ya1CJz-Nbv5v-XA-h-GFLUHKaepcq-RWk.jpg",
@@ -173,27 +169,8 @@ const girls = [
 "https://i.postimg.cc/SKyLGBT1/kko-LWJp-DP6t-Ik8q-G4ap-Hi-Qra-KN6e-Gi-Lqh-KUl-Ecqkwuyl-Al-BT4FMOke-RFt-HFH0j-Gq-Khtcu-GHa-UQYJNYG8A.jpg",
 "https://i.postimg.cc/6pzcF6vJ/KN-Yfl-Tz-n-S7wt-Gbm-Dc-Co-LRECSDe-DPyfxzklc8kuz-TP9Q7Qfr-R9n-Kc-GSPskjrv8j-YMo-Xa-Gm-Y1aqb-N1b-5eoq.jpg",
 "https://i.postimg.cc/mkcyH7dK/l-C8yqgj-AZemi-VGMys-FFCX6aw-8g-RS06e5Ow-Riy5LJu-UIWqa-Yex-Ns-KZWz-Sx-EGIJg-WHm-Oflv2u-EBDAl2Ex-KOQO.jpg",
-"https://i.postimg.cc/c6ywt2tM/l-Qu4x-L0h-QIH9Zw-DQl-Rzqt-Qvr-Fb-Yz-Hs-Oxw9vdeii-WURCxib6l-S8-g-Nh-Cx-6jb-Pk-G7ey8F9Px-WUi-FCty0Ay.jpg",
-"https://i.postimg.cc/28R0ZKDX/lu03EAUkiw3DM8Xt-MU1x-Wb-PH343SG65Xemo-D2kodv3qc-CUxt-V4SXh-V58Akg-RQ2Lrv2Ki9Kys1Y5ktd-ZFq-Mw1SAa.jpg",
-"https://i.postimg.cc/qMV135Tc/nprvbk-NTLc65q-UCgzjk234b0o-H8-FJI5Pa-U-yw-Zmu-ECctq-NQa-D1Ln-XBs-CL2-chg-Rf-ETETWo-H5pr-Sma9Oe-W6Bf.jpg",
-"https://i.postimg.cc/Y0g8P114/Nz-Yxt-Hjxr1Eo6CRR3DJ0R-YWtd-ZZOi-MVTL3KQACSrt-RZu-rl72p-Uw-SRLf-Hg-Zm6k2JFZjud-PP-d-Yy-ZMj-RJUw4Wkl.jpg",
-"https://i.postimg.cc/MZ4D8rHw/p-JWb-YR59D5r3Pn-E-4x4pnx8aevddx-C2hn3ag-XDYPGul-QFOp8s24-Y-VZt-B3-Ml-IBsr-F9Mor-PKIObx-E0A79Cq-GY-C.jpg",
-"https://i.postimg.cc/KjLQWnnC/p-Vo-S6T5k54r-Ba-Kt2XCUP3ud-F1kl-Zn-EUG26ztg-ULz-ZXj-L2l-A-b-Scaiq-UBwp-QH9jdi3ASv4fg5Cix-Wnrukyl-Hn.jpg",
-"https://i.postimg.cc/8k3HVn5x/qg-EQo-VODl-Ep4n-y-Io-Bi-GW1s-YRjdr-I5Ao813QUQkmztuxj-KHJV7-R6jqt-TDVrk-LGDNEtljbnd-Dd9Tz-O6ISPi-UBL.jpg",
-"https://i.postimg.cc/4dyzDzT6/r-Q9Ms-Giu9h-C2r-Ow-SXXyp-ZLNVy0b-Imgz-S1Hd-Ud-JNyd-LXYCj-RKh-Ik-XTkz-W9w-Xd-DX7v-JQf-TZ8Qv6sf-Fyv-H.jpg",
-"https://i.postimg.cc/Dzyjz4Ty/R-t-Zs2s-LKFUj-A51x-Ue-Gt6Kd-Yv7Zx1r-NAUt-Id-XEVH-TZd-Oza-RPPBV-HIc8rz-LBS3q-Pm-H7H8T2euhq-RO-pz-Eh.jpg",
-"https://i.postimg.cc/sg3KnG14/r-U1b1u-a6j-Ge-AZ1o-FRMHMd-TCVe8yjho-U-ch-O6PMYK-XDSHHHFJNoi5r-K8m1939s6I-6TQc-BDj-FCBv-KP4-Zfb-jvn.jpg",
-"https://i.postimg.cc/y8CyDgFd/Rl-PX0Ipf-Q4QKXht-Qn-AFe79Lrjm0DAd5OLs-Y2TLEn-Nxq1ir-FF3giw-Pq8ipx-Gg-Ds3RWQDx-V0y-Wx-Pig-K92Mod6-1c.jpg",
-"https://i.postimg.cc/J09cctv0/si-ZDgwif-HPSA6Di-C-l-COiv-WNc6f-Z-0OQE7g-Rloz-AKx-M5Bh1Ffd-Ut-Lhon-OUb-AYLxbvnlyow-XNKsha-HXULw-Rc3.jpg",
-"https://i.postimg.cc/yYcrpzPp/T4WWld-B9w-B-mbbfa-RCBTq6Fh-Da5My-A01h3im-EQsmaem-Chytzfbge-TEt5Ig-Vi-PBQvkwa9FCk-VZFh-Jxlk-Nes7bg-N.jpg",
-"https://i.postimg.cc/fb2HSWzc/tp-LQN1y9bt5u-m4FFW6k-Uxw-U12Xjt-ZUPx-PKOO9Eg-C7fx-Auv-EYfrot9sirr-Jwodr-VHl3Ykw-Axc4s79EK9WOVLUSj-Z.jpg",
-"https://i.postimg.cc/nhfGXjqy/wn-RMt-L3p1g-M2l2JTB8e-Rd-T50GMjp-Esem5CNVMPg-Ev0IGn5r-G8Jv-C8a-SRqu3QE599ityf-G8Ldph-TGe-DBLlrkt-Ki.jpg",
-"https://i.postimg.cc/tRLMzgh5/WPa-TBvo-Pn-FQL-UOx-EZF-y-LQ1Er-M-08q-Rw-NY1wy2G2b-Eimz8x35y-Uj-QVg539nmwu-WS3P82k-V54P3kmd-Ws-G1I8f.jpg",
-"https://i.postimg.cc/5t7PQ94r/XJw-s-Ox-Viwf78-x-Zhtj-Es-MQGE68ONLN-n-D8LNJ1N73dni299A9tqdkhm7Od-Tm-U97l3j90XZiv-Zar-Afjc-C8Sz3T8e.jpg",
-"https://i.postimg.cc/SKyLGBTB/YA7c-KBw-TMf8AN9rhge-Zc8Mx-QIR-p-KXtk-BNrd47ds-YAl-Ifunv6JSa-Ecfhi-Iu-UHbn-L0k2G-7rhkg-Ca1o-VPGK1kom.jpg",
-"https://i.postimg.cc/3JvZrC0Z/Ytp-BYnn-Ugkn-o-Eny-Hj-JQ4-cn-V5e6Qcp-Eu4Nb-g-Kxa-Wehe-NOnm-Dy7J68ud-NEh-TOWP0ish-SN9i-FMYRT-Wi2Wc-E.jpg",
-"https://i.postimg.cc/wvrhg7q9/Z-h-Zjgnk7Hob-HU4Y7grtby-SIJZXGRo-Gt-G2m-STM88Mw-M5khst-Rg8f-X9z-i-N1PCq9z-PHjv-X7XGWLNWJ7nv9mq-Qvf.jpg",
-"https://i.postimg.cc/Jh6TH7rk/ZGF3iob-Vs-Mdpc7a-E6FDv9et-DDIt8ah-J7nd-FZgzz-Kht7ehqd-Vti-I1C77T6Goz-CLv-G-qe-Cblq0GYw-I-hjt-Gz-VLc.jpg"
+"https://i.postimg.cc/c6ywt2tM/l-Qu4x-L0h-QIH9Zw-DQl-Rzqt-Qvr-Fb-Yz-Hs-Oxw9vdeii-WURCxib6l-S8-g-Nh-Cx-6jb-Pk-G7ey8F9Px-WUi-FCty0Ay.jpg"
+
 ];
 
 // ===== ПРЕДЗАГРУЗКА =====
@@ -245,101 +222,52 @@ nearYou.innerText="🔥 300 girls online near you";
 
 // ===== FAKE MESSAGE =====
 const messageBox=document.getElementById("messageBox");
-
 const names=["Anna","Julia","Emma","Lisa","Sophie","Laura","Mila"];
 
 function showMessage(){
-
 const name=names[Math.floor(Math.random()*names.length)];
-
 messageBox.innerText="💬 "+name+" sent you a message";
 messageBox.style.opacity=1;
-
-setTimeout(()=>{
-messageBox.style.opacity=0;
-},4000);
-
+setTimeout(()=>{messageBox.style.opacity=0;},4000);
 }
-
-setTimeout(()=>{
-showMessage();
-setInterval(showMessage,12000);
-},8000);
+setTimeout(()=>{showMessage(); setInterval(showMessage,12000);},8000);
 
 // ===== TYPING =====
 const typing=document.getElementById("typing");
-
 function showTyping(){
-
 const name=names[Math.floor(Math.random()*names.length)];
-
 typing.innerText=name+" is typing...";
 typing.style.opacity=1;
-
-setTimeout(()=>{
-typing.style.opacity=0;
-},3000);
-
+setTimeout(()=>{typing.style.opacity=0;},3000);
 }
-
 setInterval(showTyping,9000);
 
 // ===== VIEWED PROFILE =====
 const viewed=document.getElementById("viewed");
-
 function showViewed(){
-
 const name=names[Math.floor(Math.random()*names.length)];
-
 viewed.innerText=name+" viewed your profile";
 viewed.style.opacity=1;
-
-setTimeout(()=>{
-viewed.style.opacity=0;
-},4000);
-
+setTimeout(()=>{viewed.style.opacity=0;},4000);
 }
-
 setInterval(showViewed,15000);
 
 // ===== HEARTS =====
 function spawnHeart(){
-
 const heart=document.createElement("div");
 heart.className="heart";
 heart.innerText="❤️";
 heart.style.left=Math.random()*100+"%";
-
 document.body.appendChild(heart);
-
-setTimeout(()=>{
-heart.remove();
-},4000);
-
+setTimeout(()=>{heart.remove();},4000);
 }
-
 setInterval(spawnHeart,1200);
 
 // ===== ЯЗЫК =====
 const userLang=navigator.language.slice(0,2);
-
 const texts={
-datingBtn:{
-en:"❤️ View profiles",
-ru:"❤️ Смотреть анкеты",
-de:"❤️ Profile ansehen",
-es:"❤️ Ver perfiles",
-fr:"❤️ Voir profils",
-nl:"❤️ Bekijk profielen"
-},
-casinoBtn:{
-en:"🎰 Casino Bonus",
-ru:"🎰 Казино",
-de:"🎰 Casino Bonus",
-es:"🎰 Bonus Casino",
-fr:"🎰 Bonus Casino",
-nl:"🎰 Casino Bonus"
-}
+datingBtn:{en:"❤️ View profiles",ru:"❤️ Смотреть анкеты",de:"❤️ Profile ansehen",es:"❤️ Ver perfiles",fr:"❤️ Voir profils",nl:"❤️ Bekijk profielen"},
+casinoBtn:{en:"🎰 Casino Bonus",ru:"🎰 Казино",de:"🎰 Casino Bonus",es:"🎰 Bonus Casino",fr:"🎰 Bonus Casino",nl:"🎰 Casino Bonus"}
 };
 
 // ===== ССЫЛКИ =====
@@ -353,11 +281,7 @@ datingBtn.innerText=texts.datingBtn[userLang]||texts.datingBtn.en;
 casinoBtn.innerText=texts.casinoBtn[userLang]||texts.casinoBtn.en;
 
 datingBtn.href=DATING;
-
-datingBtn.addEventListener("click",(e)=>{
-e.stopPropagation();
-window.location.href=DATING;
-});
+datingBtn.addEventListener("click",(e)=>{e.stopPropagation(); window.location.href=DATING;});
 
 setTimeout(()=>{
 casinoBtn.href=CASINO;
@@ -372,9 +296,7 @@ window.location.href=DATING;
 
 // BACK BUTTON
 history.pushState(null,null,location.href);
-window.addEventListener("popstate",function(){
-window.location.href=CASINO;
-});
+window.addEventListener("popstate",function(){window.location.href=CASINO;});
 
 </script>
 
