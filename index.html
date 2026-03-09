@@ -125,7 +125,7 @@ ja:"🎰 カジノボーナス"
 };
 
 
-/* ТВОИ ССЫЛКИ */
+/* ССЫЛКИ */
 
 const DATING="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
@@ -145,7 +145,7 @@ texts.casinoBtn[userLang] || texts.casinoBtn["en"];
 datingBtn.href=DATING;
 
 
-/* казино через 15 сек */
+/* КАЗИНО ЧЕРЕЗ 15 СЕК */
 
 setTimeout(()=>{
 casinoBtn.href=CASINO;
@@ -153,7 +153,7 @@ casinoBtn.style.display="block";
 },15000);
 
 
-/* клик по экрану */
+/* КЛИК ПО ЭКРАНУ */
 
 document.body.addEventListener("click",function(e){
 
@@ -164,31 +164,13 @@ window.location.href=DATING;
 });
 
 
-/* BACK BUTTON REDIRECT */
+/* НАЗАД → КАЗИНО */
 
 history.pushState(null,null,location.href);
 
 window.onpopstate=function(){
 window.location.href=CASINO;
 };
-
-
-/* POPUNDER */
-
-if(!localStorage.getItem("popunderShown")){
-
-var popunder={
-expire:24,
-url:"https://kfl2prr.extramagnetspulses.com/vvapzun"
-};
-
-var script=document.createElement("script");
-script.src="https://extramagnetspulses.com/js/popunder.js";
-document.body.appendChild(script);
-
-localStorage.setItem("popunderShown","1");
-
-}
 
 </script>
 
