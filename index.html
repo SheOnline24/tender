@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Online Girls</title>
 
 <style>
+
 body{
 margin:0;
 height:100vh;
 background-size:cover;
 background-position:center;
+background-color:#111;
 font-family:Arial;
 cursor:pointer;
 transition:background-image 0.8s ease;
@@ -44,14 +48,15 @@ transform:scale(1.05);
 box-shadow:0 -2px 25px rgba(0,0,0,0.6);
 }
 
-#datingBtn{bottom:15px;right:15px;}
-#casinoBtn{bottom:15px;left:15px;}
-
 #datingBtn{
+bottom:15px;
+right:15px;
 background:linear-gradient(45deg, rgba(255,42,109,0.6), rgba(255,122,24,0.6));
 }
 
 #casinoBtn{
+bottom:15px;
+left:15px;
 background:linear-gradient(45deg, rgba(255,0,0,0.6), rgba(255,80,0,0.6));
 display:none;
 }
@@ -61,6 +66,7 @@ display:none;
 50%{transform:scale(1.05);opacity:1;}
 100%{transform:scale(1);opacity:0.8;}
 }
+
 </style>
 
 </head>
@@ -88,8 +94,25 @@ const girls=[
 "https://o.uguu.se/ONQdZWkt.jpg"
 ];
 
-document.body.style.backgroundImage =
-"url("+girls[Math.floor(Math.random()*girls.length)]+")";
+function loadBackground(){
+
+let img = girls[Math.floor(Math.random()*girls.length)];
+
+let test = new Image();
+
+test.src = img;
+
+test.onload=function(){
+document.body.style.backgroundImage="url('"+img+"')";
+};
+
+test.onerror=function(){
+document.body.style.background="#111";
+};
+
+}
+
+window.onload=loadBackground;
 
 
 /* ЯЗЫК */
@@ -97,6 +120,7 @@ document.body.style.backgroundImage =
 const userLang=navigator.language.slice(0,2);
 
 const texts={
+
 datingBtn:{
 en:"❤️ View profiles",
 ru:"❤️ Смотреть анкеты",
@@ -122,6 +146,7 @@ nl:"🎰 Casino Bonus",
 sv:"🎰 Casino Bonus",
 ja:"🎰 カジノボーナス"
 }
+
 };
 
 
@@ -136,20 +161,19 @@ const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 const datingBtn=document.getElementById("datingBtn");
 const casinoBtn=document.getElementById("casinoBtn");
 
-datingBtn.innerText =
-texts.datingBtn[userLang] || texts.datingBtn["en"];
-
-casinoBtn.innerText =
-texts.casinoBtn[userLang] || texts.casinoBtn["en"];
+datingBtn.innerText=texts.datingBtn[userLang] || texts.datingBtn["en"];
+casinoBtn.innerText=texts.casinoBtn[userLang] || texts.casinoBtn["en"];
 
 datingBtn.href=DATING;
 
 
-/* КАЗИНО ЧЕРЕЗ 15 СЕК */
+/* КАЗИНО КНОПКА */
 
 setTimeout(()=>{
+
 casinoBtn.href=CASINO;
 casinoBtn.style.display="block";
+
 },15000);
 
 
@@ -169,7 +193,9 @@ window.location.href=DATING;
 history.pushState(null,null,location.href);
 
 window.onpopstate=function(){
+
 window.location.href=CASINO;
+
 };
 
 </script>
