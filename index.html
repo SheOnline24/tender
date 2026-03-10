@@ -49,12 +49,15 @@ button:hover{box-shadow:0 0 25px rgba(255,46,99,1);transform:scale(1.05);}
 <div id="casino">🎰 100% Casino Bonus</div>
 
 <script>
-// ===== LINKS =====
+// ===== ССЫЛКИ =====
 const DATING="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-// ===== УНИКАЛЬНЫЕ ЖЕНСКИЕ АВАТАРКИ + ИМЕНА =====
-const avatarIds = Array.from({length: 99}, (_, i) => i + 1); // 1-99
+// ===== РАНДОМАЙЗЕР ЖЕНСКИХ АВАТАРОК И ИМЕН =====
+const usedAvatars = new Set();
+const usedNames = new Set();
+
+// 200+ женских имён
 const names = [
 "Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina",
 "Olivia","Isabella","Chloe","Amelia","Maya","Lea","Lily","Zoey",
@@ -71,14 +74,21 @@ const names = [
 "Raina","Sabrina","Tatiana","Vanessa","Yvette","Zoe"
 ];
 
-// Выбираем случайную девушку без повторов
+// Получение случайной девушки
 function getRandomGirl(){
-  if(avatarIds.length === 0) avatarIds.push(...Array.from({length: 99}, (_, i) => i + 1));
-  let avatarIndex = Math.floor(Math.random()*avatarIds.length);
-  let avatarId = avatarIds.splice(avatarIndex,1)[0];
+  // Аватар
+  let avatarId;
+  do{
+    avatarId = Math.floor(Math.random()*200)+1; // 1-200
+  }while(usedAvatars.has(avatarId));
+  usedAvatars.add(avatarId);
 
-  let nameIndex = Math.floor(Math.random()*names.length);
-  let name = names[nameIndex];
+  // Имя
+  let name;
+  do{
+    name = names[Math.floor(Math.random()*names.length)];
+  }while(usedNames.has(name));
+  usedNames.add(name);
 
   return {img:`https://randomuser.me/api/portraits/women/${avatarId}.jpg`, name};
 }
@@ -154,6 +164,7 @@ setTimeout(()=>{
   c.style.display="block";
   c.onclick=()=>{ window.location.href=CASINO; }
 },12000);
+
 </script>
 </body>
 </html>
