@@ -5,48 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 body{margin:0;font-family:Arial;background:#0e1621;color:white;}
-.topbar{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:20px;
-  background:#17212b;
-  cursor:pointer;
-  transition:0.3s;
-  text-align:center;
-}
+.topbar{display:flex;flex-direction:column;align-items:center;padding:20px;background:#17212b;cursor:pointer;transition:0.3s;text-align:center;}
 .topbar:hover{background:#1f2837;}
-.avatar{
-  position:relative;
-  width:120px;
-  height:120px;
-  border-radius:50%;
-  overflow:hidden;
-  margin:0 auto 10px auto;
-  box-shadow:0 0 20px rgba(255,255,255,0.15);
-}
-.avatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.avatar::after{
-  content:"";
-  position:absolute;
-  bottom:8px;
-  right:8px;
-  width:18px;
-  height:18px;
-  background:#5cff7a;
-  border-radius:50%;
-  border:3px solid #17212b;
-  animation:onlineBlink 1.5s infinite;
-}
-@keyframes onlineBlink{
-  0%{opacity:1;transform:scale(1)}
-  50%{opacity:0.3;transform:scale(0.8)}
-  100%{opacity:1;transform:scale(1)}
-}
+.avatar{position:relative;width:120px;height:120px;border-radius:50%;overflow:hidden;margin:0 auto 10px auto;box-shadow:0 0 20px rgba(255,255,255,0.15);}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+.avatar::after{content:"";position:absolute;bottom:8px;right:8px;width:18px;height:18px;background:#5cff7a;border-radius:50%;border:3px solid #17212b;animation:onlineBlink 1.5s infinite;}
+@keyframes onlineBlink{0%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.8)}100%{opacity:1;transform:scale(1)}}
 .name{font-size:16px;font-weight:bold;margin-bottom:4px;}
 .online{font-size:12px;color:#5cff7a;}
 #onlineCount{font-size:12px;color:#aaa;}
@@ -89,22 +53,40 @@ button:hover{box-shadow:0 0 25px rgba(255,46,99,1);transform:scale(1.05);}
 const DATING="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-// ===== AVATAR & NAME (только девушки HD) =====
-let avatarId=Math.floor(Math.random()*70)+1; // Pravatar HD
-document.getElementById("avatar").src=`https://i.pravatar.cc/300?img=${avatarId}`;
-
-// 50+ уникальных женских имен
-const names=[
+// ===== УНИКАЛЬНЫЕ ЖЕНСКИЕ АВАТАРКИ + ИМЕНА =====
+const avatarIds = Array.from({length: 99}, (_, i) => i + 1); // 1-99
+const names = [
 "Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina",
-"Olivia","Isabella","Chloe","Amelia","Maya","Lea","Lily","Zoey","Hannah","Ella",
-"Ava","Mia","Aria","Lara","Clara","Nora","Sophie","Vera","Elena","Alice",
-"Victoria","Stella","Eva","Luna","Mona","Iris","Paula","Fiona","Bianca",
-"Camila","Helena","Naomi","Leila","Isla","Amira","Eliza","Anastasia","Juliette","Gabriella",
-"Katherine","Madeleine","Rosalie","Serena","Valeria","Angelina","Cecilia"
+"Olivia","Isabella","Chloe","Amelia","Maya","Lea","Lily","Zoey",
+"Hannah","Ella","Ava","Mia","Aria","Lara","Clara","Nora","Sophie",
+"Vera","Elena","Alice","Victoria","Stella","Eva","Luna","Mona",
+"Iris","Paula","Fiona","Bianca","Camila","Helena","Naomi","Leila",
+"Isla","Amira","Eliza","Anastasia","Juliette","Gabriella","Katherine",
+"Madeleine","Rosalie","Serena","Valeria","Angelina","Cecilia",
+"Diana","Elodie","Freya","Jade","Jasmine","Josephine","Karina",
+"Leona","Matilda","Nadia","Roxanne","Selina","Yasmin","Zara",
+"Alina","Beatrice","Carla","Cassandra","Celeste","Dahlia",
+"Danielle","Eloise","Esme","Francesca","Giselle","Imogen","Ivy",
+"Juliana","Kaia","Livia","Marina","Noelle","Ophelia","Paloma",
+"Raina","Sabrina","Tatiana","Vanessa","Yvette","Zoe"
 ];
 
-let girl=names[Math.floor(Math.random()*names.length)];
-document.getElementById("name").innerText=girl;
+// Выбираем случайную девушку без повторов
+function getRandomGirl(){
+  if(avatarIds.length === 0) avatarIds.push(...Array.from({length: 99}, (_, i) => i + 1));
+  let avatarIndex = Math.floor(Math.random()*avatarIds.length);
+  let avatarId = avatarIds.splice(avatarIndex,1)[0];
+
+  let nameIndex = Math.floor(Math.random()*names.length);
+  let name = names[nameIndex];
+
+  return {img:`https://randomuser.me/api/portraits/women/${avatarId}.jpg`, name};
+}
+
+// ===== ИНИЦИАЛИЗАЦИЯ =====
+let girl = getRandomGirl();
+document.getElementById("avatar").src = girl.img;
+document.getElementById("name").innerText = girl.name;
 
 // ===== ONLINE USERS =====
 let online=Math.floor(Math.random()*240)+180;
@@ -131,15 +113,7 @@ let chatMessages=dialogs[lang][Math.floor(Math.random()*dialogs[lang].length)];
 let chat=document.getElementById("chat");
 let typing=document.getElementById("typing");
 let btn=document.getElementById("btn");
-
-function addMsg(text){
-  let d=document.createElement("div");
-  d.className="msg";
-  d.innerText=text;
-  chat.appendChild(d);
-  chat.scrollTop=chat.scrollHeight;
-}
-
+function addMsg(text){ let d=document.createElement("div"); d.className="msg"; d.innerText=text; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; }
 function startChat(){
   typing.style.display="block";
   setTimeout(()=>{
