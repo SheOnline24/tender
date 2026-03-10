@@ -1,331 +1,176 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Online Girls</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-
-body{
-margin:0;
-height:100vh;
-background-size:cover;
-background-position:center;
-background-color:#111;
-font-family:Arial;
-cursor:pointer;
-transition: background-image 1s ease, transform 0.5s ease;
+body{margin:0;font-family:Arial;background:#0e1621;color:white;}
+.topbar{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px;
+  background:#17212b;
+  cursor:pointer;
+  transition:0.3s;
+  text-align:center;
 }
-
-.overlay{
-position:absolute;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.25);
-pointer-events:none;
+.topbar:hover{background:#1f2837;}
+.avatar{
+  position:relative;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  overflow:hidden;
+  margin:0 auto 10px auto;
+  box-shadow:0 0 20px rgba(255,255,255,0.15);
 }
-
-.bottom-btn{
-position:fixed;
-padding:12px 18px;
-font-size:16px;
-text-align:center;
-text-decoration:none;
-color:white;
-border-radius:8px;
-backdrop-filter:blur(6px);
-background:rgba(255,255,255,0.15);
-box-shadow:0 -2px 10px rgba(0,0,0,0.4);
-transition:0.3s;
-animation:pulse 2s infinite alternate;
-z-index:10;
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
-
-#datingBtn{
-bottom:15px;
-right:15px;
-background:linear-gradient(45deg, rgba(255,42,109,0.6), rgba(255,122,24,0.6));
+.avatar::after{
+  content:"";
+  position:absolute;
+  bottom:8px;
+  right:8px;
+  width:18px;
+  height:18px;
+  background:#5cff7a;
+  border-radius:50%;
+  border:3px solid #17212b;
+  animation:onlineBlink 1.5s infinite;
 }
-
-#casinoBtn{
-bottom:15px;
-left:15px;
-background:linear-gradient(45deg, rgba(255,0,0,0.6), rgba(255,80,0,0.6));
-display:none;
+@keyframes onlineBlink{
+  0%{opacity:1;transform:scale(1)}
+  50%{opacity:0.3;transform:scale(0.8)}
+  100%{opacity:1;transform:scale(1)}
 }
-
-#nearYou{
-position:fixed;
-top:15px;
-left:50%;
-transform:translateX(-50%);
-background:rgba(0,0,0,0.65);
-color:white;
-padding:10px 16px;
-border-radius:10px;
-font-size:15px;
-backdrop-filter:blur(6px);
-z-index:20;
-}
-
-#messageBox{
-position:fixed;
-top:60px;
-left:50%;
-transform:translateX(-50%);
-background:rgba(0,0,0,0.75);
-color:white;
-padding:12px 16px;
-border-radius:10px;
-font-size:15px;
-opacity:0;
-transition:0.4s;
-z-index:20;
-}
-
-#typing{
-position:fixed;
-bottom:80px;
-left:50%;
-transform:translateX(-50%);
-background:rgba(0,0,0,0.7);
-color:white;
-padding:10px 14px;
-border-radius:10px;
-font-size:14px;
-opacity:0;
-transition:0.4s;
-}
-
-#viewed{
-position:fixed;
-top:110px;
-right:15px;
-background:rgba(0,0,0,0.7);
-color:white;
-padding:8px 12px;
-border-radius:8px;
-font-size:13px;
-opacity:0;
-transition:0.4s;
-}
-
-.heart{
-position:fixed;
-bottom:-20px;
-font-size:22px;
-animation:floatUp 4s linear forwards;
-pointer-events:none;
-}
-
-@keyframes floatUp{
-0%{transform:translateY(0) scale(1);opacity:1;}
-100%{transform:translateY(-120vh) scale(1.5);opacity:0;}
-}
-
-@keyframes pulse{
-0%{transform:scale(1); opacity:0.8;}
-50%{transform:scale(1.05); opacity:1;}
-100%{transform:scale(1); opacity:0.8;}
-}
-
+.name{font-size:16px;font-weight:bold;margin-bottom:4px;}
+.online{font-size:12px;color:#5cff7a;}
+#onlineCount{font-size:12px;color:#aaa;}
+#chat{padding:15px;margin-bottom:110px;overflow-y:auto;max-height:calc(100vh - 200px);}
+.msg{background:#182533;padding:10px 14px;border-radius:10px;margin:8px 0;max-width:240px;animation:fade .4s;}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+#typing{color:#aaa;font-size:13px;display:none;padding:0 15px;}
+.bottom{position:fixed;bottom:0;left:0;width:100%;background:#17212b;padding:14px;text-align:center;}
+button{padding:14px 30px;font-size:18px;border:none;border-radius:30px;cursor:pointer;color:white;background:linear-gradient(45deg,#ff2e63,#ff7a18);box-shadow:0 0 15px rgba(255,46,99,0.7);animation:pulse 1.6s infinite;display:none;transition:0.3s;}
+button:hover{box-shadow:0 0 25px rgba(255,46,99,1);transform:scale(1.05);}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+.heart{position:fixed;bottom:90px;font-size:20px;animation:heartUp 2s linear forwards;}
+@keyframes heartUp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-120px)}}
+#notify{position:fixed;top:20px;right:20px;background:#222;padding:10px 15px;border-radius:8px;font-size:14px;display:none;}
+#casino{position:fixed;bottom:120px;right:20px;background:linear-gradient(45deg,#ff2e63,#ff9a00);padding:14px 18px;border-radius:14px;font-weight:bold;font-size:14px;cursor:pointer;display:none;box-shadow:0 0 20px rgba(255,80,80,0.8);animation:casinoPulse 2s infinite;}
+@keyframes casinoPulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
 </style>
 </head>
-
 <body>
 
-<div class="overlay"></div>
+<div class="topbar">
+  <div class="avatar"><img id="avatar"></div>
+  <div class="name" id="name"></div>
+  <div class="online">online</div>
+  <div id="onlineCount"></div>
+</div>
 
-<div id="nearYou"></div>
-<div id="messageBox"></div>
-<div id="typing"></div>
-<div id="viewed"></div>
+<div id="chat"></div>
+<div id="typing">typing...</div>
 
-<a id="datingBtn" class="bottom-btn" href="#" target="_blank"></a>
-<a id="casinoBtn" class="bottom-btn" href="#" target="_blank"></a>
+<div class="bottom">
+  <button id="btn">Continue chat ❤️</button>
+</div>
+
+<div id="notify">💬 New message</div>
+<div id="casino">🎰 100% Casino Bonus</div>
 
 <script>
-
-// ===== ФОТО =====
-const girls = [
-"https://i.postimg.cc/9X8t1WDX/IMG-20260309-061848-965.jpg",
-"https://i.postimg.cc/c19MTsvH/IMG-20260309-075128-325.jpg",
-"https://i.postimg.cc/05WdZ8zy/IMG-20260309-075130-800.jpg",
-"https://i.postimg.cc/J76cK1st/IMG-20260309-075133-235.jpg",
-"https://i.postimg.cc/xjxyg0X8/IMG-20260309-075138-403.jpg",
-"https://i.postimg.cc/VsGB4YJS/IMG-20260309-075141-356.jpg",
-"https://i.postimg.cc/HWZ43pr7/IMG-20260309-075143-800.jpg",
-"https://i.postimg.cc/HWZ43pry/IMG-20260309-075145-345.jpg",
-"https://i.postimg.cc/597qpxXz/IMG-20260309-075147-869.jpg",
-"https://i.postimg.cc/VsGB4YJX/IMG-20260309-075150-337.jpg",
-"https://i.postimg.cc/bYCHLzZQ/IMG-20260309-075152-672.jpg",
-"https://i.postimg.cc/K8bpdspR/22ya-N2kn3IZ73ut-Zvn1VJ2Gadkk-Hxb-UFCMTBc7-0B618fqrtran-MWy-z-Z1j-D7np-Z793V9y-N9sk-WOi-Z5f4e-ROEQ-X.jpg",
-"https://i.postimg.cc/8cWwYhhB/2BL7u7-ky-NUpu6Dru-Yfe-IUr-T56ua-KEdjmb3X4Ua-Cu6G6x-Tj-JWz5PGvu-SNc-QLMj7I3Ydb1sa-ABQj1Jlo1zniege8s.jpg",
-"https://i.postimg.cc/26g2THBz/41KY0z8NL54Xt-HQg-S0Hh-K-xhks-A-e-NJ1eowdmvf-Ltkt18aemx-CSRed-E3vd-Ya1CJz-Nbv5v-XA-h-GFLUHKaepcq-RWk.jpg",
-"https://i.postimg.cc/rF1QCNyq/7CA-V5Q-frb-Wsq-UMKYQGXZS-6KEYn-C8fnwmqeok-Qy-Kc9ia-WC2s0-s-XBo-j4ea6-Iy-SQ-4cv-UXKW2UKgp6DXAgr-QS.jpg",
-"https://i.postimg.cc/63Pdty9h/9ZKCk-Iv-XY2wqzk-ZQ2n-Nfqrug-S0o3Tw0-4HPVjea5T3Ek-EEAe1ZTJort-JMp-Nob-GXJEs-Erg9MTNe-Ot-IPipv-Lvbo-E.jpg",
-"https://i.postimg.cc/zfXtfHrV/af52Ok-TCd-QA60d1FRm-TJ52o5za-JGq-TD89v9e-Skh4Yx-Ko-RJJAF60rz-U4HYx2Swe-WMji5Bxo-QO5nw-Kt-URvd-U3sz.jpg",
-"https://i.postimg.cc/fR5C1W9M/Axf-O8Uo-RM52j-QM5JUsf-c5K9Cs-ULf-EBf-Ny0-a9ODm-Qu-Nx0t-GPQUdrkz7l-MHa-Bo-YKJSw3-pwo-Zhn-GCtkk-BH2NC.jpg",
-"https://i.postimg.cc/fbBcq8pF/BZkp-Gp-n6i-6Wk-Vnm-K2Z-pn-K2Rmj3xu-Vu-Xzj-ZD69GYv-c-Lz-Cz-G-Xyy-Kue-JJWJ-i-D7s-HKIXByp-v-Nf-EYMa-Zx.jpg",
-"https://i.postimg.cc/NLqm2S2P/c-URgv6ZEj-MZ0Kr-DEw-E9DRf4Mlr5UF6dv-ASToee-ZJw5w-XDt-DTR2D9S9w8fo-CGl-Bs6Nt-PFq89E2-vq-HUZI4e-Ms-RY.jpg",
-"https://i.postimg.cc/ZYgchDnn/e-HNz-FYAp-L5Xo-Tm-B5Yg-DMIjxm-W-7Qsxvx-WDoy-V6863O6c1PZmy6Pc0u6n-Gwv2Svy-Ksj-Gyc-Yo-Ed-Ocal-C1e-Xx0.jpg",
-"https://i.postimg.cc/Vsb75c37/fd-VKWHl-Qe-MPSkvw-Vga-Prf8d6kz-YICIj7R7l-Ypn-Ibykipd4FEa-Y7a-RN5QW9234ql-ICi2vlaw-Ayupa-OJg-Iidi7hn.jpg",
-"https://i.postimg.cc/4x12ZbrZ/Gn-Rj-U4LGu-I3h-Y7SVlr-X4k5W8j-N6NEN3Tkn-Ts-SXCled6S3q-Xcig-VBv-Vi-EJuq-O8JWm-Fvo-GR-vv-THYFp-R8zc-R.jpg",
-"https://i.postimg.cc/pTmsfNy2/GVb-YORm-VR5c-Ud-x3Oas3Qil-WMo1h0mt-FJx-F8Mum946n2Gx7u9N0us-DQSIhm-avno-Bg-f-St-T6roc-L9lcjf-Gj2z-EA.jpg",
-"https://i.postimg.cc/BnC7scRD/h33g-LNs8D1pp0s8q6ky-LNzr-Bw-Qz-RTs-P6j-QC0S22t-Eyc7IV2Ui3k-OUSx-KWFBd-UUIu-BGnwr-HXg-QYFI7l-U-px7KN.jpg",
-"https://i.postimg.cc/VLnHZcgc/HU69c-Sr-Dcx-WJ5k-AWusv-D1BLw4Mt-QBJTpr-Kinx-Tghz8o-Hg00dez-Bzhm-Gncp-Fn-TVxgi-SLq-U30Lt-I6GXSys-Ttf.jpg",
-"https://i.postimg.cc/7h7XRg3v/Ii-Tzg-DJcf9B7SCg-6m8BZy4g-T8IY-3Wo6j7ln-G2-ZTP7Bl-H-9yh-IWyxw-Q5OLp-PTf-Xv-PXU1p-A1FKU0Yx-Y6AN5v7BP.jpg",
-"https://i.postimg.cc/SKyLGBT1/kko-LWJp-DP6t-Ik8q-G4ap-Hi-Qra-KN6e-Gi-Lqh-KUl-Ecqkwuyl-Al-BT4FMOke-RFt-HFH0j-Gq-Khtcu-GHa-UQYJNYG8A.jpg",
-"https://i.postimg.cc/6pzcF6vJ/KN-Yfl-Tz-n-S7wt-Gbm-Dc-Co-LRECSDe-DPyfxzklc8kuz-TP9Q7Qfr-R9n-Kc-GSPskjrv8j-YMo-Xa-Gm-Y1aqb-N1b-5eoq.jpg",
-"https://i.postimg.cc/mkcyH7dK/l-C8yqgj-AZemi-VGMys-FFCX6aw-8g-RS06e5Ow-Riy5LJu-UIWqa-Yex-Ns-KZWz-Sx-EGIJg-WHm-Oflv2u-EBDAl2Ex-KOQO.jpg",
-"https://i.postimg.cc/c6ywt2tM/l-Qu4x-L0h-QIH9Zw-DQl-Rzqt-Qvr-Fb-Yz-Hs-Oxw9vdeii-WURCxib6l-S8-g-Nh-Cx-6jb-Pk-G7ey8F9Px-WUi-FCty0Ay.jpg",
-"https://i.postimg.cc/28R0ZKDX/lu03EAUkiw3DM8Xt-MU1x-Wb-PH343SG65Xemo-D2kodv3qc-CUxt-V4SXh-V58Akg-RQ2Lrv2Ki9Kys1Y5ktd-ZFq-Mw1SAa.jpg",
-"https://i.postimg.cc/qMV135Tc/nprvbk-NTLc65q-UCgzjk234b0o-H8-FJI5Pa-U-yw-Zmu-ECctq-NQa-D1Ln-XBs-CL2-chg-Rf-ETETWo-H5pr-Sma9Oe-W6Bf.jpg",
-"https://i.postimg.cc/Y0g8P114/Nz-Yxt-Hjxr1Eo6CRR3DJ0R-YWtd-ZZOi-MVTL3KQACSrt-RZu-rl72p-Uw-SRLf-Hg-Zm6k2JFZjud-PP-d-Yy-ZMj-RJUw4Wkl.jpg",
-"https://i.postimg.cc/MZ4D8rHw/p-JWb-YR59D5r3Pn-E-4x4pnx8aevddx-C2hn3ag-XDYPGul-QFOp8s24-Y-VZt-B3-Ml-IBsr-F9Mor-PKIObx-E0A79Cq-GY-C.jpg",
-"https://i.postimg.cc/KjLQWnnC/p-Vo-S6T5k54r-Ba-Kt2XCUP3ud-F1kl-Zn-EUG26ztg-ULz-ZXj-L2l-A-b-Scaiq-UBwp-QH9jdi3ASv4fg5Cix-Wnrukyl-Hn.jpg",
-"https://i.postimg.cc/8k3HVn5x/qg-EQo-VODl-Ep4n-y-Io-Bi-GW1s-YRjdr-I5Ao813QUQkmztuxj-KHJV7-R6jqt-TDVrk-LGDNEtljbnd-Dd9Tz-O6ISPi-UBL.jpg",
-"https://i.postimg.cc/4dyzDzT6/r-Q9Ms-Giu9h-C2r-Ow-SXXyp-ZLNVy0b-Imgz-S1Hd-Ud-JNyd-LXYCj-RKh-Ik-XTkz-W9w-Xd-DX7v-JQf-TZ8Qv6sf-Fyv-H.jpg",
-"https://i.postimg.cc/Dzyjz4Ty/R-t-Zs2s-LKFUj-A51x-Ue-Gt6Kd-Yv7Zx1r-NAUt-Id-XEVH-TZd-Oza-RPPBV-HIc8rz-LBS3q-Pm-H7H8T2euhq-RO-pz-Eh.jpg",
-"https://i.postimg.cc/sg3KnG14/r-U1b1u-a6j-Ge-AZ1o-FRMHMd-TCVe8yjho-U-ch-O6PMYK-XDSHHHFJNoi5r-K8m1939s6I-6TQc-BDj-FCBv-KP4-Zfb-jvn.jpg",
-"https://i.postimg.cc/y8CyDgFd/Rl-PX0Ipf-Q4QKXht-Qn-AFe79Lrjm0DAd5OLs-Y2TLEn-Nxq1ir-FF3giw-Pq8ipx-Gg-Ds3RWQDx-V0y-Wx-Pig-K92Mod6-1c.jpg",
-"https://i.postimg.cc/J09cctv0/si-ZDgwif-HPSA6Di-C-l-COiv-WNc6f-Z-0OQE7g-Rloz-AKx-M5Bh1Ffd-Ut-Lhon-OUb-AYLxbvnlyow-XNKsha-HXULw-Rc3.jpg",
-"https://i.postimg.cc/yYcrpzPp/T4WWld-B9w-B-mbbfa-RCBTq6Fh-Da5My-A01h3im-EQsmaem-Chytzfbge-TEt5Ig-Vi-PBQvkwa9FCk-VZFh-Jxlk-Nes7bg-N.jpg",
-"https://i.postimg.cc/fb2HSWzc/tp-LQN1y9bt5u-m4FFW6k-Uxw-U12Xjt-ZUPx-PKOO9Eg-C7fx-Auv-EYfrot9sirr-Jwodr-VHl3Ykw-Axc4s79EK9WOVLUSj-Z.jpg",
-"https://i.postimg.cc/nhfGXjqy/wn-RMt-L3p1g-M2l2JTB8e-Rd-T50GMjp-Esem5CNVMPg-Ev0IGn5r-G8Jv-C8a-SRqu3QE599ityf-G8Ldph-TGe-DBLlrkt-Ki.jpg",
-"https://i.postimg.cc/tRLMzgh5/WPa-TBvo-Pn-FQL-UOx-EZF-y-LQ1Er-M-08q-Rw-NY1wy2G2b-Eimz8x35y-Uj-QVg539nmwu-WS3P82k-V54P3kmd-Ws-G1I8f.jpg",
-"https://i.postimg.cc/5t7PQ94r/XJw-s-Ox-Viwf78-x-Zhtj-Es-MQGE68ONLN-n-D8LNJ1N73dni299A9tqdkhm7Od-Tm-U97l3j90XZiv-Zar-Afjc-C8Sz3T8e.jpg",
-"https://i.postimg.cc/SKyLGBTB/YA7c-KBw-TMf8AN9rhge-Zc8Mx-QIR-p-KXtk-BNrd47ds-YAl-Ifunv6JSa-Ecfhi-Iu-UHbn-L0k2G-7rhkg-Ca1o-VPGK1kom.jpg",
-"https://i.postimg.cc/3JvZrC0Z/Ytp-BYnn-Ugkn-o-Eny-Hj-JQ4-cn-V5e6Qcp-Eu4Nb-g-Kxa-Wehe-NOnm-Dy7J68ud-NEh-TOWP0ish-SN9i-FMYRT-Wi2Wc-E.jpg",
-"https://i.postimg.cc/wvrhg7q9/Z-h-Zjgnk7Hob-HU4Y7grtby-SIJZXGRo-Gt-G2m-STM88Mw-M5khst-Rg8f-X9z-i-N1PCq9z-PHjv-X7XGWLNWJ7nv9mq-Qvf.jpg",
-"https://i.postimg.cc/Jh6TH7rk/ZGF3iob-Vs-Mdpc7a-E6FDv9et-DDIt8ah-J7nd-FZgzz-Kht7ehqd-Vti-I1C77T6Goz-CLv-G-qe-Cblq0GYw-I-hjt-Gz-VLc.jpg"
-];
- // ===== ПРЕДЗАГРУЗКА =====
-girls.forEach(src=>{
-const img=new Image();
-img.src=src;
-});
-  // ===== СЛУЧАЙНЫЕ ФОТО =====
-let currentIndex=Math.floor(Math.random()*girls.length);
-
-function changeBackground(){
-
-let newIndex;
-
-do{
-newIndex=Math.floor(Math.random()*girls.length);
-}while(newIndex===currentIndex);
-
-currentIndex=newIndex;
-
-document.body.style.backgroundImage=`url('${girls[currentIndex]}')`;
-document.body.style.transform="scale(1.02)";
-
-setTimeout(()=>{
-document.body.style.transform="scale(1)";
-},500);
-
-}
-
-window.addEventListener("load",()=>{
-changeBackground();
-setInterval(changeBackground,5000);
-});
-
-// ===== GEO =====
-const nearYou=document.getElementById("nearYou");
-
-fetch("https://ipapi.co/json/")
-.then(res=>res.json())
-.then(data=>{
-const city=data.city||"your area";
-const count=250+Math.floor(Math.random()*250);
-nearYou.innerText="🔥 "+count+" girls online near "+city;
-})
-.catch(()=>{
-nearYou.innerText="🔥 300 girls online near you";
-});
-
-// ===== FAKE MESSAGE =====
-const messageBox=document.getElementById("messageBox");
-const names=["Anna","Julia","Emma","Lisa","Sophie","Laura","Mila"];
-
-function showMessage(){
-const name=names[Math.floor(Math.random()*names.length)];
-messageBox.innerText="💬 "+name+" sent you a message";
-messageBox.style.opacity=1;
-setTimeout(()=>{messageBox.style.opacity=0;},4000);
-}
-setTimeout(()=>{showMessage(); setInterval(showMessage,12000);},8000);
-
-// ===== TYPING =====
-const typing=document.getElementById("typing");
-function showTyping(){
-const name=names[Math.floor(Math.random()*names.length)];
-typing.innerText=name+" is typing...";
-typing.style.opacity=1;
-setTimeout(()=>{typing.style.opacity=0;},3000);
-}
-setInterval(showTyping,9000);
-
-// ===== VIEWED PROFILE =====
-const viewed=document.getElementById("viewed");
-function showViewed(){
-const name=names[Math.floor(Math.random()*names.length)];
-viewed.innerText=name+" viewed your profile";
-viewed.style.opacity=1;
-setTimeout(()=>{viewed.style.opacity=0;},4000);
-}
-setInterval(showViewed,15000);
-
-// ===== HEARTS =====
-function spawnHeart(){
-const heart=document.createElement("div");
-heart.className="heart";
-heart.innerText="❤️";
-heart.style.left=Math.random()*100+"%";
-document.body.appendChild(heart);
-setTimeout(()=>{heart.remove();},4000);
-}
-setInterval(spawnHeart,1200);
-
-// ===== ЯЗЫК =====
-const userLang=navigator.language.slice(0,2);
-const texts={
-datingBtn:{en:"❤️ View profiles",ru:"❤️ Смотреть анкеты",de:"❤️ Profile ansehen",es:"❤️ Ver perfiles",fr:"❤️ Voir profils",nl:"❤️ Bekijk profielen"},
-casinoBtn:{en:"🎰 Casino Bonus",ru:"🎰 Казино",de:"🎰 Casino Bonus",es:"🎰 Bonus Casino",fr:"🎰 Bonus Casino",nl:"🎰 Casino Bonus"}
-};
-
-// ===== ССЫЛКИ =====
-const DATING="https://prev.affomelody.com/click?pid=6350&offer_id=25";
+// ===== LINKS =====
+const DATING="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-const datingBtn=document.getElementById("datingBtn");
-const casinoBtn=document.getElementById("casinoBtn");
+// ===== AVATAR & NAME =====
+let id=Math.floor(Math.random()*90);
+document.getElementById("avatar").src="https://randomuser.me/api/portraits/women/"+id+".jpg";
+const names=["Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina"];
+let girl=names[Math.floor(Math.random()*names.length)];
+document.getElementById("name").innerText=girl;
 
-datingBtn.innerText=texts.datingBtn[userLang]||texts.datingBtn.en;
-casinoBtn.innerText=texts.casinoBtn[userLang]||texts.casinoBtn.en;
+// ===== ONLINE USERS =====
+let online=Math.floor(Math.random()*240)+180;
+document.getElementById("onlineCount").innerText=online+" users online";
 
-datingBtn.href=DATING;
-datingBtn.addEventListener("click",(e)=>{e.stopPropagation(); window.location.href=DATING;});
+// ===== LANGUAGE & DIALOGS =====
+let lang=navigator.language.slice(0,2);
+const dialogs={
+en:[["Hey 😉","I saw you here..."],["Hi beautiful 😘","Want to chat privately?"],["Hey handsome 😏","Can we talk in private?"]],
+ru:[["Привет 😉","Ты один сегодня?"],["Привет 😘","Хочешь пообщаться?"],["Хей 😏","Пойдём в приват?"]],
+de:[["Hey 😉","Ich habe dich gesehen..."],["Hi 😘","Willst du privat chatten?"],["Hallo 😏","Können wir privat reden?"]],
+es:[["Hola 😉","Te vi aquí..."],["Hola hermosa 😘","¿Quieres chatear en privado?"],["Hola guapo 😏","¿Podemos hablar en privado?"]],
+fr:[["Salut 😉","Je t'ai vu ici..."],["Coucou 😘","Veux-tu discuter en privé?"],["Hey 😏","On peut parler en privé?"]],
+it:[["Ciao 😉","Ti ho visto qui..."],["Ciao bella 😘","Vuoi chattare in privato?"],["Hey 😏","Possiamo parlare in privato?"]],
+pt:[["Oi 😉","Eu te vi aqui..."],["Oi linda 😘","Quer conversar em privado?"],["Hey 😏","Podemos conversar em privado?"]],
+nl:[["Hoi 😉","Ik zag je hier..."],["Hoi mooie 😘","Wil je privé chatten?"],["Hey 😏","Kunnen we privé praten?"]],
+sv:[["Hej 😉","Jag såg dig här..."],["Hej vacker 😘","Vill du chatta privat?"],["Hej 😏","Kan vi prata privat?"]],
+ja:[["やあ 😉","ここで見かけたよ..."],["こんにちは 😘","プライベートでチャットしたい?"],["やあ 😏","個別に話せる?"]]
+};
+if(!dialogs[lang]) lang="en";
+let chatMessages=dialogs[lang][Math.floor(Math.random()*dialogs[lang].length)];
 
-setTimeout(()=>{
-casinoBtn.href=CASINO;
-casinoBtn.style.display="block";
-},15000);
+// ===== CHAT =====
+let chat=document.getElementById("chat");
+let typing=document.getElementById("typing");
+let btn=document.getElementById("btn");
 
-document.body.addEventListener("click",function(e){
-if(!e.target.closest("a")){
-window.location.href=DATING;
+function addMsg(text){
+  let d=document.createElement("div");
+  d.className="msg";
+  d.innerText=text;
+  chat.appendChild(d);
+  chat.scrollTop=chat.scrollHeight;
 }
+
+function startChat(){
+  typing.style.display="block";
+  setTimeout(()=>{
+    typing.style.display="none";
+    addMsg(chatMessages[0]);
+    typing.style.display="block";
+    setTimeout(()=>{
+      typing.style.display="none";
+      addMsg(chatMessages[1]);
+      btn.style.display="inline-block";
+    },1200);
+  },1200);
+}
+setTimeout(startChat,2000);
+
+// ===== CLICKABLE TOPBAR & BUTTON =====
+document.querySelector(".topbar").onclick=()=>{ window.location.href=DATING; }
+btn.onclick=()=>{ window.location.href=DATING; }
+
+// ===== HEARTS =====
+btn.addEventListener("mouseover",()=>{
+  for(let i=0;i<3;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left=(window.innerWidth/2+Math.random()*80-40)+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),2000);
+  }
 });
 
-// BACK BUTTON
-history.pushState(null,null,location.href);
-window.addEventListener("popstate",function(){window.location.href=CASINO;});
+// ===== NOTIFY =====
+setTimeout(()=>{ document.getElementById("notify").style.display="block"; },3500);
+
+// ===== CASINO BANNER 12s =====
+setTimeout(()=>{
+  let c=document.getElementById("casino");
+  c.style.display="block";
+  c.onclick=()=>{ window.location.href=CASINO; }
+},12000);
 
 </script>
-
 </body>
 </html>
