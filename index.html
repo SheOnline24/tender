@@ -4,37 +4,168 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{margin:0;font-family:Arial;background:#0e1621;color:white;cursor:pointer;}
-.topbar{display:flex;flex-direction:column;align-items:center;padding:20px;background:#17212b;transition:0.3s;text-align:center;}
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0e1621;
+  color:white;
+  cursor:pointer;
+  overflow:hidden;
+}
+
+/* TOPBAR */
+.topbar{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px;
+  background:#17212b;
+  transition:0.3s;
+  text-align:center;
+}
 .topbar:hover{background:#1f2837;}
-.avatar{position:relative;width:120px;height:120px;border-radius:50%;overflow:hidden;margin:0 auto 10px auto;box-shadow:0 0 20px rgba(255,255,255,0.15);}
-.avatar img{width:100%;height:100%;object-fit:cover;}
-.avatar::after{content:"";position:absolute;bottom:8px;right:8px;width:18px;height:18px;background:#5cff7a;border-radius:50%;border:3px solid #17212b;animation:onlineBlink 1.5s infinite;}
-@keyframes onlineBlink{0%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.8)}100%{opacity:1;transform:scale(1)}}
+
+.avatar{
+  position:relative;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  overflow:hidden;
+  margin:0 auto 10px auto;
+  box-shadow:0 0 20px rgba(255,255,255,0.15);
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.avatar::after{
+  content:"";
+  position:absolute;
+  bottom:8px;
+  right:8px;
+  width:18px;
+  height:18px;
+  background:#5cff7a;
+  border-radius:50%;
+  border:3px solid #17212b;
+  animation:onlineBlink 1.5s infinite;
+}
+@keyframes onlineBlink{
+  0%{opacity:1;transform:scale(1)}
+  50%{opacity:0.3;transform:scale(0.8)}
+  100%{opacity:1;transform:scale(1)}
+}
+
 .name{font-size:16px;font-weight:bold;margin-bottom:4px;}
 .online{font-size:12px;color:#5cff7a;}
 #onlineCount{font-size:12px;color:#aaa;}
+
+/* CHAT */
 #chat{
   padding:15px;
+  margin:20px;
   margin-bottom:110px;
   overflow-y:auto;
   max-height:calc(100vh - 200px);
-  background: linear-gradient(135deg, #1f1c2c, #928dab);
-  border-radius: 12px;
-  margin: 20px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  border-radius:12px;
+  position:relative;
+  z-index:1;
+  background: radial-gradient(circle at 50% 50%, #3a3d5c 0%, #1f1c2c 100%);
+  box-shadow:0 0 20px rgba(0,0,0,0.5);
+  animation:bgPulse 8s ease-in-out infinite alternate;
 }
-.msg{background:rgba(0,0,0,0.4);padding:10px 14px;border-radius:10px;margin:8px 0;max-width:240px;animation:fade .4s;color:white;}
+
+@keyframes bgPulse{
+  0%{background-position:0% 0%}
+  50%{background-position:100% 100%}
+  100%{background-position:0% 0%}
+}
+
+/* Мерцающие огоньки */
+.light{
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:#fff;
+  border-radius:50%;
+  opacity:0.8;
+  animation:blink 2s infinite alternate;
+}
+@keyframes blink{
+  0%{opacity:0.2; transform:scale(0.5);}
+  50%{opacity:0.8; transform:scale(1);}
+  100%{opacity:0.2; transform:scale(0.5);}
+}
+
+.msg{
+  background:rgba(0,0,0,0.5);
+  padding:10px 14px;
+  border-radius:10px;
+  margin:8px 0;
+  max-width:240px;
+  color:white;
+  animation:fade .4s;
+}
 @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+
 #typing{color:#ccc;font-size:13px;display:none;padding:0 15px;}
-.bottom{position:fixed;bottom:0;left:0;width:100%;background:#17212b;padding:14px;text-align:center;}
-button{padding:14px 30px;font-size:18px;border:none;border-radius:30px;cursor:pointer;color:white;background:linear-gradient(45deg,#ff2e63,#ff7a18);box-shadow:0 0 15px rgba(255,46,99,0.7);animation:pulse 1.6s infinite;display:none;transition:0.3s;}
+
+/* BUTTONS */
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#17212b;
+  padding:14px;
+  text-align:center;
+  z-index:2;
+}
+button{
+  padding:14px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  color:white;
+  background:linear-gradient(45deg,#ff2e63,#ff7a18);
+  box-shadow:0 0 15px rgba(255,46,99,0.7);
+  animation:pulse 1.6s infinite;
+  display:none;
+  transition:0.3s;
+  z-index:2;
+}
 button:hover{box-shadow:0 0 25px rgba(255,46,99,1);transform:scale(1.05);}
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
-.heart{position:fixed;bottom:90px;font-size:20px;animation:heartUp 2s linear forwards;}
-@keyframes heartUp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-120px)}}
-#notify{position:fixed;top:20px;right:20px;background:#222;padding:10px 15px;border-radius:8px;font-size:14px;display:none;}
-#casino{position:fixed;bottom:120px;right:20px;background:linear-gradient(45deg,#ff2e63,#ff9a00);padding:14px 18px;border-radius:14px;font-weight:bold;font-size:14px;cursor:pointer;display:none;box-shadow:0 0 20px rgba(255,80,80,0.8);animation:casinoPulse 2s infinite;}
+
+#notify{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#222;
+  padding:10px 15px;
+  border-radius:8px;
+  font-size:14px;
+  display:none;
+  z-index:2;
+}
+
+#casino{
+  position:fixed;
+  bottom:120px;
+  right:20px;
+  background:linear-gradient(45deg,#ff2e63,#ff9a00);
+  padding:14px 18px;
+  border-radius:14px;
+  font-weight:bold;
+  font-size:14px;
+  cursor:pointer;
+  display:none;
+  box-shadow:0 0 20px rgba(255,80,80,0.8);
+  animation:casinoPulse 2s infinite;
+  z-index:2;
+}
 @keyframes casinoPulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
 </style>
 </head>
@@ -62,29 +193,25 @@ button:hover{box-shadow:0 0 25px rgba(255,46,99,1);transform:scale(1.05);}
 const DATING="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-// ===== РАНДОМАЙЗЕР ЖЕНСКИХ АВАТАРОК И ИМЕН =====
+// ===== ЖЕНСКИЕ ИМЕНА и АВАТАРЫ =====
 const usedAvatars = new Set();
-const usedNames = new Set();
 const names=[
-"Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina","Olivia","Isabella","Chloe","Amelia","Maya","Lea","Lily","Zoey",
-"Hannah","Ella","Ava","Mia","Aria","Lara","Clara","Nora","Sophie","Vera","Elena","Alice","Victoria","Stella","Eva","Luna","Mona",
-"Iris","Paula","Fiona","Bianca","Camila","Helena","Naomi","Leila","Isla","Amira","Eliza","Anastasia","Juliette","Gabriella","Katherine",
-"Madeleine","Rosalie","Serena","Valeria","Angelina","Cecilia"
+"Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina",
+"Olivia","Isabella","Chloe","Amelia","Maya","Lea","Lily","Zoey",
+"Hannah","Ella","Ava","Mia","Aria","Lara","Clara","Nora","Sophie",
+"Vera","Elena","Alice","Victoria","Stella","Eva","Luna","Mona",
+"Iris","Paula","Fiona","Bianca","Camila","Helena","Naomi","Leila"
 ];
 
-function getRandomGirl(){
+function getGirl(){
   let avatarId;
-  do{ avatarId = Math.floor(Math.random()*200)+1; } while(usedAvatars.has(avatarId));
+  do{ avatarId=Math.floor(Math.random()*70)+1; } while(usedAvatars.has(avatarId));
   usedAvatars.add(avatarId);
-
-  let name;
-  do{ name = names[Math.floor(Math.random()*names.length)]; } while(usedNames.has(name));
-  usedNames.add(name);
-
-  return {img:`https://randomuser.me/api/portraits/women/${avatarId}.jpg`, name};
+  let name=names[Math.floor(Math.random()*names.length)];
+  return {img:`https://i.pravatar.cc/300?img=${avatarId}`, name};
 }
 
-let girl = getRandomGirl();
+let girl=getGirl();
 document.getElementById("avatar").src = girl.img;
 document.getElementById("name").innerText = girl.name;
 
@@ -92,19 +219,11 @@ document.getElementById("name").innerText = girl.name;
 let online=Math.floor(Math.random()*240)+180;
 document.getElementById("onlineCount").innerText=online+" users online";
 
-// ===== LANGUAGE & DIALOGS =====
+// ===== DIALOGS =====
 let lang=navigator.language.slice(0,2);
 const dialogs={
-en:[["Hey 😉","I saw you here..."],["Hi beautiful 😘","Want to chat privately?"],["Hey handsome 😏","Can we talk in private?"]],
-ru:[["Привет 😉","Ты один сегодня?"],["Привет 😘","Хочешь пообщаться?"],["Хей 😏","Пойдём в приват?"]],
-de:[["Hey 😉","Ich habe dich gesehen..."],["Hi 😘","Willst du privat chatten?"],["Hallo 😏","Können wir privat reden?"]],
-es:[["Hola 😉","Te vi aquí..."],["Hola hermosa 😘","¿Quieres chatear en privado?"],["Hola guapo 😏","¿Podemos hablar en privado?"]],
-fr:[["Salut 😉","Je t'ai vu ici..."],["Coucou 😘","Veux-tu discuter en privé?"],["Hey 😏","On peut parler en privé?"]],
-it:[["Ciao 😉","Ti ho visto qui..."],["Ciao bella 😘","Vuoi chattare in privato?"],["Hey 😏","Possiamo parlare in privato?"]],
-pt:[["Oi 😉","Eu te vi aqui..."],["Oi linda 😘","Quer conversar em privado?"],["Hey 😏","Podemos conversar em privado?"]],
-nl:[["Hoi 😉","Ik zag je hier..."],["Hoi mooie 😘","Wil je privé chatten?"],["Hey 😏","Kunnen we privé praten?"]],
-sv:[["Hej 😉","Jag såg dig här..."],["Hej vacker 😘","Vill du chatta privat?"],["Hej 😏","Kan vi prata privat?"]],
-ja:[["やあ 😉","ここで見かけたよ..."],["こんにちは 😘","プライベートでチャットしたい?"],["やあ 😏","個別に話せる?"]]
+en:[["Hey 😉","I saw you here..."],["Hi beautiful 😘","Want to chat privately?"]],
+ru:[["Привет 😉","Ты один сегодня?"],["Привет 😘","Хочешь пообщаться?"]]
 };
 if(!dialogs[lang]) lang="en";
 let chatMessages=dialogs[lang][Math.floor(Math.random()*dialogs[lang].length)];
@@ -113,7 +232,15 @@ let chatMessages=dialogs[lang][Math.floor(Math.random()*dialogs[lang].length)];
 let chat=document.getElementById("chat");
 let typing=document.getElementById("typing");
 let btn=document.getElementById("btn");
-function addMsg(text){ let d=document.createElement("div"); d.className="msg"; d.innerText=text; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; }
+
+function addMsg(text){ 
+  let d=document.createElement("div"); 
+  d.className="msg"; 
+  d.innerText=text; 
+  chat.appendChild(d); 
+  chat.scrollTop=chat.scrollHeight; 
+}
+
 function startChat(){
   typing.style.display="block";
   setTimeout(()=>{
@@ -146,14 +273,23 @@ btn.addEventListener("mouseover",()=>{
   }
 });
 
+// ===== LIGHT EFFECTS =====
+for(let i=0;i<20;i++){
+  let l=document.createElement("div");
+  l.className="light";
+  l.style.top=Math.random()*window.innerHeight+"px";
+  l.style.left=Math.random()*window.innerWidth+"px";
+  l.style.width=(2+Math.random()*4)+"px";
+  l.style.height=l.style.width;
+  l.style.animationDuration=(1+Math.random()*3)+"s";
+  document.body.appendChild(l);
+}
+
 // ===== NOTIFY =====
 setTimeout(()=>{ document.getElementById("notify").style.display="block"; },3500);
 
-// ===== CASINO BANNER 12s =====
-setTimeout(()=>{
-  let c=document.getElementById("casino");
-  c.style.display="block";
-},12000);
+// ===== CASINO BANNER =====
+setTimeout(()=>{ document.getElementById("casino").style.display="block"; },12000);
 
 </script>
 </body>
