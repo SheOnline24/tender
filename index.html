@@ -201,13 +201,12 @@ const girls = [
 "https://i.postimg.cc/wvrhg7q9/Z-h-Zjgnk7Hob-HU4Y7grtby-SIJZXGRo-Gt-G2m-STM88Mw-M5khst-Rg8f-X9z-i-N1PCq9z-PHjv-X7XGWLNWJ7nv9mq-Qvf.jpg",
 "https://i.postimg.cc/Jh6TH7rk/ZGF3iob-Vs-Mdpc7a-E6FDv9et-DDIt8ah-J7nd-FZgzz-Kht7ehqd-Vti-I1C77T6Goz-CLv-G-qe-Cblq0GYw-I-hjt-Gz-VLc.jpg"
 ];
-  ПРЕДЗАГРУЗКА =====
+ // ===== ПРЕДЗАГРУЗКА =====
 girls.forEach(src=>{
 const img=new Image();
 img.src=src;
 });
-
-// ===== СЛУЧАЙНЫЕ ФОТО =====
+  // ===== СЛУЧАЙНЫЕ ФОТО =====
 let currentIndex=Math.floor(Math.random()*girls.length);
 
 function changeBackground(){
