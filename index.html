@@ -12,8 +12,6 @@ body{
   cursor:pointer;
   overflow:hidden;
 }
-
-/* TOPBAR */
 .topbar{
   display:flex;
   flex-direction:column;
@@ -24,7 +22,6 @@ body{
   text-align:center;
 }
 .topbar:hover{background:#1f2837;}
-
 .avatar{
   position:relative;
   width:120px;
@@ -34,11 +31,7 @@ body{
   margin:0 auto 10px auto;
   box-shadow:0 0 20px rgba(255,255,255,0.15);
 }
-.avatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+.avatar img{width:100%;height:100%;object-fit:cover;}
 .avatar::after{
   content:"";
   position:absolute;
@@ -56,12 +49,9 @@ body{
   50%{opacity:0.3;transform:scale(0.8)}
   100%{opacity:1;transform:scale(1)}
 }
-
 .name{font-size:16px;font-weight:bold;margin-bottom:4px;}
 .online{font-size:12px;color:#5cff7a;}
 #onlineCount{font-size:12px;color:#aaa;}
-
-/* CHAT */
 #chat{
   padding:15px;
   margin:20px;
@@ -75,14 +65,11 @@ body{
   box-shadow:0 0 20px rgba(0,0,0,0.5);
   animation:bgPulse 8s ease-in-out infinite alternate;
 }
-
 @keyframes bgPulse{
   0%{background-position:0% 0%}
   50%{background-position:100% 100%}
   100%{background-position:0% 0%}
 }
-
-/* Мерцающие огоньки */
 .light{
   position:absolute;
   width:4px;
@@ -97,7 +84,6 @@ body{
   50%{opacity:0.8; transform:scale(1);}
   100%{opacity:0.2; transform:scale(0.5);}
 }
-
 .msg{
   background:rgba(0,0,0,0.5);
   padding:10px 14px;
@@ -108,10 +94,7 @@ body{
   animation:fade .4s;
 }
 @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
-
 #typing{color:#ccc;font-size:13px;display:none;padding:0 15px;}
-
-/* BUTTONS */
 .bottom{
   position:fixed;
   bottom:0;
@@ -138,7 +121,6 @@ button{
 }
 button:hover{box-shadow:0 0 25px rgba(255,46,99,1);transform:scale(1.05);}
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
-
 #notify{
   position:fixed;
   top:20px;
@@ -150,7 +132,6 @@ button:hover{box-shadow:0 0 25px rgba(255,46,99,1);transform:scale(1.05);}
   display:none;
   z-index:2;
 }
-
 #casino{
   position:fixed;
   bottom:120px;
@@ -193,27 +174,36 @@ button:hover{box-shadow:0 0 25px rgba(255,46,99,1);transform:scale(1.05);}
 const DATING="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
 const CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-// ===== ЖЕНСКИЕ ИМЕНА и АВАТАРЫ =====
-const usedAvatars = new Set();
+// ===== ЖЕНСКИЕ ИМЕНА (>100) =====
 const names=[
-"Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina",
-"Olivia","Isabella","Chloe","Amelia","Maya","Lea","Lily","Zoey",
-"Hannah","Ella","Ava","Mia","Aria","Lara","Clara","Nora","Sophie",
-"Vera","Elena","Alice","Victoria","Stella","Eva","Luna","Mona",
-"Iris","Paula","Fiona","Bianca","Camila","Helena","Naomi","Leila"
+"Anna","Mila","Sofia","Emma","Lena","Julia","Sara","Laura","Nina","Olivia","Isabella","Chloe","Amelia","Maya",
+"Lea","Lily","Zoey","Hannah","Ella","Ava","Mia","Aria","Lara","Clara","Nora","Sophie","Vera","Elena","Alice",
+"Victoria","Stella","Eva","Luna","Mona","Iris","Paula","Fiona","Bianca","Camila","Helena","Naomi","Leila","Isla",
+"Amira","Eliza","Anastasia","Juliette","Gabriella","Katherine","Madeleine","Rosalie","Serena","Valeria","Angelina",
+"Cecilia","Diana","Elodie","Freya","Jade","Jasmine","Josephine","Karina","Leona","Matilda","Nadia","Roxanne","Selina",
+"Yasmin","Zara","Alina","Beatrice","Carla","Cassandra","Celeste","Dahlia","Danielle","Eloise","Esme","Francesca",
+"Giselle","Imogen","Ivy","Juliana","Kaia","Livia","Marina","Noelle","Ophelia","Paloma","Raina","Sabrina","Tatiana",
+"Vanessa","Yvette","Zoe","Karla","Samantha","Monique","Ruth","Naia","Anya","Talia","Viktoria","Sienna","Elsa",
+"Aurora","Selena","Leona","Alessia","Celina"
 ];
 
-function getGirl(){
-  let avatarId;
-  do{ avatarId=Math.floor(Math.random()*70)+1; } while(usedAvatars.has(avatarId));
-  usedAvatars.add(avatarId);
-  let name=names[Math.floor(Math.random()*names.length)];
-  return {img:`https://i.pravatar.cc/300?img=${avatarId}`, name};
+// ===== ФУНКЦИЯ ПОЛУЧЕНИЯ ЖЕНСКОГО АВАТАРА =====
+async function getGirl(){
+  const res = await fetch("https://randomuser.me/api/?gender=female&inc=name,picture&noinfo&size=large");
+  const data = await res.json();
+  const user = data.results[0];
+  const name = names[Math.floor(Math.random()*names.length)]; // из списка 100+
+  const img = user.picture.large; // HD
+  return {name,img};
 }
 
-let girl=getGirl();
-document.getElementById("avatar").src = girl.img;
-document.getElementById("name").innerText = girl.name;
+// ===== ИНИЦИАЛИЗАЦИЯ =====
+async function initGirl(){
+  const girl = await getGirl();
+  document.getElementById("avatar").src = girl.img;
+  document.getElementById("name").innerText = girl.name;
+}
+initGirl();
 
 // ===== ONLINE USERS =====
 let online=Math.floor(Math.random()*240)+180;
@@ -251,6 +241,8 @@ function startChat(){
       typing.style.display="none";
       addMsg(chatMessages[1]);
       btn.style.display="inline-block";
+      // Подгружаем нового пользователя для следующего диалога
+      initGirl();
     },1200);
   },1200);
 }
