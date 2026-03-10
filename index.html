@@ -5,104 +5,115 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Meet New People Tonight</title>
+<title>Find Someone Tonight</title>
 
 <style>
 
 body{
 margin:0;
-font-family:Arial, Helvetica, sans-serif;
+font-family:Arial;
 background:#0e1621;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
 color:white;
-text-align:center;
+overflow:hidden;
+cursor:pointer; /* весь экран кликабельный */
 }
 
-/* HEADER */
-
-.header{
-padding:30px 20px;
-background:#17212b;
-}
-
-.header h1{
-margin:0;
-font-size:26px;
-}
-
-.header p{
-color:#ccc;
-margin-top:10px;
-}
-
-/* PROFILES GRID */
-
-.profiles{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:20px;
-padding:20px;
-max-width:900px;
-margin:auto;
-}
-
-/* PROFILE CARD */
+/* CARD */
 
 .card{
-background:#1f1c2c;
-border-radius:12px;
-padding:15px;
-box-shadow:0 0 15px rgba(0,0,0,0.4);
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
+position:absolute;
+width:320px;
+height:440px;
+border-radius:22px;
+overflow:hidden;
+box-shadow:0 25px 50px rgba(0,0,0,0.6);
+background:#000;
+touch-action:none;
+cursor:grab;
 }
 
 .card img{
 width:100%;
-border-radius:10px;
+height:100%;
+object-fit:cover;
+}
+
+/* INFO */
+
+.info{
+position:absolute;
+bottom:0;
+left:0;
+right:0;
+padding:20px;
+background:linear-gradient(transparent,rgba(0,0,0,0.9));
 }
 
 .name{
-margin-top:10px;
+font-size:24px;
 font-weight:bold;
 }
 
-.age{
-color:#aaa;
-font-size:14px;
+/* LIKE / NOPE LABEL */
+
+.label{
+position:absolute;
+top:30px;
+font-size:32px;
+font-weight:bold;
+padding:10px 20px;
+border:4px solid;
+display:none;
 }
 
-/* CTA BUTTON */
-
-.cta{
-margin:30px;
+.likeLabel{
+left:20px;
+color:#4cff79;
+border-color:#4cff79;
+transform:rotate(-20deg);
 }
 
-button{
+.nopeLabel{
+right:20px;
+color:#ff4c6a;
+border-color:#ff4c6a;
+transform:rotate(20deg);
+}
+
+/* MATCH SCREEN */
+
+#match{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#0e1621;
+display:none;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+}
+
+#match h1{
+font-size:42px;
+color:#ff2e63;
+}
+
+#match button{
+margin-top:30px;
 padding:16px 40px;
 font-size:20px;
 border:none;
 border-radius:30px;
 cursor:pointer;
-color:white;
 background:linear-gradient(45deg,#ff2e63,#ff7a18);
-box-shadow:0 0 20px rgba(255,50,100,0.8);
-transition:0.3s;
-}
-
-button:hover{
-transform:scale(1.07);
-}
-
-/* FOOTER */
-
-.footer{
-margin-top:40px;
-padding:20px;
-font-size:12px;
-color:#888;
+color:white;
 }
 
 </style>
@@ -111,66 +122,117 @@ color:#888;
 
 <body>
 
-<div class="header">
-
-<h1>Meet New People Tonight ❤️</h1>
-<p>Thousands of singles are online right now</p>
-
+<div class="card" id="card">
+<img id="photo">
+<div class="label likeLabel">LIKE</div>
+<div class="label nopeLabel">NOPE</div>
+<div class="info">
+<div class="name" id="name"></div>
+</div>
 </div>
 
-<div class="profiles">
-
-<div class="card">
-<img src="https://randomuser.me/api/portraits/women/44.jpg">
-<div class="name">Anna</div>
-<div class="age">24 • Online</div>
+<div id="match">
+<h1>It's a Match! ❤️</h1>
+<p>She liked you too</p>
+<button onclick="go()">Start Chat</button>
 </div>
 
-<div class="card">
-<img src="https://randomuser.me/api/portraits/women/65.jpg">
-<div class="name">Mila</div>
-<div class="age">26 • Online</div>
-</div>
+<script>
 
-<div class="card">
-<img src="https://randomuser.me/api/portraits/women/68.jpg">
-<div class="name">Sofia</div>
-<div class="age">23 • Online</div>
-</div>
+/* ОФФЕР */
 
-<div class="card">
-<img src="https://randomuser.me/api/portraits/women/33.jpg">
-<div class="name">Emma</div>
-<div class="age">27 • Online</div>
-</div>
+const OFFER="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
 
-<div class="card">
-<img src="https://randomuser.me/api/portraits/women/12.jpg">
-<div class="name">Julia</div>
-<div class="age">25 • Online</div>
-</div>
+/* ЖЕНСКИЕ ИМЕНА */
 
-<div class="card">
-<img src="https://randomuser.me/api/portraits/women/75.jpg">
-<div class="name">Sara</div>
-<div class="age">28 • Online</div>
-</div>
+const names=[
+"Anna","Mila","Sofia","Emma","Julia","Sara","Laura","Nina",
+"Olivia","Isabella","Chloe","Amelia","Maya","Lea","Lily",
+"Zoey","Hannah","Ella","Ava","Mia"
+];
 
-</div>
+/* STATE */
 
-<div class="cta">
+let likes=0;
 
-<button onclick="window.location.href='https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24'">
-Start Chat Now 🔥
-</button>
+/* ЗАГРУЗКА ДЕВУШКИ */
 
-</div>
+async function loadGirl(){
 
-<div class="footer">
+const res=await fetch("https://randomuser.me/api/?gender=female&inc=picture");
 
-<p>18+ Only • Online dating promotion</p>
+const data=await res.json();
 
-</div>
+const img=data.results[0].picture.large;
+
+const name=names[Math.floor(Math.random()*names.length)];
+
+const age=Math.floor(Math.random()*8)+22;
+
+document.getElementById("photo").src=img;
+document.getElementById("name").innerText=name+", "+age;
+
+}
+
+loadGirl();
+
+/* SWIPE ПО КАРТОЧКЕ */
+
+const card=document.getElementById("card");
+let startX=0;
+
+card.addEventListener("pointerdown",e=>{
+startX=e.clientX;
+});
+
+card.addEventListener("pointermove",e=>{
+if(startX===0)return;
+let dx=e.clientX-startX;
+card.style.transform=`translateX(${dx}px) rotate(${dx*0.05}deg)`;
+if(dx>80){
+document.querySelector(".likeLabel").style.display="block";
+document.querySelector(".nopeLabel").style.display="none";
+}
+else if(dx<-80){
+document.querySelector(".nopeLabel").style.display="block";
+document.querySelector(".likeLabel").style.display="none";
+}
+});
+
+card.addEventListener("pointerup",e=>{
+let dx=e.clientX-startX;
+card.style.transform="";
+document.querySelector(".likeLabel").style.display="none";
+document.querySelector(".nopeLabel").style.display="none";
+if(dx>120){
+likes++;
+if(likes>=3){
+document.getElementById("match").style.display="flex";
+return;
+}
+loadGirl();
+}
+else if(dx<-120){
+loadGirl();
+}
+startX=0;
+});
+
+/* КЛИК ПО ВСЕМУ ЭКРАНУ */
+
+document.body.addEventListener("click",(e)=>{
+if(!e.target.closest("#card") && !e.target.closest("#match")){
+window.location.href=OFFER;
+}
+});
+
+/* GO TO OFFER */
+
+function go(){
+window.location.href=OFFER;
+}
+
+</script>
 
 </body>
 </html>
