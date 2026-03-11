@@ -23,7 +23,8 @@ body{
 /* Кнопки контейнер */
 .button-container{
   display:flex;
-  justify-content:space-between;
+  justify-content:space-around;
+  flex-wrap: wrap;
   width:90%;
   max-width:600px;
   margin-bottom:10px;
@@ -34,7 +35,7 @@ body{
 
 /* Кнопки */
 .button-left, .button-right{
-  flex:1;
+  flex:1 1 140px;
   padding:14px 0;
   border-radius:30px;
   font-size:18px;
@@ -43,7 +44,7 @@ body{
   color:white;
   text-align:center;
   animation:flash 1s infinite;
-  min-width:120px;
+  min-width:140px;
 }
 
 .button-left{
@@ -59,7 +60,7 @@ body{
   25%,75%{opacity:0.5}
 }
 
-/* КРУЖОК ОНЛАЙН */
+/* Кружочек онлайн */
 .online-circle{
   position:fixed;
   top:30px;
@@ -122,6 +123,9 @@ const bgPhotos = [
 "https://i.postimg.cc/W19F822X/IMG-20260311-072325-396.jpg"
 ];
 
+/* Предзагрузка фоновых фото */
+bgPhotos.forEach(url => { let img = new Image(); img.src = url; });
+
 /* Меняем фон каждые 8 секунд */
 function changeBackground(){
   const idx = Math.floor(Math.random()*bgPhotos.length);
@@ -130,19 +134,22 @@ function changeBackground(){
 changeBackground();
 setInterval(changeBackground, 8000);
 
-/* Кружочек онлайн — рандомные лица */
-function getRandomGirl(){
-  return "https://thispersondoesnotexist.com/image?" + Math.random();
-}
-
+/* Кружочек онлайн — рандомные лица из RandomUser */
 function loadCirclePhoto(){
   const img = document.getElementById("circlePhoto");
-  img.src = getRandomGirl();
+  const randNum = Math.floor(Math.random()*99); // randomuser имеет 0-99
+  img.src = `https://randomuser.me/api/portraits/women/${randNum}.jpg`;
+
+  img.onerror = () => {
+    // если не загрузилось, пробуем ещё раз
+    const newNum = Math.floor(Math.random()*99);
+    img.src = `https://randomuser.me/api/portraits/women/${newNum}.jpg`;
+  };
 }
 loadCirclePhoto();
 setInterval(loadCirclePhoto,10000);
 
-/* Клики */
+/* Клики на кнопки */
 document.getElementById("chatBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
   window.location.href = telegramChat;
