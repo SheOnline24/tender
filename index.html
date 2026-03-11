@@ -21,23 +21,27 @@ overflow:hidden;
 cursor:pointer;
 }
 
+/* GRID */
+
 .grid{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(2,1fr);
 grid-template-rows:repeat(2,1fr);
-gap:12px;
-width:95vw;
-max-width:900px;
-height:85vh;
+gap:14px;
+width:92vw;
+max-width:700px;
+height:82vh;
 }
+
+/* CARD */
 
 .card{
 position:relative;
-border-radius:16px;
+border-radius:18px;
 overflow:hidden;
-box-shadow:0 10px 25px rgba(0,0,0,0.6);
+box-shadow:0 12px 30px rgba(0,0,0,0.6);
 cursor:pointer;
-transition:transform .4s, opacity .4s;
+transition:transform .4s,opacity .4s;
 animation:pulse 3s infinite;
 }
 
@@ -47,28 +51,34 @@ height:100%;
 object-fit:cover;
 }
 
+/* INFO */
+
 .info{
 position:absolute;
 bottom:0;
 left:0;
 right:0;
-padding:10px;
+padding:14px;
 background:linear-gradient(transparent,rgba(0,0,0,0.9));
 color:white;
-font-size:15px;
+font-size:18px;
 font-weight:bold;
 }
 
+/* ONLINE DOT */
+
 .online{
 position:absolute;
-top:8px;
-left:8px;
+top:10px;
+left:10px;
 background:#00ff6a;
 width:10px;
 height:10px;
 border-radius:50%;
 box-shadow:0 0 8px #00ff6a;
 }
+
+/* FADE */
 
 .fadeOut{
 opacity:0;
@@ -79,6 +89,8 @@ transform:scale(0.9);
 opacity:1;
 transform:scale(1);
 }
+
+/* PULSE */
 
 @keyframes pulse{
 0%{transform:scale(1)}
@@ -98,19 +110,25 @@ transform:scale(1);
 
 const OFFER="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
 
+/* NAMES */
+
 const names=[
 "Anna","Mila","Sofia","Emma","Julia","Sara","Laura","Nina",
 "Olivia","Isabella","Chloe","Amelia","Maya","Lea","Lily",
 "Zoey","Hannah","Ella","Ava","Mia"
 ];
 
-/* генерация AI фото */
+/* генерация фото */
 
 function getPhoto(){
 
-return "https://thispersondoesnotexist.com/image?"+Math.random();
+const id=Math.floor(Math.random()*1000)+1;
+
+return "https://randomuser.me/api/portraits/women/"+id+".jpg";
 
 }
+
+/* LOAD GIRLS */
 
 function loadGirls(){
 
@@ -126,7 +144,7 @@ setTimeout(()=>{
 
 grid.innerHTML="";
 
-for(let i=0;i<8;i++){
+for(let i=0;i<4;i++){
 
 const photo=getPhoto();
 
@@ -160,14 +178,24 @@ grid.appendChild(card);
 
 }
 
+/* FIRST LOAD */
+
 loadGirls();
+
+/* CHANGE EVERY 7 SECONDS */
 
 setInterval(loadGirls,7000);
 
+/* CLICK ANYWHERE */
+
 document.body.addEventListener("click",(e)=>{
+
 if(!e.target.closest(".card")){
+
 window.location.href=OFFER;
+
 }
+
 });
 
 </script>
