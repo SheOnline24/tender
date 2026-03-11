@@ -13,27 +13,37 @@ body{
 margin:0;
 font-family:Arial;
 background:#0e1621;
+height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
-height:100vh;
-color:white;
 overflow:hidden;
-cursor:pointer; /* весь экран кликабельный */
+cursor:pointer;
+}
+
+/* GRID */
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+grid-template-rows:1fr 1fr;
+gap:16px;
+width:90vw;
+max-width:720px;
+height:80vh;
 }
 
 /* CARD */
 
 .card{
-position:absolute;
-width:320px;
-height:440px;
-border-radius:22px;
+position:relative;
+border-radius:20px;
 overflow:hidden;
-box-shadow:0 25px 50px rgba(0,0,0,0.6);
-background:#000;
-touch-action:none;
-cursor:grab;
+box-shadow:0 20px 40px rgba(0,0,0,0.6);
+cursor:pointer;
+transform:scale(0.95);
+opacity:0;
+animation:fade 0.6s forwards;
 }
 
 .card img{
@@ -49,71 +59,20 @@ position:absolute;
 bottom:0;
 left:0;
 right:0;
-padding:20px;
+padding:18px;
 background:linear-gradient(transparent,rgba(0,0,0,0.9));
-}
-
-.name{
-font-size:24px;
-font-weight:bold;
-}
-
-/* LIKE / NOPE LABEL */
-
-.label{
-position:absolute;
-top:30px;
-font-size:32px;
-font-weight:bold;
-padding:10px 20px;
-border:4px solid;
-display:none;
-}
-
-.likeLabel{
-left:20px;
-color:#4cff79;
-border-color:#4cff79;
-transform:rotate(-20deg);
-}
-
-.nopeLabel{
-right:20px;
-color:#ff4c6a;
-border-color:#ff4c6a;
-transform:rotate(20deg);
-}
-
-/* MATCH SCREEN */
-
-#match{
-position:fixed;
-top:0;
-left:0;
-right:0;
-bottom:0;
-background:#0e1621;
-display:none;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-}
-
-#match h1{
-font-size:42px;
-color:#ff2e63;
-}
-
-#match button{
-margin-top:30px;
-padding:16px 40px;
-font-size:20px;
-border:none;
-border-radius:30px;
-cursor:pointer;
-background:linear-gradient(45deg,#ff2e63,#ff7a18);
 color:white;
+font-size:20px;
+font-weight:bold;
+}
+
+/* ANIMATION */
+
+@keyframes fade{
+to{
+opacity:1;
+transform:scale(1);
+}
 }
 
 </style>
@@ -122,28 +81,15 @@ color:white;
 
 <body>
 
-<div class="card" id="card">
-<img id="photo">
-<div class="label likeLabel">LIKE</div>
-<div class="label nopeLabel">NOPE</div>
-<div class="info">
-<div class="name" id="name"></div>
-</div>
-</div>
-
-<div id="match">
-<h1>It's a Match! ❤️</h1>
-<p>She liked you too</p>
-<button onclick="go()">Start Chat</button>
-</div>
+<div class="grid" id="grid"></div>
 
 <script>
 
-/* ОФФЕР */
+/* OFFER */
 
 const OFFER="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
 
-/* ЖЕНСКИЕ ИМЕНА */
+/* NAMES */
 
 const names=[
 "Anna","Mila","Sofia","Emma","Julia","Sara","Laura","Nina",
@@ -151,86 +97,80 @@ const names=[
 "Zoey","Hannah","Ella","Ava","Mia"
 ];
 
-/* STATE */
+/* UNSPLASH HD PHOTOS */
 
-let likes=0;
+const photos=[
+"https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+"https://images.unsplash.com/photo-1502685104226-ee32379fefbe",
+"https://images.unsplash.com/photo-1517841905240-472988babdf9",
+"https://images.unsplash.com/photo-1488426862026-3ee34a7d66df",
+"https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
+"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
+"https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91",
+"https://images.unsplash.com/photo-1519699047748-de8e457a634e",
+"https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d"
+];
 
-/* ЗАГРУЗКА ДЕВУШКИ */
+/* GENERATE GIRLS */
 
-async function loadGirl(){
+function loadGirls(){
 
-const res=await fetch("https://randomuser.me/api/?gender=female&inc=picture");
+const grid=document.getElementById("grid");
 
-const data=await res.json();
+grid.innerHTML="";
 
-const img=data.results[0].picture.large;
+for(let i=0;i<4;i++){
+
+const photo=photos[Math.floor(Math.random()*photos.length)]+"?w=900&q=90";
 
 const name=names[Math.floor(Math.random()*names.length)];
 
 const age=Math.floor(Math.random()*8)+22;
 
-document.getElementById("photo").src=img;
-document.getElementById("name").innerText=name+", "+age;
+const card=document.createElement("div");
+
+card.className="card";
+
+card.onclick=()=>{
+
+window.location.href=OFFER;
+
+};
+
+card.innerHTML=`
+
+<img src="${photo}">
+
+<div class="info">${name}, ${age}</div>
+
+`;
+
+grid.appendChild(card);
 
 }
 
-loadGirl();
-
-/* SWIPE ПО КАРТОЧКЕ */
-
-const card=document.getElementById("card");
-let startX=0;
-
-card.addEventListener("pointerdown",e=>{
-startX=e.clientX;
-});
-
-card.addEventListener("pointermove",e=>{
-if(startX===0)return;
-let dx=e.clientX-startX;
-card.style.transform=`translateX(${dx}px) rotate(${dx*0.05}deg)`;
-if(dx>80){
-document.querySelector(".likeLabel").style.display="block";
-document.querySelector(".nopeLabel").style.display="none";
 }
-else if(dx<-80){
-document.querySelector(".nopeLabel").style.display="block";
-document.querySelector(".likeLabel").style.display="none";
-}
-});
 
-card.addEventListener("pointerup",e=>{
-let dx=e.clientX-startX;
-card.style.transform="";
-document.querySelector(".likeLabel").style.display="none";
-document.querySelector(".nopeLabel").style.display="none";
-if(dx>120){
-likes++;
-if(likes>=3){
-document.getElementById("match").style.display="flex";
-return;
-}
-loadGirl();
-}
-else if(dx<-120){
-loadGirl();
-}
-startX=0;
-});
+/* FIRST LOAD */
 
-/* КЛИК ПО ВСЕМУ ЭКРАНУ */
+loadGirls();
+
+/* CHANGE EVERY 5 SECONDS */
+
+setInterval(loadGirls,5000);
+
+/* CLICK ANYWHERE */
 
 document.body.addEventListener("click",(e)=>{
-if(!e.target.closest("#card") && !e.target.closest("#match")){
+
+if(!e.target.closest(".card")){
+
 window.location.href=OFFER;
+
 }
+
 });
-
-/* GO TO OFFER */
-
-function go(){
-window.location.href=OFFER;
-}
 
 </script>
 
