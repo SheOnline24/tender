@@ -11,67 +11,81 @@ body{
   background:#0e1621;
   height:100vh;
   display:flex;
+  align-items:center;
+  justify-content:center;
   overflow:hidden;
   cursor:pointer;
 }
 
-/* LEFT COLUMN */
-.column{
-  position:fixed;
-  top:50%;
-  left:20px;
-  transform:translateY(-50%);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-/* AVATAR CIRCLE */
-.avatar{
+/* КРУЖОК ПО ЦЕНТРУ */
+.avatar-center{
   position:relative;
-  width:70px;
-  height:70px;
+  width:250px;
+  height:250px;
   border-radius:50%;
   overflow:hidden;
-  box-shadow:0 4px 15px rgba(0,0,0,0.6);
+  box-shadow:0 8px 35px rgba(0,0,0,0.6);
   cursor:pointer;
-  transition: transform .3s, box-shadow .3s;
-}
-.avatar:hover{
-  transform:scale(1.15);
-  box-shadow:0 6px 25px rgba(0,255,106,0.7);
+  transition:transform .3s;
 }
 
-.avatar img{
+.avatar-center:hover{
+  transform:scale(1.05);
+}
+
+.avatar-center img{
   width:100%;
   height:100%;
   object-fit:cover;
 }
 
-/* ONLINE DOT */
+/* ОНЛАЙН ДОТИК */
 .online{
   position:absolute;
-  bottom:4px;
-  right:4px;
-  width:12px;
-  height:12px;
+  bottom:12px;
+  right:12px;
+  width:18px;
+  height:18px;
   border-radius:50%;
   background:#00ff6a;
-  box-shadow:0 0 6px #00ff6a;
+  box-shadow:0 0 8px #00ff6a;
   border:2px solid #0e1621;
   animation:blink 2s infinite;
 }
 
-/* Online dot blinking */
 @keyframes blink{
-  0%, 50%, 100%{opacity:1}
-  25%, 75%{opacity:0.4}
+  0%,50%,100%{opacity:1}
+  25%,75%{opacity:0.4}
+}
+
+/* МОРГАЮЩАЯ КНОПКА */
+.cta{
+  position:absolute;
+  bottom:60px;
+  background:linear-gradient(45deg,#ff2e63,#ff7a18);
+  padding:14px 28px;
+  border-radius:30px;
+  font-size:20px;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  animation:flash 1s infinite;
+}
+
+@keyframes flash{
+  0%,50%,100%{opacity:1}
+  25%,75%{opacity:0.5}
 }
 </style>
 </head>
 <body>
 
-<div class="column" id="column"></div>
+<div class="avatar-center" id="avatar">
+  <img id="photo" src="">
+  <div class="online"></div>
+</div>
+
+<div class="cta" id="ctaBtn">Click Here ❤️</div>
 
 <script>
 const OFFER="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
@@ -82,47 +96,40 @@ const names=[
 "Zoey","Hannah","Ella","Ava","Mia"
 ];
 
-/* Генерация уникальных фото женщин */
-function getUniquePhotos(count){
-  const usedIds = new Set();
-  const photos = [];
-  while(photos.length < count){
-    const id = Math.floor(Math.random()*1000)+1;
-    if(!usedIds.has(id)){
-      usedIds.add(id);
-      photos.push("https://randomuser.me/api/portraits/women/"+id+".jpg");
-    }
-  }
-  return photos;
+/* Получаем новое фото женщины */
+function getPhoto(){
+  return "https://thispersondoesnotexist.com/image?"+Math.random();
 }
 
-/* Загрузка девушек */
-function loadGirls(){
-  const col=document.getElementById("column");
-  col.innerHTML="";
-  const photos = getUniquePhotos(7);
-  for(let i=0;i<7;i++){
-    const photo = photos[i];
-    const name = names[Math.floor(Math.random()*names.length)];
-    const avatar=document.createElement("div");
-    avatar.className="avatar";
-    avatar.title=name;
-    avatar.onclick=()=>{ window.location.href=OFFER; };
-    avatar.innerHTML=`
-      <img src="${photo}">
-      <div class="online"></div>
-    `;
-    col.appendChild(avatar);
-  }
+/* Загрузка */
+function loadGirl(){
+  const photoEl = document.getElementById("photo");
+  photoEl.src = getPhoto();
+  const name = names[Math.floor(Math.random()*names.length)];
+  photoEl.alt = name;
 }
 
 /* Первый заход */
-loadGirls();
+loadGirl();
 
-/* Клик по пустому месту */
+/* Меняем каждые 7 секунд */
+setInterval(loadGirl,7000);
+
+/* Клик на фото */
+document.getElementById("avatar").addEventListener("click",()=>{
+  window.location.href = OFFER;
+});
+
+/* Клик на кнопку */
+document.getElementById("ctaBtn").addEventListener("click",(e)=>{
+  e.stopPropagation(); // чтобы не срабатывал клик на фоне
+  window.location.href = OFFER;
+});
+
+/* Клик на весь экран */
 document.body.addEventListener("click",(e)=>{
-  if(!e.target.closest(".avatar")){
-    window.location.href=OFFER;
+  if(!e.target.closest("#avatar") && !e.target.closest("#ctaBtn")){
+    window.location.href = OFFER;
   }
 });
 </script>
