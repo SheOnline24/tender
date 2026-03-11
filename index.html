@@ -21,29 +21,24 @@ overflow:hidden;
 cursor:pointer;
 }
 
-/* GRID */
-
 .grid{
 display:grid;
-grid-template-columns:1fr 1fr;
-grid-template-rows:1fr 1fr;
-gap:16px;
-width:90vw;
-max-width:720px;
-height:80vh;
+grid-template-columns:repeat(4,1fr);
+grid-template-rows:repeat(2,1fr);
+gap:12px;
+width:95vw;
+max-width:900px;
+height:85vh;
 }
-
-/* CARD */
 
 .card{
 position:relative;
-border-radius:20px;
+border-radius:16px;
 overflow:hidden;
-box-shadow:0 20px 40px rgba(0,0,0,0.6);
+box-shadow:0 10px 25px rgba(0,0,0,0.6);
 cursor:pointer;
-transform:scale(0.95);
-opacity:0;
-animation:fade 0.6s forwards;
+transition:transform .4s, opacity .4s;
+animation:pulse 3s infinite;
 }
 
 .card img{
@@ -52,27 +47,43 @@ height:100%;
 object-fit:cover;
 }
 
-/* INFO */
-
 .info{
 position:absolute;
 bottom:0;
 left:0;
 right:0;
-padding:18px;
+padding:10px;
 background:linear-gradient(transparent,rgba(0,0,0,0.9));
 color:white;
-font-size:20px;
+font-size:15px;
 font-weight:bold;
 }
 
-/* ANIMATION */
+.online{
+position:absolute;
+top:8px;
+left:8px;
+background:#00ff6a;
+width:10px;
+height:10px;
+border-radius:50%;
+box-shadow:0 0 8px #00ff6a;
+}
 
-@keyframes fade{
-to{
+.fadeOut{
+opacity:0;
+transform:scale(0.9);
+}
+
+.fadeIn{
 opacity:1;
 transform:scale(1);
 }
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.03)}
+100%{transform:scale(1)}
 }
 
 </style>
@@ -85,11 +96,7 @@ transform:scale(1);
 
 <script>
 
-/* OFFER */
-
 const OFFER="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
-
-/* NAMES */
 
 const names=[
 "Anna","Mila","Sofia","Emma","Julia","Sara","Laura","Nina",
@@ -97,23 +104,31 @@ const names=[
 "Zoey","Hannah","Ella","Ava","Mia"
 ];
 
-/* LOAD GIRLS */
+/* генерация AI фото */
 
-async function loadGirls(){
+function getPhoto(){
+
+return "https://thispersondoesnotexist.com/image?"+Math.random();
+
+}
+
+function loadGirls(){
 
 const grid=document.getElementById("grid");
 
+const cards=document.querySelectorAll(".card");
+
+cards.forEach(card=>{
+card.classList.add("fadeOut");
+});
+
+setTimeout(()=>{
+
 grid.innerHTML="";
 
-/* получаем 4 женщины */
+for(let i=0;i<8;i++){
 
-const res=await fetch("https://randomuser.me/api/?results=4&gender=female&inc=picture");
-
-const data=await res.json();
-
-data.results.forEach(user=>{
-
-const photo=user.picture.large;
+const photo=getPhoto();
 
 const name=names[Math.floor(Math.random()*names.length)];
 
@@ -121,43 +136,38 @@ const age=Math.floor(Math.random()*8)+22;
 
 const card=document.createElement("div");
 
-card.className="card";
+card.className="card fadeIn";
 
 card.onclick=()=>{
-
 window.location.href=OFFER;
-
 };
 
 card.innerHTML=`
+
+<div class="online"></div>
+
 <img src="${photo}">
+
 <div class="info">${name}, ${age}</div>
+
 `;
 
 grid.appendChild(card);
 
-});
-
 }
 
-/* FIRST LOAD */
+},400);
+
+}
 
 loadGirls();
 
-/* CHANGE EVERY 5 SECONDS */
-
-setInterval(loadGirls,5000);
-
-/* CLICK ANYWHERE */
+setInterval(loadGirls,7000);
 
 document.body.addEventListener("click",(e)=>{
-
 if(!e.target.closest(".card")){
-
 window.location.href=OFFER;
-
 }
-
 });
 
 </script>
