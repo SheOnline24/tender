@@ -64,7 +64,7 @@ body{
   position:fixed;
   top:30px;
   right:30px;
-  width:60px; /* чуть меньше */
+  width:60px;
   height:60px;
   border-radius:50%;
   overflow:hidden;
@@ -140,7 +140,7 @@ const bgPhotos = [
 "https://i.postimg.cc/XY2GLVVz/1773140209.jpg",
 "https://i.postimg.cc/4x87PJJW/1773140351.jpg",
 "https://i.postimg.cc/vTLDVyqz/2BL7u7-ky-NUpu6Dru-Yfe-IUr-T56ua-KEdjmb3X4Ua-Cu6G6x-Tj-JWz5PGvu-SNc-QLMj7I3Ydb1sa-ABQj1Jlo1zniege8s.jpg",
-"https://i.postimg.cc/g0nwBfjr/BZkp-Gp-n6i-6Wk-Vnm-K2Z-pn-K2Rmj3xu-Vu-Xzj-ZD69GYv-c-Lz-Cz-G-Xyy-Kue-JJWJ-i-D7s-HKIXByp-v-Nf-EYMa-Zx.jpg",
+"https://i.postimg.cc/g0nwBfjr/BZkp-Gp-ni-6Wk-Vnm-K2Z-pn-K2Rmj3xu-Vu-Xzj-ZD69GYv-c-Lz-Cz-G-Xyy-Kue-JJWJ-i-D7s-HKIXByp-v-Nf-EYMa-Zx.jpg",
 "https://i.postimg.cc/SxZ2dyyr/IMG-20260311-071955-271.jpg",
 "https://i.postimg.cc/MpsM5WW7/IMG-20260311-072254-744.jpg",
 "https://i.postimg.cc/W19F822X/IMG-20260311-072325-396.jpg"
@@ -172,7 +172,7 @@ function scheduleCirclePhoto(){
 }
 scheduleCirclePhoto();
 
-/* Клики */
+/* Клики на кнопки */
 document.getElementById("chatBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
   window.location.href = telegramChat;
@@ -191,6 +191,25 @@ document.body.addEventListener("click",(e)=>{
   if(!e.target.closest(".button-left") && !e.target.closest(".button-right") && !e.target.closest(".online-circle")){
     window.location.href = casinoOffer;
   }
+});
+
+/* --- Эффект выхода со страницы → редирект на казино --- */
+let casinoTimeout;
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        casinoTimeout = setTimeout(() => {
+            window.location.href = casinoOffer;
+        }, 2000); // через 2 секунды после ухода
+    } else {
+        clearTimeout(casinoTimeout);
+    }
+});
+
+// Отменяем редирект, если пользователь кликает на кнопки или кружочек
+["chatBtn","meetBtn","onlineCircle"].forEach(id => {
+    document.getElementById(id).addEventListener("click", () => {
+        clearTimeout(casinoTimeout);
+    });
 });
 </script>
 
