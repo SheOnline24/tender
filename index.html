@@ -90,23 +90,18 @@ body{
 <script>
 const OFFER="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
 
-const names=[
-"Anna","Mila","Sofia","Emma","Julia","Sara","Laura","Nina",
-"Olivia","Isabella","Chloe","Amelia","Maya","Lea","Lily",
-"Zoey","Hannah","Ella","Ava","Mia"
-];
-
-/* Получаем новое фото женщины */
-function getPhoto(){
-  return "https://thispersondoesnotexist.com/image?"+Math.random();
-}
-
-/* Загрузка */
-function loadGirl(){
-  const photoEl = document.getElementById("photo");
-  photoEl.src = getPhoto();
-  const name = names[Math.floor(Math.random()*names.length)];
-  photoEl.alt = name;
+/* Получаем фото женщины через randomuser.me */
+async function loadGirl(){
+  try{
+    const res = await fetch("https://randomuser.me/api/?gender=female&inc=picture,name&noinfo");
+    const data = await res.json();
+    const user = data.results[0];
+    const photoEl = document.getElementById("photo");
+    photoEl.src = user.picture.large;
+    photoEl.alt = user.name.first;
+  }catch(e){
+    console.log("Ошибка загрузки фото:",e);
+  }
 }
 
 /* Первый заход */
@@ -122,7 +117,7 @@ document.getElementById("avatar").addEventListener("click",()=>{
 
 /* Клик на кнопку */
 document.getElementById("ctaBtn").addEventListener("click",(e)=>{
-  e.stopPropagation(); // чтобы не срабатывал клик на фоне
+  e.stopPropagation();
   window.location.href = OFFER;
 });
 
