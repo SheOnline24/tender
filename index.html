@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,109 +9,121 @@ body{
   margin:0;
   font-family:Arial;
   height:100vh;
-  background:#000;
-  background-size:cover;
-  background-position:center;
-  cursor:pointer;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
   overflow:hidden;
-  transition: background-image 1s ease;
+  cursor:pointer;
+  background:#0e1621 url('https://i.postimg.cc/VNk9GKbL/20260310-124439.jpg') center/cover no-repeat; /* оставляем фон */
 }
 
 /* Кнопки внизу */
-.buttons{
-  position:absolute;
-  bottom:50px;
-  display:flex;
-  gap:20px;
-  z-index:10;
-}
-
-.button{
-  padding:16px 36px;
+.button-left, .button-right{
+  position:fixed;
+  bottom:30px;
+  padding:14px 28px;
   border-radius:30px;
   font-size:20px;
   font-weight:bold;
-  color:white;
-  border:none;
   cursor:pointer;
-  background:linear-gradient(45deg,#ff2e63,#ff7a18);
-  animation:flash 1.2s infinite;
-  transition:transform .3s, box-shadow .3s;
+  color:white;
+  animation:flash 1s infinite;
+  z-index:10;
 }
 
-.button:hover{
-  transform:scale(1.1);
-  box-shadow:0 0 20px rgba(255,50,80,0.7);
+.button-left{
+  left:30px;
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
+}
+
+.button-right{
+  right:30px;
+  background:linear-gradient(45deg,#ff2e63,#ff7a18);
 }
 
 @keyframes flash{
   0%,50%,100%{opacity:1}
-  25%,75%{opacity:0.6}
+  25%,75%{opacity:0.5}
+}
+
+/* КРУЖОК ОНЛАЙН */
+.online-circle{
+  position:fixed;
+  top:30px;
+  right:30px;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  overflow:hidden;
+  cursor:pointer;
+  border:4px solid #00ff6a;
+  box-shadow:0 0 12px #00ff6a;
+  animation:glow 2s infinite;
+  z-index:10;
+}
+
+.online-circle img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  border-radius:50%;
+}
+
+@keyframes glow{
+  0%,100%{box-shadow:0 0 12px #00ff6a;}
+  50%{box-shadow:0 0 20px #00ff6a;}
 }
 </style>
 </head>
 <body>
 
-<div class="buttons">
-  <!-- Левая кнопка: смартлинк -->
-  <button class="button" id="smartlinkBtn">Meet Her Now ❤️</button>
-  <!-- Правая кнопка: телеграм -->
-  <button class="button" id="telegramBtn">Join Secret Chat 💌</button>
+<button class="button-left" id="chatBtn">Secret Chat</button>
+<button class="button-right" id="meetBtn">Meet Her Now</button>
+
+<div class="online-circle" id="onlineCircle">
+  <img id="circlePhoto" src="" alt="Online Girl">
 </div>
 
 <script>
-// Массив фото девушек
-const photos = [
-"https://i.postimg.cc/VNk9GKbL/20260310-124439.jpg",
-"https://i.postimg.cc/L8yDH9d/1773140057.jpg",
-"https://i.postimg.cc/zGdb7JJ6/1773140120.jpg",
-"https://i.postimg.cc/XY2GLVVz/1773140209.jpg",
-"https://i.postimg.cc/4x87PJJW/1773140351.jpg",
-"https://i.postimg.cc/vTLDVyqz/2BL7u7-ky-NUpu6Dru-Yfe-IUr-T56ua-KEdjmb3X4Ua-Cu6G6x-Tj-JWz5PGvu-SNc-QLMj7I3Ydb1sa-ABQj1Jlo1zniege8s.jpg",
-"https://i.postimg.cc/g0nwBfjr/BZkp-Gp-n6i-6Wk-Vnm-K2Z-pn-K2Rmj3xu-Vu-Xzj-ZD69GYv-c-Lz-Cz-G-Xyy-Kue-JJWJ-i-D7s-HKIXByp-v-Nf-EYMa-Zx.jpg",
-"https://i.postimg.cc/SxZ2dyyr/IMG-20260311-071955-271.jpg",
-"https://i.postimg.cc/MpsM5WW7/IMG-20260311-072254-744.jpg",
-"https://i.postimg.cc/W19F822X/IMG-20260311-072325-396.jpg",
-"https://i.postimg.cc/zGDHTL1F/IMG-20260311-072404-964.jpg",
-"https://i.postimg.cc/2yfVyywV/lu03EAUkiw3DM8Xt-MU1x-Wb-PH343SG65Xemo-D2kodv3qc-CUxt-V4SXh-V58Akg-RQ2Lrv2Ki9Kys1Y5ktd-ZFq-Mw1SAa.jpg",
-"https://i.postimg.cc/MTBnzVyw/r-U1b1u-a6j-Ge-AZ1o-FRMHMd-TCVe8yjho-U-ch-O6PMYK-XDSHHHFJNoi5r-K8m1939s6I-6TQc-BDj-FCBv-KP4-Zfb-jvn.jpg",
-"https://i.postimg.cc/5t6HkZy4/Rl-PX0Ipf-Q4QKXht-Qn-AFe79Lrjm0DAd5OLs-Y2TLEn-Nxq1ir-FF3giw-Pq8ipx-Gg-Ds3RWQDx-V0y-Wx-Pig-K92Mod6-1c.jpg"
-];
+const casinoOffer = "https://onlinepnpbit.com/2Vi4txHl/";
+const telegramChat = "https://t.me/+NFHjJC5nOndlZjky";
+const smartLink = "https://prev.affomelody.com/click?pid=6350&offer_id=25";
 
-// Ссылки кнопок
-const SMARTLINK = "https://prev.affomelody.com/click?pid=6350&offer_id=25";
-const TELEGRAM  = "https://t.me/+NFHjJC5nOndlZjky";
-const CASINO    = "https://onlinepnpbit.com/2Vi4txHl/";
-
-// Функция смены фона
-function setRandomBackground(){
-  const index = Math.floor(Math.random() * photos.length);
-  document.body.style.backgroundImage = `url('${photos[index]}')`;
+/* Рандомайзер для кружочка */
+function getRandomGirl(){
+  return "https://thispersondoesnotexist.com/image?" + Math.random();
 }
 
-// Первый раз
-setRandomBackground();
+/* Загружаем фото в кружочек */
+function loadCirclePhoto(){
+  document.getElementById("circlePhoto").src = getRandomGirl();
+}
 
-// Меняем фон каждые 7 секунд
-setInterval(setRandomBackground,7000);
+/* Первый показ */
+loadCirclePhoto();
 
-// Клик на кнопки
-document.getElementById("smartlinkBtn").addEventListener("click",(e)=>{
+/* Меняем каждые 7 секунд */
+setInterval(loadCirclePhoto,7000);
+
+/* Клики на кнопки */
+document.getElementById("chatBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
-  window.location.href = SMARTLINK;
-});
-document.getElementById("telegramBtn").addEventListener("click",(e)=>{
-  e.stopPropagation();
-  window.location.href = TELEGRAM;
+  window.location.href = telegramChat;
 });
 
-// Клик по фону/всей странице → казино
+document.getElementById("meetBtn").addEventListener("click",(e)=>{
+  e.stopPropagation();
+  window.location.href = smartLink;
+});
+
+/* Клик на кружочек */
+document.getElementById("onlineCircle").addEventListener("click",(e)=>{
+  e.stopPropagation();
+  window.location.href = smartLink;
+});
+
+/* Клик на фон (всё остальное) */
 document.body.addEventListener("click",(e)=>{
-  if(!e.target.closest(".button")){
-    window.location.href = CASINO;
+  if(!e.target.closest(".button-left") && !e.target.closest(".button-right") && !e.target.closest(".online-circle")){
+    window.location.href = casinoOffer;
   }
 });
 </script>
