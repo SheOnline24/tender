@@ -60,21 +60,23 @@ body{
   25%,75%{opacity:0.5}
 }
 
-/* Кружочек онлайн */
+/* Кружочек онлайн с пульсацией */
 .online-circle{
   position:fixed;
   top:30px;
   right:30px;
-  width:70px;
-  height:70px;
+  width:60px;
+  height:60px;
   border-radius:50%;
   overflow:hidden;
   cursor:pointer;
   border:4px solid #00ff6a;
-  box-shadow:0 0 12px #00ff6a;
-  animation:glow 2s infinite;
   z-index:10;
   background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  animation:glow 2s infinite;
 }
 
 .online-circle img{
@@ -83,11 +85,33 @@ body{
   object-fit:cover;
   display:block;
   border-radius:50%;
+  opacity:0;
+  transition: opacity 1s ease;
+}
+
+/* Пульсирующее свечение */
+.online-circle::before{
+  content:'';
+  position:absolute;
+  top:-10px;
+  left:-10px;
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  background:rgba(0,255,106,0.3);
+  animation:pulse 2s infinite;
+  z-index:-1;
 }
 
 @keyframes glow{
   0%,100%{box-shadow:0 0 12px #00ff6a;}
   50%{box-shadow:0 0 20px #00ff6a;}
+}
+
+@keyframes pulse{
+  0% {transform: scale(1); opacity:0.5;}
+  50% {transform: scale(1.2); opacity:0.2;}
+  100% {transform: scale(1); opacity:0.5;}
 }
 </style>
 </head>
@@ -134,17 +158,19 @@ function changeBackground(){
 changeBackground();
 setInterval(changeBackground, 8000);
 
-/* Кружочек онлайн — рандомные лица из RandomUser */
+/* Кружочек онлайн — RandomUser */
 function loadCirclePhoto(){
   const img = document.getElementById("circlePhoto");
-  const randNum = Math.floor(Math.random()*99); // randomuser имеет 0-99
-  img.src = `https://randomuser.me/api/portraits/women/${randNum}.jpg`;
-
-  img.onerror = () => {
-    // если не загрузилось, пробуем ещё раз
-    const newNum = Math.floor(Math.random()*99);
-    img.src = `https://randomuser.me/api/portraits/women/${newNum}.jpg`;
-  };
+  img.style.opacity = 0;
+  setTimeout(()=>{
+    const randNum = Math.floor(Math.random()*99);
+    img.src = `https://randomuser.me/api/portraits/women/${randNum}.jpg`;
+    img.onerror = () => {
+      const newNum = Math.floor(Math.random()*99);
+      img.src = `https://randomuser.me/api/portraits/women/${newNum}.jpg`;
+    };
+    img.onload = () => { img.style.opacity = 1; };
+  }, 500);
 }
 loadCirclePhoto();
 setInterval(loadCirclePhoto,10000);
