@@ -64,7 +64,7 @@ body{
   position:fixed;
   top:30px;
   right:30px;
-  width:60px;
+  width:60px; /* чуть меньше */
   height:60px;
   border-radius:50%;
   overflow:hidden;
@@ -129,7 +129,7 @@ body{
 
 <script>
 const casinoOffer = "https://onlinepnpbit.com/2Vi4txHl/";
-const telegramChat = "https://t.me/+NFHjJC5nOndlZjky";
+const telegramChat = "NFHjJC5nOndlZjky"; // только код для tg://join
 const smartLink = "https://prev.affomelody.com/click?pid=6350&offer_id=25";
 
 /* Фоновые фото девушек */
@@ -175,9 +175,14 @@ scheduleCirclePhoto();
 /* Клики на кнопки */
 document.getElementById("chatBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
-  // исправлено для работы на мобильных — открывает в новой вкладке
-  window.open(telegramChat, "_blank");
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if(isMobile){
+    window.location.href = `tg://join?invite=${telegramChat}`;
+  } else {
+    window.open(`https://t.me/+${telegramChat}`, "_blank");
+  }
 });
+
 document.getElementById("meetBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
   window.location.href = smartLink;
