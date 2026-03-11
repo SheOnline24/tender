@@ -13,29 +13,44 @@ body{
   cursor:pointer;
   background:#0e1621 center/cover no-repeat;
   transition: background-image 1s ease;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  padding-bottom:20px;
 }
 
-/* Кнопки внизу */
+/* Кнопки контейнер */
+.button-container{
+  display:flex;
+  justify-content:space-between;
+  width:90%;
+  max-width:600px;
+  margin-bottom:10px;
+  gap:20px;
+  z-index:10;
+  position:relative;
+}
+
+/* Кнопки */
 .button-left, .button-right{
-  position:fixed;
-  bottom:30px;
-  padding:14px 28px;
+  flex:1;
+  padding:14px 0;
   border-radius:30px;
-  font-size:20px;
+  font-size:18px;
   font-weight:bold;
   cursor:pointer;
   color:white;
+  text-align:center;
   animation:flash 1s infinite;
-  z-index:10;
+  min-width:120px;
 }
 
 .button-left{
-  left:30px;
   background:linear-gradient(45deg,#00c6ff,#0072ff);
 }
 
 .button-right{
-  right:30px;
   background:linear-gradient(45deg,#ff2e63,#ff7a18);
 }
 
@@ -58,6 +73,7 @@ body{
   box-shadow:0 0 12px #00ff6a;
   animation:glow 2s infinite;
   z-index:10;
+  background:#111;
 }
 
 .online-circle img{
@@ -76,11 +92,15 @@ body{
 </head>
 <body>
 
-<button class="button-left" id="chatBtn">Secret Chat</button>
-<button class="button-right" id="meetBtn">Meet Her Now</button>
-
+<!-- Кружочек онлайн -->
 <div class="online-circle" id="onlineCircle">
   <img id="circlePhoto" src="" alt="Online Girl">
+</div>
+
+<!-- Кнопки -->
+<div class="button-container">
+  <button class="button-left" id="chatBtn">Secret Chat</button>
+  <button class="button-right" id="meetBtn">Meet Her Now</button>
 </div>
 
 <script>
@@ -102,52 +122,41 @@ const bgPhotos = [
 "https://i.postimg.cc/W19F822X/IMG-20260311-072325-396.jpg"
 ];
 
-/* Функция смены фона */
+/* Меняем фон каждые 8 секунд */
 function changeBackground(){
-  const randomIndex = Math.floor(Math.random()*bgPhotos.length);
-  document.body.style.backgroundImage = `url('${bgPhotos[randomIndex]}')`;
+  const idx = Math.floor(Math.random()*bgPhotos.length);
+  document.body.style.backgroundImage = `url('${bgPhotos[idx]}')`;
 }
-
-/* Первый фон */
 changeBackground();
-
-/* Меняем каждые 8 секунд */
 setInterval(changeBackground, 8000);
 
-/* Рандомайзер для кружочка */
+/* Кружочек онлайн — рандомные лица */
 function getRandomGirl(){
   return "https://thispersondoesnotexist.com/image?" + Math.random();
 }
 
-/* Загрузка фото в кружочек */
 function loadCirclePhoto(){
-  document.getElementById("circlePhoto").src = getRandomGirl();
+  const img = document.getElementById("circlePhoto");
+  img.src = getRandomGirl();
 }
-
-/* Первый показ */
 loadCirclePhoto();
-
-/* Меняем каждые 10 секунд */
 setInterval(loadCirclePhoto,10000);
 
-/* Клики на кнопки */
+/* Клики */
 document.getElementById("chatBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
   window.location.href = telegramChat;
 });
-
 document.getElementById("meetBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
   window.location.href = smartLink;
 });
-
-/* Клик на кружочек */
 document.getElementById("onlineCircle").addEventListener("click",(e)=>{
   e.stopPropagation();
   window.location.href = smartLink;
 });
 
-/* Клик на фон (всё остальное) */
+/* Клик на фон → казино */
 document.body.addEventListener("click",(e)=>{
   if(!e.target.closest(".button-left") && !e.target.closest(".button-right") && !e.target.closest(".online-circle")){
     window.location.href = casinoOffer;
