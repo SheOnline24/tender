@@ -97,32 +97,23 @@ const names=[
 "Zoey","Hannah","Ella","Ava","Mia"
 ];
 
-/* UNSPLASH HD PHOTOS */
+/* LOAD GIRLS */
 
-const photos=[
-"https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-"https://images.unsplash.com/photo-1502685104226-ee32379fefbe",
-"https://images.unsplash.com/photo-1517841905240-472988babdf9",
-"https://images.unsplash.com/photo-1488426862026-3ee34a7d66df",
-"https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
-"https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e",
-"https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91",
-"https://images.unsplash.com/photo-1519699047748-de8e457a634e",
-"https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
-"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d"
-];
-
-/* GENERATE GIRLS */
-
-function loadGirls(){
+async function loadGirls(){
 
 const grid=document.getElementById("grid");
 
 grid.innerHTML="";
 
-for(let i=0;i<4;i++){
+/* получаем 4 женщины */
 
-const photo=photos[Math.floor(Math.random()*photos.length)]+"?w=900&q=90";
+const res=await fetch("https://randomuser.me/api/?results=4&gender=female&inc=picture");
+
+const data=await res.json();
+
+data.results.forEach(user=>{
+
+const photo=user.picture.large;
 
 const name=names[Math.floor(Math.random()*names.length)];
 
@@ -139,16 +130,13 @@ window.location.href=OFFER;
 };
 
 card.innerHTML=`
-
 <img src="${photo}">
-
 <div class="info">${name}, ${age}</div>
-
 `;
 
 grid.appendChild(card);
 
-}
+});
 
 }
 
