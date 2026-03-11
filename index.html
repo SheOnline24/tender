@@ -11,7 +11,8 @@ body{
   height:100vh;
   overflow:hidden;
   cursor:pointer;
-  background:#0e1621 url('https://i.postimg.cc/VNk9GKbL/20260310-124439.jpg') center/cover no-repeat; /* оставляем фон */
+  background:#0e1621 center/cover no-repeat;
+  transition: background-image 1s ease;
 }
 
 /* Кнопки внизу */
@@ -87,12 +88,38 @@ const casinoOffer = "https://onlinepnpbit.com/2Vi4txHl/";
 const telegramChat = "https://t.me/+NFHjJC5nOndlZjky";
 const smartLink = "https://prev.affomelody.com/click?pid=6350&offer_id=25";
 
+/* Фоновые фото девушек */
+const bgPhotos = [
+"https://i.postimg.cc/VNk9GKbL/20260310-124439.jpg",
+"https://i.postimg.cc/L8yYDH9d/1773140057.jpg",
+"https://i.postimg.cc/zGdb7JJ6/1773140120.jpg",
+"https://i.postimg.cc/XY2GLVVz/1773140209.jpg",
+"https://i.postimg.cc/4x87PJJW/1773140351.jpg",
+"https://i.postimg.cc/vTLDVyqz/2BL7u7-ky-NUpu6Dru-Yfe-IUr-T56ua-KEdjmb3X4Ua-Cu6G6x-Tj-JWz5PGvu-SNc-QLMj7I3Ydb1sa-ABQj1Jlo1zniege8s.jpg",
+"https://i.postimg.cc/g0nwBfjr/BZkp-Gp-n6i-6Wk-Vnm-K2Z-pn-K2Rmj3xu-Vu-Xzj-ZD69GYv-c-Lz-Cz-G-Xyy-Kue-JJWJ-i-D7s-HKIXByp-v-Nf-EYMa-Zx.jpg",
+"https://i.postimg.cc/SxZ2dyyr/IMG-20260311-071955-271.jpg",
+"https://i.postimg.cc/MpsM5WW7/IMG-20260311-072254-744.jpg",
+"https://i.postimg.cc/W19F822X/IMG-20260311-072325-396.jpg"
+];
+
+/* Функция смены фона */
+function changeBackground(){
+  const randomIndex = Math.floor(Math.random()*bgPhotos.length);
+  document.body.style.backgroundImage = `url('${bgPhotos[randomIndex]}')`;
+}
+
+/* Первый фон */
+changeBackground();
+
+/* Меняем каждые 8 секунд */
+setInterval(changeBackground, 8000);
+
 /* Рандомайзер для кружочка */
 function getRandomGirl(){
   return "https://thispersondoesnotexist.com/image?" + Math.random();
 }
 
-/* Загружаем фото в кружочек */
+/* Загрузка фото в кружочек */
 function loadCirclePhoto(){
   document.getElementById("circlePhoto").src = getRandomGirl();
 }
@@ -100,8 +127,8 @@ function loadCirclePhoto(){
 /* Первый показ */
 loadCirclePhoto();
 
-/* Меняем каждые 7 секунд */
-setInterval(loadCirclePhoto,7000);
+/* Меняем каждые 10 секунд */
+setInterval(loadCirclePhoto,10000);
 
 /* Клики на кнопки */
 document.getElementById("chatBtn").addEventListener("click",(e)=>{
