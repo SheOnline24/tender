@@ -175,7 +175,8 @@ scheduleCirclePhoto();
 /* Клики на кнопки */
 document.getElementById("chatBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
-  window.location.href = telegramChat;
+  // исправлено для работы на мобильных — открывает в новой вкладке
+  window.open(telegramChat, "_blank");
 });
 document.getElementById("meetBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
