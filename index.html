@@ -8,123 +8,108 @@
 body{
   margin:0;
   font-family:Arial;
-  background:#0e1621;
   height:100vh;
+  background:#000;
+  background-size:cover;
+  background-position:center;
+  cursor:pointer;
   display:flex;
-  align-items:center;
+  align-items:flex-end;
   justify-content:center;
   overflow:hidden;
-  cursor:pointer;
+  transition: background-image 1s ease;
 }
 
-/* КРУЖОК ПО ЦЕНТРУ */
-.avatar-center{
-  position:relative;
-  width:250px;
-  height:250px;
-  border-radius:50%;
-  overflow:hidden;
-  box-shadow:0 8px 35px rgba(0,0,0,0.6);
-  cursor:pointer;
-  transition:transform .3s;
-}
-
-.avatar-center:hover{
-  transform:scale(1.05);
-}
-
-.avatar-center img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-/* ОНЛАЙН ДОТИК */
-.online{
+/* Кнопки внизу */
+.buttons{
   position:absolute;
-  bottom:12px;
-  right:12px;
-  width:18px;
-  height:18px;
-  border-radius:50%;
-  background:#00ff6a;
-  box-shadow:0 0 8px #00ff6a;
-  border:2px solid #0e1621;
-  animation:blink 2s infinite;
+  bottom:50px;
+  display:flex;
+  gap:20px;
+  z-index:10;
 }
 
-@keyframes blink{
-  0%,50%,100%{opacity:1}
-  25%,75%{opacity:0.4}
-}
-
-/* МОРГАЮЩАЯ КНОПКА */
-.cta{
-  position:absolute;
-  bottom:60px;
-  background:linear-gradient(45deg,#ff2e63,#ff7a18);
-  padding:14px 28px;
+.button{
+  padding:16px 36px;
   border-radius:30px;
   font-size:20px;
-  color:white;
   font-weight:bold;
+  color:white;
+  border:none;
   cursor:pointer;
-  animation:flash 1s infinite;
+  background:linear-gradient(45deg,#ff2e63,#ff7a18);
+  animation:flash 1.2s infinite;
+  transition:transform .3s, box-shadow .3s;
+}
+
+.button:hover{
+  transform:scale(1.1);
+  box-shadow:0 0 20px rgba(255,50,80,0.7);
 }
 
 @keyframes flash{
   0%,50%,100%{opacity:1}
-  25%,75%{opacity:0.5}
+  25%,75%{opacity:0.6}
 }
 </style>
 </head>
 <body>
 
-<div class="avatar-center" id="avatar">
-  <img id="photo" src="">
-  <div class="online"></div>
+<div class="buttons">
+  <button class="button" id="smartlinkBtn">Go to Smartlink</button>
+  <button class="button" id="telegramBtn">Telegram Channel</button>
 </div>
 
-<div class="cta" id="ctaBtn">Click Here ❤️</div>
-
 <script>
-const OFFER="https://tone.affomelody.com/click?pid=6350&offer_id=25&sub1=Online24";
+// Массив фото девушек
+const photos = [
+"https://i.postimg.cc/VNk9GKbL/20260310-124439.jpg",
+"https://i.postimg.cc/L8yDH9d/1773140057.jpg",
+"https://i.postimg.cc/zGdb7JJ6/1773140120.jpg",
+"https://i.postimg.cc/XY2GLVVz/1773140209.jpg",
+"https://i.postimg.cc/4x87PJJW/1773140351.jpg",
+"https://i.postimg.cc/vTLDVyqz/2BL7u7-ky-NUpu6Dru-Yfe-IUr-T56ua-KEdjmb3X4Ua-Cu6G6x-Tj-JWz5PGvu-SNc-QLMj7I3Ydb1sa-ABQj1Jlo1zniege8s.jpg",
+"https://i.postimg.cc/g0nwBfjr/BZkp-Gp-n6i-6Wk-Vnm-K2Z-pn-K2Rmj3xu-Vu-Xzj-ZD69GYv-c-Lz-Cz-G-Xyy-Kue-JJWJ-i-D7s-HKIXByp-v-Nf-EYMa-Zx.jpg",
+"https://i.postimg.cc/SxZ2dyyr/IMG-20260311-071955-271.jpg",
+"https://i.postimg.cc/MpsM5WW7/IMG-20260311-072254-744.jpg",
+"https://i.postimg.cc/W19F822X/IMG-20260311-072325-396.jpg",
+"https://i.postimg.cc/zGDHTL1F/IMG-20260311-072404-964.jpg",
+"https://i.postimg.cc/2yfVyywV/lu03EAUkiw3DM8Xt-MU1x-Wb-PH343SG65Xemo-D2kodv3qc-CUxt-V4SXh-V58Akg-RQ2Lrv2Ki9Kys1Y5ktd-ZFq-Mw1SAa.jpg",
+"https://i.postimg.cc/MTBnzVyw/r-U1b1u-a6j-Ge-AZ1o-FRMHMd-TCVe8yjho-U-ch-O6PMYK-XDSHHHFJNoi5r-K8m1939s6I-6TQc-BDj-FCBv-KP4-Zfb-jvn.jpg",
+"https://i.postimg.cc/5t6HkZy4/Rl-PX0Ipf-Q4QKXht-Qn-AFe79Lrjm0DAd5OLs-Y2TLEn-Nxq1ir-FF3giw-Pq8ipx-Gg-Ds3RWQDx-V0y-Wx-Pig-K92Mod6-1c.jpg"
+];
 
-/* Получаем фото женщины через randomuser.me */
-async function loadGirl(){
-  try{
-    const res = await fetch("https://randomuser.me/api/?gender=female&inc=picture,name&noinfo");
-    const data = await res.json();
-    const user = data.results[0];
-    const photoEl = document.getElementById("photo");
-    photoEl.src = user.picture.large;
-    photoEl.alt = user.name.first;
-  }catch(e){
-    console.log("Ошибка загрузки фото:",e);
-  }
+// Ссылки кнопок
+const SMARTLINK = "https://prev.affomelody.com/click?pid=6350&offer_id=25";
+const TELEGRAM  = "https://t.me/+NFHjJC5nOndlZjky";
+const CASINO    = "https://onlinepnpbit.com/2Vi4txHl/";
+
+// Функция смены фона
+function setRandomBackground(){
+  const index = Math.floor(Math.random() * photos.length);
+  document.body.style.backgroundImage = `url('${photos[index]}')`;
 }
 
-/* Первый заход */
-loadGirl();
+// Первый раз
+setRandomBackground();
 
-/* Меняем каждые 7 секунд */
-setInterval(loadGirl,7000);
+// Меняем фон каждые 7 секунд
+setInterval(setRandomBackground,7000);
 
-/* Клик на фото */
-document.getElementById("avatar").addEventListener("click",()=>{
-  window.location.href = OFFER;
-});
-
-/* Клик на кнопку */
-document.getElementById("ctaBtn").addEventListener("click",(e)=>{
+// Клик на кнопки
+document.getElementById("smartlinkBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
-  window.location.href = OFFER;
+  window.location.href = SMARTLINK;
+});
+document.getElementById("telegramBtn").addEventListener("click",(e)=>{
+  e.stopPropagation();
+  window.location.href = TELEGRAM;
 });
 
-/* Клик на весь экран */
+// Клик по фону/всей странице → казино
 document.body.addEventListener("click",(e)=>{
-  if(!e.target.closest("#avatar") && !e.target.closest("#ctaBtn")){
-    window.location.href = OFFER;
+  if(!e.target.closest(".button")){
+    window.location.href = CASINO;
   }
 });
 </script>
