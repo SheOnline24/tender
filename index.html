@@ -23,8 +23,7 @@ body{
 /* Кнопки контейнер */
 .button-container{
   display:flex;
-  justify-content:space-around;
-  flex-wrap: wrap;
+  justify-content:space-between;
   width:90%;
   max-width:600px;
   margin-bottom:10px;
@@ -35,7 +34,7 @@ body{
 
 /* Кнопки */
 .button-left, .button-right{
-  flex:1 1 140px;
+  flex:1;
   padding:14px 0;
   border-radius:30px;
   font-size:18px;
@@ -44,7 +43,7 @@ body{
   color:white;
   text-align:center;
   animation:flash 1s infinite;
-  min-width:140px;
+  min-width:120px;
 }
 
 .button-left{
@@ -60,23 +59,24 @@ body{
   25%,75%{opacity:0.5}
 }
 
-/* Кружочек онлайн с пульсацией */
+/* Кружочек онлайн */
 .online-circle{
   position:fixed;
   top:30px;
   right:30px;
-  width:60px;
+  width:60px; /* чуть меньше */
   height:60px;
   border-radius:50%;
   overflow:hidden;
   cursor:pointer;
   border:4px solid #00ff6a;
+  box-shadow:0 0 12px #00ff6a;
+  animation:glow 2s infinite;
   z-index:10;
   background:#111;
   display:flex;
   justify-content:center;
   align-items:center;
-  animation:glow 2s infinite;
 }
 
 .online-circle img{
@@ -89,18 +89,17 @@ body{
   transition: opacity 1s ease;
 }
 
-/* Пульсирующее свечение */
-.online-circle::before{
-  content:'';
+.online-dot{
   position:absolute;
-  top:-10px;
-  left:-10px;
-  width:80px;
-  height:80px;
+  bottom:4px;
+  right:4px;
+  width:12px;
+  height:12px;
   border-radius:50%;
-  background:rgba(0,255,106,0.3);
-  animation:pulse 2s infinite;
-  z-index:-1;
+  background:#00ff6a;
+  box-shadow:0 0 8px #00ff6a;
+  border:2px solid #111;
+  animation:blink 2s infinite;
 }
 
 @keyframes glow{
@@ -108,10 +107,9 @@ body{
   50%{box-shadow:0 0 20px #00ff6a;}
 }
 
-@keyframes pulse{
-  0% {transform: scale(1); opacity:0.5;}
-  50% {transform: scale(1.2); opacity:0.2;}
-  100% {transform: scale(1); opacity:0.5;}
+@keyframes blink{
+  0%,50%,100%{opacity:1}
+  25%,75%{opacity:0.4}
 }
 </style>
 </head>
@@ -120,6 +118,7 @@ body{
 <!-- Кружочек онлайн -->
 <div class="online-circle" id="onlineCircle">
   <img id="circlePhoto" src="" alt="Online Girl">
+  <div class="online-dot"></div>
 </div>
 
 <!-- Кнопки -->
@@ -147,9 +146,6 @@ const bgPhotos = [
 "https://i.postimg.cc/W19F822X/IMG-20260311-072325-396.jpg"
 ];
 
-/* Предзагрузка фоновых фото */
-bgPhotos.forEach(url => { let img = new Image(); img.src = url; });
-
 /* Меняем фон каждые 8 секунд */
 function changeBackground(){
   const idx = Math.floor(Math.random()*bgPhotos.length);
@@ -158,24 +154,25 @@ function changeBackground(){
 changeBackground();
 setInterval(changeBackground, 8000);
 
-/* Кружочек онлайн — RandomUser */
-function loadCirclePhoto(){
+/* Кружочек онлайн — фото с RandomUser */
+async function loadCirclePhoto(){
   const img = document.getElementById("circlePhoto");
+  const res = await fetch("https://randomuser.me/api/?gender=female");
+  const data = await res.json();
+  const photoUrl = data.results[0].picture.medium;
   img.style.opacity = 0;
-  setTimeout(()=>{
-    const randNum = Math.floor(Math.random()*99);
-    img.src = `https://randomuser.me/api/portraits/women/${randNum}.jpg`;
-    img.onerror = () => {
-      const newNum = Math.floor(Math.random()*99);
-      img.src = `https://randomuser.me/api/portraits/women/${newNum}.jpg`;
-    };
-    img.onload = () => { img.style.opacity = 1; };
-  }, 500);
+  setTimeout(()=>{ img.src = photoUrl; img.style.opacity=1; }, 300);
 }
-loadCirclePhoto();
-setInterval(loadCirclePhoto,10000);
 
-/* Клики на кнопки */
+/* Случайная задержка 9–11 секунд */
+function scheduleCirclePhoto(){
+  loadCirclePhoto();
+  const interval = 9000 + Math.random()*2000;
+  setTimeout(scheduleCirclePhoto, interval);
+}
+scheduleCirclePhoto();
+
+/* Клики */
 document.getElementById("chatBtn").addEventListener("click",(e)=>{
   e.stopPropagation();
   window.location.href = telegramChat;
