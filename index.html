@@ -217,19 +217,24 @@ const bgPhotos = [
 "https://SheOnline24.github.io/tender/photos/FindGirl66.jpg"
 ];
 
-/* Предзагрузка всех изображений */
-bgPhotos.forEach(src => {
-  const img = new Image();
-  img.src = src;
-});
+// индекс текущего фона
+let currentIndex = 0;
 
-/* Смена фона */
-function changeBackground(){
-  const i=Math.floor(Math.random()*bgPhotos.length);
-  document.body.style.backgroundImage=`url('${bgPhotos[i]}')`;
+// функция смены фона с предзагрузкой следующего
+function changeBackground() {
+  const nextIndex = Math.floor(Math.random() * bgPhotos.length);
+  const img = new Image();
+  img.src = bgPhotos[nextIndex];
+  img.onload = () => {
+    document.body.style.backgroundImage = `url('${bgPhotos[nextIndex]}')`;
+    currentIndex = nextIndex;
+  };
 }
+
+// первая смена фона
 changeBackground();
-setInterval(changeBackground,8000);
+// смена каждые 8 секунд
+setInterval(changeBackground, 8000);
 
 /* random user */
 async function loadCirclePhoto(){
