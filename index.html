@@ -38,14 +38,21 @@ const DATING="https://prev.affomelody.com/click?pid=6350&offer_id=25",
 
 // ===== ФОТО =====
 const girls = Array.from({length:66},(_,i)=>`https://SheOnline24.github.io/tender/photos/FindGirl${i+1}.jpg`);
-girls.forEach(src=>new Image().src=src); // preload
 
-// ===== ФОН =====
+// ===== ФОН С ЛЕНИВОЙ ЗАГРУЗКОЙ =====
 let currentIndex=Math.floor(Math.random()*girls.length);
+function preloadNext(n=3){
+  for(let i=1;i<=n;i++){
+    const idx=(currentIndex+i)%girls.length;
+    const img=new Image();
+    img.src=girls[idx];
+  }
+}
 function changeBackground(){
   document.body.style.backgroundImage=`url('${girls[currentIndex]}')`;
   document.body.style.transform="scale(1.03)";
   setTimeout(()=>document.body.style.transform="scale(1)",600);
+  preloadNext(); // подгружаем 3 следующих фото
   currentIndex=(currentIndex+1)%girls.length;
 }
 window.onload=()=>{
@@ -87,14 +94,12 @@ function handleGeo(loc){
     setTimeout(()=>casinoBtn.style.display="block",15000);
   } else casinoBtn.style.display="block";
 
-  // клик по фону
   document.body.addEventListener("click",e=>{
     if(!e.target.closest("a")){
       window.location.href=cis.includes(country)?DATING:CASINO;
     }
   });
 
-  // кнопки
   [datingBtn,casinoBtn].forEach(btn=>{
     btn.addEventListener("click",e=>{ e.stopPropagation(); window.location.href=btn.href; });
   });
