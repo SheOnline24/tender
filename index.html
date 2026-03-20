@@ -19,14 +19,29 @@ body{
   position:absolute; width:100%; height:100%; background:rgba(0,0,0,0.25); pointer-events:none;
 }
 .bottom-btn{
-  position:fixed; padding:14px 20px; font-size:18px; text-align:center;
-  text-decoration:none; color:white; border-radius:10px;
-  backdrop-filter:blur(6px); background:rgba(0,0,0,0.4);
-  box-shadow:0 -2px 15px rgba(0,0,0,0.5); transition:0.3s; z-index:10;
+  position:fixed;
+  padding:14px 20px;
+  font-size:18px;
+  text-align:center;
+  text-decoration:none;
+  color:white;
+  border-radius:10px;
+  backdrop-filter:blur(6px);
+  background:rgba(0,0,0,0.4);
+  box-shadow:0 -2px 15px rgba(0,0,0,0.5);
+  transition:0.3s;
+  z-index:10;
 }
 .bottom-btn:hover{transform:scale(1.08);}
+
+/* Кнопки на мобильнике — вертикально, справа */
 #datingBtn{ bottom:15px; right:15px; }
-#casinoBtn{ bottom:15px; left:15px; display:none; }
+#casinoBtn{ bottom:70px; right:15px; display:none; }
+
+/* Десктоп — левый нижний угол для казино */
+@media(min-width: 768px){
+  #casinoBtn{ bottom:15px; left:15px; right:auto; }
+}
 </style>
 </head>
 <body>
@@ -93,7 +108,7 @@ function handleGeo(loc){
 
   const cis = ["RU","UA","KZ","BY"];
 
-  // Показываем кнопку казино
+  // Показываем кнопку казино с задержкой на CIS
   if(cis.includes(country)){
     casinoBtn.style.display="none";
     setTimeout(()=>{ casinoBtn.style.display="block"; },15000);
@@ -117,7 +132,6 @@ function handleGeo(loc){
 // ===== BACK BUTTON REDIRECT на казино =====
 history.pushState(null,null,location.href);
 window.addEventListener("popstate",()=>{ window.location.href=CASINO; });
-
 </script>
 </body>
 </html>
