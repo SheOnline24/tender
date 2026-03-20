@@ -6,132 +6,103 @@
 <title>Online Girls</title>
 <style>
 body{
-  margin:0;
-  height:100vh;
-  background-size:cover;
-  background-position:center;
-  background-color:#111;
-  font-family:Arial;
-  cursor:pointer;
+  margin:0; height:100vh; background:#111 center/cover no-repeat;
+  font-family:Arial; cursor:pointer;
   transition: background-image 1s ease, transform 0.6s ease;
 }
 .overlay{
   position:absolute; width:100%; height:100%; background:rgba(0,0,0,0.25); pointer-events:none;
 }
 .bottom-btn{
-  position:fixed;
-  padding:14px 20px;
-  font-size:18px;
-  text-align:center;
-  text-decoration:none;
-  color:white;
-  border-radius:10px;
-  backdrop-filter:blur(6px);
-  background:rgba(0,0,0,0.4);
-  box-shadow:0 -2px 15px rgba(0,0,0,0.5);
-  transition:0.3s;
-  z-index:10;
+  position:fixed; padding:14px 20px; font-size:18px; text-align:center;
+  text-decoration:none; color:white; border-radius:10px;
+  backdrop-filter:blur(6px); background:rgba(0,0,0,0.4);
+  box-shadow:0 -2px 15px rgba(0,0,0,0.5); transition:0.3s; z-index:10;
 }
 .bottom-btn:hover{transform:scale(1.08);}
-
-/* Кнопки на мобильнике — вертикально, справа */
 #datingBtn{ bottom:15px; right:15px; }
 #casinoBtn{ bottom:70px; right:15px; display:none; }
-
-/* Десктоп — левый нижний угол для казино */
-@media(min-width: 768px){
-  #casinoBtn{ bottom:15px; left:15px; right:auto; }
-}
+@media(min-width:768px){ #casinoBtn{ bottom:15px; left:15px; right:auto; } }
 </style>
 </head>
 <body>
 
 <div class="overlay"></div>
-
 <a id="datingBtn" class="bottom-btn" href="#"></a>
 <a id="casinoBtn" class="bottom-btn" href="#"></a>
 
 <script>
 // ===== ССЫЛКИ =====
-const DATING = "https://prev.affomelody.com/click?pid=6350&offer_id=25";
-const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
+const DATING="https://prev.affomelody.com/click?pid=6350&offer_id=25",
+      CASINO="https://onlinepnpbit.com/2Vi4txHl/";
 
-// ===== ФОТО (66 шт) =====
-const girls = [];
-for(let i=1;i<=66;i++){
-  girls.push(`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`);
-}
-// preload
-girls.forEach(src => { const img=new Image(); img.src=src; });
+// ===== ФОТО =====
+const girls = Array.from({length:66},(_,i)=>`https://SheOnline24.github.io/tender/photos/FindGirl${i+1}.jpg`);
+girls.forEach(src=>new Image().src=src); // preload
 
-// ===== СМЕНА ФОНА каждые 7 секунд с лёгким зумом =====
-let currentIndex = Math.floor(Math.random()*girls.length);
+// ===== ФОН =====
+let currentIndex=Math.floor(Math.random()*girls.length);
 function changeBackground(){
-  document.body.style.backgroundImage = `url('${girls[currentIndex]}')`;
-  document.body.style.transform = "scale(1.03)";
-  setTimeout(()=>{document.body.style.transform="scale(1)";},600);
-  currentIndex = (currentIndex+1)%girls.length;
+  document.body.style.backgroundImage=`url('${girls[currentIndex]}')`;
+  document.body.style.transform="scale(1.03)";
+  setTimeout(()=>document.body.style.transform="scale(1)",600);
+  currentIndex=(currentIndex+1)%girls.length;
 }
-window.onload = () => {
+window.onload=()=>{
   changeBackground();
   setInterval(changeBackground,7000);
 };
 
-// ===== ГЕО + ТЕКСТ КНОПОК =====
+// ===== ГЕО + кнопки =====
 fetch("https://ipapi.co/json/")
-  .then(res => res.json())
-  .then(data => handleGeo(data))
-  .catch(err => handleGeo({country:"US"}));
+  .then(r=>r.json())
+  .then(data=>handleGeo(data))
+  .catch(()=>handleGeo({country:"US"}));
 
 function handleGeo(loc){
-  const country = loc.country || "US";
-  const datingBtn = document.getElementById("datingBtn");
-  const casinoBtn = document.getElementById("casinoBtn");
+  const country=loc.country||"US",
+        datingBtn=document.getElementById("datingBtn"),
+        casinoBtn=document.getElementById("casinoBtn"),
+        cis=["RU","UA","KZ","BY"],
+        copy={
+          RU:{dating:"❤️ Новые анкеты здесь", casino:"🎰 Казино: Бонус сейчас"},
+          UA:{dating:"❤️ Дивись анкети тут", casino:"🎰 Казино: Отримай бонус"},
+          KZ:{dating:"❤️ Танымал анкеты", casino:"🎰 Ойын бонусы"},
+          BY:{dating:"❤️ Глядзець анкеты", casino:"🎰 Казіно бонус"},
+          US:{dating:"🔥 Hot Singles Waiting", casino:"🎰 Huge Casino Bonus"},
+          GB:{dating:"🔥 Check Hot Profiles", casino:"🎰 Casino Bonus Inside"},
+          CA:{dating:"🔥 Meet Singles Now", casino:"🎰 Big Casino Bonus"},
+          AU:{dating:"🔥 See Hot Profiles", casino:"🎰 Casino Bonus Today"},
+          DEFAULT:{dating:"🔥 See Profiles Now", casino:"🎰 Casino Bonus Waiting"}
+        },
+        texts=copy[country]||copy.DEFAULT;
 
-  const copy = {
-    RU:{dating:"❤️ Новые анкеты здесь", casino:"🎰 Казино: Бонус сейчас"},
-    UA:{dating:"❤️ Дивись анкети тут", casino:"🎰 Казино: Отримай бонус"},
-    KZ:{dating:"❤️ Танымал анкеты", casino:"🎰 Ойын бонусы"},
-    BY:{dating:"❤️ Глядзець анкеты", casino:"🎰 Казіно бонус"},
-    US:{dating:"🔥 Hot Singles Waiting", casino:"🎰 Huge Casino Bonus"},
-    GB:{dating:"🔥 Check Hot Profiles", casino:"🎰 Casino Bonus Inside"},
-    CA:{dating:"🔥 Meet Singles Now", casino:"🎰 Big Casino Bonus"},
-    AU:{dating:"🔥 See Hot Profiles", casino:"🎰 Casino Bonus Today"},
-    DEFAULT:{dating:"🔥 See Profiles Now", casino:"🎰 Casino Bonus Waiting"}
-  };
+  datingBtn.innerText=texts.dating;
+  casinoBtn.innerText=texts.casino;
+  datingBtn.href=DATING;
+  casinoBtn.href=CASINO;
 
-  const texts = copy[country] || copy["DEFAULT"];
-  datingBtn.innerText = texts.dating;
-  casinoBtn.innerText = texts.casino;
-  datingBtn.href = DATING;
-  casinoBtn.href = CASINO;
-
-  const cis = ["RU","UA","KZ","BY"];
-
-  // Показываем кнопку казино с задержкой на CIS
   if(cis.includes(country)){
     casinoBtn.style.display="none";
-    setTimeout(()=>{ casinoBtn.style.display="block"; },15000);
-  } else {
-    casinoBtn.style.display="block";
-  }
+    setTimeout(()=>casinoBtn.style.display="block",15000);
+  } else casinoBtn.style.display="block";
 
-  // Клик по фону
-  document.body.addEventListener("click",function(e){
+  // клик по фону
+  document.body.addEventListener("click",e=>{
     if(!e.target.closest("a")){
-      if(cis.includes(country)) window.location.href=DATING;
-      else window.location.href=CASINO;
+      window.location.href=cis.includes(country)?DATING:CASINO;
     }
   });
 
-  // Обработка клика по кнопкам
-  datingBtn.addEventListener("click", e=>{ e.stopPropagation(); window.location.href=DATING; });
-  casinoBtn.addEventListener("click", e=>{ e.stopPropagation(); window.location.href=CASINO; });
+  // кнопки
+  [datingBtn,casinoBtn].forEach(btn=>{
+    btn.addEventListener("click",e=>{ e.stopPropagation(); window.location.href=btn.href; });
+  });
 }
 
-// ===== BACK BUTTON REDIRECT на казино =====
+// ===== BACK BUTTON =====
 history.pushState(null,null,location.href);
-window.addEventListener("popstate",()=>{ window.location.href=CASINO; });
+window.addEventListener("popstate",()=>window.location.href=CASINO);
 </script>
 </body>
 </html>
