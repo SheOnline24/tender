@@ -1,296 +1,123 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find Someone Tonight</title>
-
+<title>Online Girls</title>
 <style>
 body{
   margin:0;
-  font-family:Arial;
   height:100vh;
-  overflow:hidden;
+  background-size:cover;
+  background-position:center;
+  background-color:#111;
+  font-family:Arial;
   cursor:pointer;
-  background:#0e1621 center/cover no-repeat;
-  transition: background-image 1s ease;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  align-items:center;
-  padding-bottom:20px;
-  position:relative;
+  transition: background-image 1s ease, transform 0.6s ease;
 }
-
-/* затемнение */
-.fade-overlay{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#000;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 1.2s ease;
-  z-index:1000;
+.overlay{
+  position:absolute; width:100%; height:100%; background:rgba(0,0,0,0.25); pointer-events:none;
 }
-
-/* кнопки */
-.button-container{
-  display:flex;
-  justify-content:space-between;
-  width:90%;
-  max-width:600px;
-  margin-bottom:10px;
-  gap:20px;
-  z-index:10;
-  position:relative;
+.bottom-btn{
+  position:fixed; padding:14px 20px; font-size:18px; text-align:center;
+  text-decoration:none; color:white; border-radius:10px;
+  backdrop-filter:blur(6px); background:rgba(0,0,0,0.4);
+  box-shadow:0 -2px 15px rgba(0,0,0,0.5); transition:0.3s; z-index:10;
 }
-
-.button-left,.button-right{
-  flex:1;
-  padding:14px 0;
-  border-radius:30px;
-  font-size:18px;
-  font-weight:bold;
-  cursor:pointer;
-  color:white;
-  text-align:center;
-  animation:flash 1s infinite;
-  min-width:120px;
-  border:none;
-}
-
-.button-left{
-  background:linear-gradient(45deg,#00c6ff,#0072ff);
-}
-
-.button-right{
-  background:linear-gradient(45deg,#ff2e63,#ff7a18);
-}
-
-@keyframes flash{
-  0%,50%,100%{opacity:1}
-  25%,75%{opacity:.5}
-}
-
-/* кружок */
-.online-circle{
-  position:fixed;
-  top:30px;
-  right:30px;
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  overflow:hidden;
-  cursor:pointer;
-  border:4px solid #00ff6a;
-  box-shadow:0 0 12px #00ff6a;
-  animation:glow 2s infinite;
-  z-index:10;
-  background:#111;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-.online-circle img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:50%;
-  opacity:0;
-  transition:opacity 1s ease;
-}
-
-.online-dot{
-  position:absolute;
-  bottom:4px;
-  right:4px;
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  background:#00ff6a;
-  box-shadow:0 0 8px #00ff6a;
-  border:2px solid #111;
-  animation:blink 2s infinite;
-}
-
-@keyframes glow{
-  0%,100%{box-shadow:0 0 12px #00ff6a}
-  50%{box-shadow:0 0 20px #00ff6a}
-}
-
-@keyframes blink{
-  0%,50%,100%{opacity:1}
-  25%,75%{opacity:.4}
-}
+.bottom-btn:hover{transform:scale(1.08);}
+#datingBtn{ bottom:15px; right:15px; }
+#casinoBtn{ bottom:15px; left:15px; display:none; }
 </style>
 </head>
-
 <body>
 
-<div class="online-circle" id="onlineCircle">
-  <img id="circlePhoto">
-  <div class="online-dot"></div>
-</div>
+<div class="overlay"></div>
 
-<div class="button-container">
-  <button class="button-left" id="chatBtn">Secret Chat</button>
-  <button class="button-right" id="meetBtn">Meet Her Now</button>
-</div>
-
-<div class="fade-overlay" id="fadeOverlay"></div>
+<a id="datingBtn" class="bottom-btn" href="#"></a>
+<a id="casinoBtn" class="bottom-btn" href="#"></a>
 
 <script>
-const casinoOffer="https://onlinepnpbit.com/2Vi4txHl/";
-const telegramChat="https://t.me/+NFHjJC5nOndlZjky";
-const smartLink="https://prev.affomelody.com/click?pid=6350&offer_id=25";
+// ===== ССЫЛКИ =====
+const DATING = "https://prev.affomelody.com/click?pid=6350&offer_id=25";
+const CASINO = "https://onlinepnpbit.com/2Vi4txHl/";
 
-/* массив фоновых изображений */
-const bgPhotos = [
-"https://SheOnline24.github.io/tender/photos/FindGirl1.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl2.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl3.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl4.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl5.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl6.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl7.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl8.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl9.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl10.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl12.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl13.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl14.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl15.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl16.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl17.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl18.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl19.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl20.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl21.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl22.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl23.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl24.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl25.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl26.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl27.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl28.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl29.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl30.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl31.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl32.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl33.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl34.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl35.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl36.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl37.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl38.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl39.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl40.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl41.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl42.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl43.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl44.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl45.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl46.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl47.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl48.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl49.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl50.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl51.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl52.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl53.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl54.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl55.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl56.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl57.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl58.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl59.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl60.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl61.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl62.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl63.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl64.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl65.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl66.jpg"
-];
+// ===== ФОТО (66 шт) =====
+const girls = [];
+for(let i=1;i<=66;i++){
+  girls.push(`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`);
+}
+// preload
+girls.forEach(src => { const img=new Image(); img.src=src; });
 
-// индекс текущего фона
-let currentIndex = 0;
+// ===== СМЕНА ФОНА каждые 7 секунд с лёгким зумом =====
+let currentIndex = Math.floor(Math.random()*girls.length);
+function changeBackground(){
+  document.body.style.backgroundImage = `url('${girls[currentIndex]}')`;
+  document.body.style.transform = "scale(1.03)";
+  setTimeout(()=>{document.body.style.transform="scale(1)";},600);
+  currentIndex = (currentIndex+1)%girls.length;
+}
+window.onload = () => {
+  changeBackground();
+  setInterval(changeBackground,7000);
+};
 
-// функция смены фона с предзагрузкой следующего
-function changeBackground() {
-  const nextIndex = Math.floor(Math.random() * bgPhotos.length);
-  const img = new Image();
-  img.src = bgPhotos[nextIndex];
-  img.onload = () => {
-    document.body.style.backgroundImage = `url('${bgPhotos[nextIndex]}')`;
-    currentIndex = nextIndex;
+// ===== ГЕО + ТЕКСТ КНОПОК =====
+fetch("https://ipapi.co/json/")
+  .then(res => res.json())
+  .then(data => handleGeo(data))
+  .catch(err => handleGeo({country:"US"}));
+
+function handleGeo(loc){
+  const country = loc.country || "US";
+  const datingBtn = document.getElementById("datingBtn");
+  const casinoBtn = document.getElementById("casinoBtn");
+
+  const copy = {
+    RU:{dating:"❤️ Новые анкеты здесь", casino:"🎰 Казино: Бонус сейчас"},
+    UA:{dating:"❤️ Дивись анкети тут", casino:"🎰 Казино: Отримай бонус"},
+    KZ:{dating:"❤️ Танымал анкеты", casino:"🎰 Ойын бонусы"},
+    BY:{dating:"❤️ Глядзець анкеты", casino:"🎰 Казіно бонус"},
+    US:{dating:"🔥 Hot Singles Waiting", casino:"🎰 Huge Casino Bonus"},
+    GB:{dating:"🔥 Check Hot Profiles", casino:"🎰 Casino Bonus Inside"},
+    CA:{dating:"🔥 Meet Singles Now", casino:"🎰 Big Casino Bonus"},
+    AU:{dating:"🔥 See Hot Profiles", casino:"🎰 Casino Bonus Today"},
+    DEFAULT:{dating:"🔥 See Profiles Now", casino:"🎰 Casino Bonus Waiting"}
   };
-}
 
-// первая смена фона
-changeBackground();
-// смена каждые 8 секунд
-setInterval(changeBackground, 8000);
+  const texts = copy[country] || copy["DEFAULT"];
+  datingBtn.innerText = texts.dating;
+  casinoBtn.innerText = texts.casino;
+  datingBtn.href = DATING;
+  casinoBtn.href = CASINO;
 
-/* random user */
-async function loadCirclePhoto(){
-  const img=document.getElementById("circlePhoto");
-  const res=await fetch("https://randomuser.me/api/?gender=female");
-  const data=await res.json();
-  img.style.opacity=0;
-  setTimeout(()=>{
-    img.src=data.results[0].picture.medium;
-    img.style.opacity=1;
-  },300);
-}
-function scheduleCirclePhoto(){
-  loadCirclePhoto();
-  setTimeout(scheduleCirclePhoto,9000+Math.random()*2000);
-}
-scheduleCirclePhoto();
+  const cis = ["RU","UA","KZ","BY"];
 
-/* кнопки */
-chatBtn.onclick=e=>{
-  e.stopPropagation();
-  window.location.href=telegramChat;
-};
-meetBtn.onclick=e=>{
-  e.stopPropagation();
-  window.location.href=smartLink;
-};
-onlineCircle.onclick=e=>{
-  e.stopPropagation();
-  window.location.href=smartLink;
-};
-
-/* клик по фону */
-document.body.onclick=e=>{
-  if(!e.target.closest(".button-left") &&
-     !e.target.closest(".button-right") &&
-     !e.target.closest(".online-circle")){
-    window.location.href=casinoOffer;
+  // Показываем кнопку казино
+  if(cis.includes(country)){
+    casinoBtn.style.display="none";
+    setTimeout(()=>{ casinoBtn.style.display="block"; },15000);
+  } else {
+    casinoBtn.style.display="block";
   }
-};
 
-/* универсальный редирект */
-const fade=document.getElementById("fadeOverlay");
-function goCasino(){
-  fade.style.opacity=1;
-  setTimeout(()=>{window.location.href=casinoOffer},1200);
+  // Клик по фону
+  document.body.addEventListener("click",function(e){
+    if(!e.target.closest("a")){
+      if(cis.includes(country)) window.location.href=DATING;
+      else window.location.href=CASINO;
+    }
+  });
+
+  // Обработка клика по кнопкам
+  datingBtn.addEventListener("click", e=>{ e.stopPropagation(); window.location.href=DATING; });
+  casinoBtn.addEventListener("click", e=>{ e.stopPropagation(); window.location.href=CASINO; });
 }
-document.addEventListener("visibilitychange",()=>{
-  if(document.hidden){
-    setTimeout(goCasino,2000);
-  }
-});
-window.addEventListener("pagehide",goCasino);
-window.addEventListener("blur",()=>{
-  setTimeout(goCasino,1500);
-});
+
+// ===== BACK BUTTON REDIRECT на казино =====
+history.pushState(null,null,location.href);
+window.addEventListener("popstate",()=>{ window.location.href=CASINO; });
+
 </script>
 </body>
 </html>
