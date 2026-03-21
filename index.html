@@ -4,27 +4,86 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Online Girls</title>
+
 <style>
 body{
   margin:0; height:100vh; background:#111 center/cover no-repeat;
   font-family:Arial; cursor:pointer;
   transition: background-image 1s ease, transform 0.6s ease;
 }
+
 .overlay{
-  position:absolute; width:100%; height:100%; background:rgba(0,0,0,0.25); pointer-events:none;
+  position:absolute; width:100%; height:100%;
+  background:rgba(0,0,0,0.25); pointer-events:none;
 }
+
+/* ===== НОВЫЕ КНОПКИ ===== */
 .bottom-btn{
-  position:fixed; padding:14px 20px; font-size:18px; text-align:center;
-  text-decoration:none; color:white; border-radius:10px;
-  backdrop-filter:blur(6px); background:rgba(0,0,0,0.4);
-  box-shadow:0 -2px 15px rgba(0,0,0,0.5); transition:0.3s; z-index:10;
+  position:fixed;
+  padding:16px 22px;
+  font-size:19px;
+  font-weight:bold;
+  text-align:center;
+  text-decoration:none;
+  color:white;
+  border-radius:14px;
+
+  background: linear-gradient(135deg, #ff3c3c, #ff8a00);
+  box-shadow: 0 6px 25px rgba(255, 60, 60, 0.6);
+
+  transition: all 0.25s ease;
+  z-index:10;
 }
-.bottom-btn:hover{transform:scale(1.08);}
-#datingBtn{ bottom:15px; right:15px; }
-#casinoBtn{ bottom:70px; right:15px; display:none; }
-@media(min-width:768px){ #casinoBtn{ bottom:15px; left:15px; right:auto; } }
+
+/* стрелка */
+.bottom-btn::after{
+  content:" →";
+  font-weight:900;
+}
+
+/* hover */
+.bottom-btn:hover{
+  transform: scale(1.12);
+  box-shadow: 0 10px 35px rgba(255, 60, 60, 0.9);
+}
+
+/* пульсация */
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.08);}
+  100%{transform:scale(1);}
+}
+
+#datingBtn{
+  bottom:15px;
+  right:15px;
+  animation: pulse 1.8s infinite;
+}
+
+/* casino — зелёная */
+#casinoBtn{
+  bottom:70px;
+  right:15px;
+  display:none;
+
+  background: linear-gradient(135deg, #00c853, #00e676);
+  box-shadow: 0 6px 25px rgba(0, 200, 83, 0.6);
+}
+
+#casinoBtn:hover{
+  box-shadow: 0 10px 35px rgba(0, 200, 83, 0.9);
+}
+
+@media(min-width:768px){
+  #casinoBtn{
+    bottom:15px;
+    left:15px;
+    right:auto;
+  }
+}
 </style>
 </head>
+
 <body>
 
 <div class="overlay"></div>
@@ -39,8 +98,9 @@ const DATING="https://prev.affomelody.com/click?pid=6350&offer_id=25",
 // ===== ФОТО =====
 const girls = Array.from({length:66},(_,i)=>`https://SheOnline24.github.io/tender/photos/FindGirl${i+1}.jpg`);
 
-// ===== ФОН С ЛЕНИВОЙ ЗАГРУЗКОЙ =====
+// ===== ФОН =====
 let currentIndex=Math.floor(Math.random()*girls.length);
+
 function preloadNext(n=3){
   for(let i=1;i<=n;i++){
     const idx=(currentIndex+i)%girls.length;
@@ -48,19 +108,21 @@ function preloadNext(n=3){
     img.src=girls[idx];
   }
 }
+
 function changeBackground(){
   document.body.style.backgroundImage=`url('${girls[currentIndex]}')`;
   document.body.style.transform="scale(1.03)";
   setTimeout(()=>document.body.style.transform="scale(1)",600);
-  preloadNext(); // подгружаем 3 следующих фото
+  preloadNext();
   currentIndex=(currentIndex+1)%girls.length;
 }
+
 window.onload=()=>{
   changeBackground();
   setInterval(changeBackground,7000);
 };
 
-// ===== ГЕО + кнопки =====
+// ===== ГЕО =====
 fetch("https://ipapi.co/json/")
   .then(r=>r.json())
   .then(data=>handleGeo(data))
@@ -92,7 +154,9 @@ function handleGeo(loc){
   if(cis.includes(country)){
     casinoBtn.style.display="none";
     setTimeout(()=>casinoBtn.style.display="block",15000);
-  } else casinoBtn.style.display="block";
+  } else {
+    casinoBtn.style.display="block";
+  }
 
   document.body.addEventListener("click",e=>{
     if(!e.target.closest("a")){
@@ -101,7 +165,10 @@ function handleGeo(loc){
   });
 
   [datingBtn,casinoBtn].forEach(btn=>{
-    btn.addEventListener("click",e=>{ e.stopPropagation(); window.location.href=btn.href; });
+    btn.addEventListener("click",e=>{
+      e.stopPropagation();
+      window.location.href=btn.href;
+    });
   });
 }
 
@@ -109,5 +176,6 @@ function handleGeo(loc){
 history.pushState(null,null,location.href);
 window.addEventListener("popstate",()=>window.location.href=CASINO);
 </script>
+
 </body>
 </html>
