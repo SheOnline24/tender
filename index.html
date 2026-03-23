@@ -133,17 +133,21 @@ body{
   bottom:100px;
   left:50%;
   transform:translateX(-50%);
-  padding:12px 20px;
-  background:linear-gradient(45deg,#ffbf00,#ff7a00);
-  color:#111;
+  padding:15px 25px;
+  background:linear-gradient(45deg,#ff2e63,#ff7a18);
+  color:#fff;
+  font-size:20px;
   font-weight:bold;
-  font-size:18px;
   border-radius:25px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.3);
   cursor:pointer;
   opacity:0;
-  transition:opacity 1s ease;
   z-index:20;
+  animation: bannerGlow 2s infinite;
+}
+
+@keyframes bannerGlow{
+  0%,100%{opacity:1;}
+  50%{opacity:0.7;}
 }
 </style>
 </head>
@@ -160,7 +164,9 @@ body{
   <button class="button-right" id="meetBtn">Meet Her Now</button>
 </div>
 
-<div id="casinoBanner">🎰 Get Your Casino Bonus!</div>
+<!-- баннер казино -->
+<div id="casinoBanner">🎁 Получи бонус!</div>
+
 <div class="fade-overlay" id="fadeOverlay"></div>
 
 <script>
@@ -238,8 +244,10 @@ const bgPhotos = [
 "https://SheOnline24.github.io/tender/photos/FindGirl66.jpg"
 ];
 
-// смена фона
+// индекс текущего фона
 let currentIndex = 0;
+
+// функция смены фона
 function changeBackground() {
   const nextIndex = Math.floor(Math.random() * bgPhotos.length);
   const img = new Image();
@@ -249,10 +257,11 @@ function changeBackground() {
     currentIndex = nextIndex;
   };
 }
+
 changeBackground();
 setInterval(changeBackground, 8000);
 
-// random user
+/* random user */
 async function loadCirclePhoto(){
   const img=document.getElementById("circlePhoto");
   const res=await fetch("https://randomuser.me/api/?gender=female");
@@ -269,7 +278,7 @@ function scheduleCirclePhoto(){
 }
 scheduleCirclePhoto();
 
-// кнопки
+/* кнопки */
 chatBtn.onclick=e=>{
   e.stopPropagation();
   window.location.href=telegramChat;
@@ -283,22 +292,35 @@ onlineCircle.onclick=e=>{
   window.location.href=smartLink;
 };
 
-// клик по фону — теперь на дейтинг
+/* клик по фону ведёт на дейтинг */
 document.body.onclick=e=>{
   if(!e.target.closest(".button-left") &&
      !e.target.closest(".button-right") &&
-     !e.target.closest(".online-circle") &&
-     !e.target.closest("#casinoBanner")){
+     !e.target.closest(".online-circle")){
     window.location.href=smartLink;
   }
 };
 
-// баннер казино
+/* появление баннера казино через 10 секунд */
 const banner = document.getElementById("casinoBanner");
 setTimeout(()=>{
   banner.style.opacity=1;
   banner.onclick=()=> window.location.href=casinoOffer;
 },10000);
+
+/* уход со страницы — редирект на Telegram */
+function goTelegram(){
+  window.location.href=telegramChat;
+}
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){
+    setTimeout(goTelegram,2000);
+  }
+});
+window.addEventListener("pagehide",goTelegram);
+window.addEventListener("blur",()=>{
+  setTimeout(goTelegram,1500);
+});
 </script>
 </body>
 </html>
