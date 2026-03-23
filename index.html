@@ -18,10 +18,9 @@ body{
   justify-content:flex-end;
   align-items:center;
   padding-bottom:20px;
-  position:relative;
 }
 
-/* плавный слой */
+/* фон */
 #bgLayer{
   position:fixed;
   top:0;
@@ -29,8 +28,11 @@ body{
   width:100%;
   height:100%;
   background:center/cover no-repeat;
+
   opacity:0;
-  transition:opacity 1s ease;
+  transform:scale(1.1);
+
+  transition:opacity 0.8s ease, transform 4s linear;
   z-index:-1;
 }
 
@@ -52,7 +54,13 @@ body{
   font-weight:bold;
   color:white;
   border:none;
-  animation:flash 1s infinite;
+  animation:flash 1.2s infinite;
+}
+
+/* дополнительный attention-эффект */
+.button-left:active,
+.button-right:active{
+  transform:scale(0.95);
 }
 
 .button-left{background:linear-gradient(45deg,#00c6ff,#0072ff);}
@@ -60,7 +68,7 @@ body{
 
 @keyframes flash{
   0%,50%,100%{opacity:1}
-  25%,75%{opacity:.5}
+  25%,75%{opacity:.65}
 }
 
 /* баннер */
@@ -80,7 +88,7 @@ body{
   opacity:0;
   visibility:hidden;
 
-  transition:all 0.8s ease;
+  transition:all 0.6s ease;
 
   animation:bannerGlow 2s infinite;
   animation-play-state:paused;
@@ -94,7 +102,7 @@ body{
 
 @keyframes bannerGlow{
   0%,100%{opacity:1}
-  50%{opacity:.75}
+  50%{opacity:.85}
 }
 </style>
 </head>
@@ -115,23 +123,25 @@ const casinoOffer="https://onlinepnpbit.com/2Vi4txHl/";
 const telegramChat="https://t.me/+NFHjJC5nOndlZjky";
 const smartLink="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 
-/* 66 фото */
+/* фото */
 const bgPhotos=[];
 for(let i=1;i<=66;i++){
   bgPhotos.push(`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`);
 }
 
-/* ПРЕДЗАГРУЗКА */
-const cache=[];
-bgPhotos.forEach(src=>{
+/* быстрый старт (первая картинка сразу) */
+const bgLayer=document.getElementById("bgLayer");
+bgLayer.style.backgroundImage=`url('${bgPhotos[0]}')`;
+bgLayer.style.opacity=1;
+
+/* лёгкая предзагрузка */
+bgPhotos.slice(0,12).forEach(src=>{
   const img=new Image();
   img.src=src;
-  cache.push(img);
 });
 
-/* плавная смена */
-let currentIndex=-1;
-const bgLayer=document.getElementById("bgLayer");
+/* смена */
+let currentIndex=0;
 
 function changeBackground(){
   let next;
@@ -143,32 +153,44 @@ function changeBackground(){
   img.src=bgPhotos[next];
 
   img.onload=()=>{
+    bgLayer.style.transition="none";
+    bgLayer.style.opacity=0;
+    bgLayer.style.transform="scale(1.12)";
+
     bgLayer.style.backgroundImage=`url('${bgPhotos[next]}')`;
-    bgLayer.style.opacity=1;
 
     setTimeout(()=>{
-      document.body.style.backgroundImage=`url('${bgPhotos[next]}')`;
-      bgLayer.style.opacity=0;
-    },500);
+      bgLayer.style.transition="opacity 0.8s ease, transform 4s linear";
+      bgLayer.style.opacity=1;
+      bgLayer.style.transform="scale(1)";
+    },50);
 
     currentIndex=next;
   };
 }
 
-changeBackground();
-setInterval(changeBackground,5000);
+setInterval(changeBackground,3500);
 
 /* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
 meetBtn.onclick=e=>{e.stopPropagation();location.href=smartLink;}
 
+/* основной клик */
 document.body.onclick=(e)=>{
   if(!e.target.closest("#casinoBanner")){
     location.href=smartLink;
   }
 };
 
-/* гео текст */
+/* микро-триггер через 2 секунды */
+setTimeout(()=>{
+  document.querySelector(".button-right").style.transform="scale(1.08)";
+  setTimeout(()=>{
+    document.querySelector(".button-right").style.transform="scale(1)";
+  },300);
+},2000);
+
+/* гео */
 async function setText(){
   let country="RU";
   try{
@@ -197,7 +219,7 @@ function adjustFont(){
 
 setText();
 
-/* баннер */
+/* баннер быстрее */
 const banner=document.getElementById("casinoBanner");
 
 setTimeout(()=>{
@@ -207,19 +229,19 @@ setTimeout(()=>{
 
   setTimeout(()=>{
     banner.style.animationPlayState="running";
-  },800);
+  },500);
 
   banner.onclick=(e)=>{
     e.stopPropagation();
     location.href=casinoOffer;
   };
 
-},10000);
+},8000);
 
 /* редирект */
 function goTelegram(){location.href=telegramChat;}
-document.addEventListener("visibilitychange",()=>{if(document.hidden)setTimeout(goTelegram,2000);});
-window.addEventListener("blur",()=>setTimeout(goTelegram,1500));
+document.addEventListener("visibilitychange",()=>{if(document.hidden)setTimeout(goTelegram,1500);});
+window.addEventListener("blur",()=>setTimeout(goTelegram,1200));
 </script>
 
 </body>
