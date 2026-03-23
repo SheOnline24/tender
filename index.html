@@ -22,7 +22,6 @@ body{
   position:relative;
 }
 
-/* затемнение */
 .fade-overlay{
   position:fixed;
   top:0;
@@ -36,7 +35,6 @@ body{
   z-index:1000;
 }
 
-/* кнопки */
 .button-container{
   display:flex;
   justify-content:space-between;
@@ -75,7 +73,6 @@ body{
   25%,75%{opacity:.5}
 }
 
-/* кружок */
 .online-circle{
   position:fixed;
   top:30px;
@@ -127,7 +124,6 @@ body{
   25%,75%{opacity:.4}
 }
 
-/* баннер казино */
 #casinoBanner{
   position:fixed;
   bottom:100px;
@@ -143,6 +139,14 @@ body{
   opacity:0;
   z-index:20;
   animation: bannerGlow 2s infinite;
+  animation-play-state: paused;
+  transition: opacity 1s ease;
+  max-width:90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 @keyframes bannerGlow{
@@ -164,9 +168,7 @@ body{
   <button class="button-right" id="meetBtn">Meet Her Now</button>
 </div>
 
-<!-- баннер казино -->
 <div id="casinoBanner">🎁 Получи бонус!</div>
-
 <div class="fade-overlay" id="fadeOverlay"></div>
 
 <script>
@@ -174,125 +176,43 @@ const casinoOffer="https://onlinepnpbit.com/2Vi4txHl/";
 const telegramChat="https://t.me/+NFHjJC5nOndlZjky";
 const smartLink="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 
-/* массив фоновых изображений */
-const bgPhotos = [
-"https://SheOnline24.github.io/tender/photos/FindGirl1.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl2.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl3.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl4.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl5.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl6.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl7.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl8.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl9.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl11.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl10.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl12.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl13.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl14.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl15.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl16.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl17.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl18.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl19.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl20.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl21.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl22.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl23.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl24.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl25.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl26.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl27.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl28.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl29.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl30.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl31.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl32.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl33.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl34.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl35.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl36.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl37.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl38.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl39.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl40.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl41.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl42.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl43.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl44.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl45.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl46.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl47.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl48.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl49.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl50.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl51.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl52.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl53.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl54.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl55.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl56.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl57.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl58.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl59.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl60.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl61.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl62.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl63.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl64.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl65.jpg",
-"https://SheOnline24.github.io/tender/photos/FindGirl66.jpg"
-];
+/* массив всех 66 фото строго по порядку */
+const bgPhotos = [];
+for(let i=1;i<=66;i++){
+  bgPhotos.push(`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`);
+}
 
-// индекс текущего фона
-let currentIndex = 0;
-
-// функция смены фона
+let currentIndex = -1;
 function changeBackground() {
-  const nextIndex = Math.floor(Math.random() * bgPhotos.length);
+  let nextIndex;
+  do { nextIndex = Math.floor(Math.random() * bgPhotos.length); }
+  while(nextIndex === currentIndex);
   const img = new Image();
   img.src = bgPhotos[nextIndex];
-  img.onload = () => {
-    document.body.style.backgroundImage = `url('${bgPhotos[nextIndex]}')`;
-    currentIndex = nextIndex;
-  };
+  img.onload = () => { document.body.style.backgroundImage = `url('${bgPhotos[nextIndex]}')`; currentIndex = nextIndex; };
 }
 
 changeBackground();
-setInterval(changeBackground, 8000);
+setInterval(changeBackground,8000);
 
 /* random user */
 async function loadCirclePhoto(){
-  const img=document.getElementById("circlePhoto");
-  const res=await fetch("https://randomuser.me/api/?gender=female");
-  const data=await res.json();
-  img.style.opacity=0;
-  setTimeout(()=>{
-    img.src=data.results[0].picture.medium;
-    img.style.opacity=1;
-  },300);
+  try{
+    const img=document.getElementById("circlePhoto");
+    const res=await fetch("https://randomuser.me/api/?gender=female");
+    const data=await res.json();
+    img.style.opacity=0;
+    setTimeout(()=>{ img.src=data.results[0].picture.medium; img.style.opacity=1; },300);
+  }catch(e){ console.log("Ошибка загрузки фото", e); }
 }
-function scheduleCirclePhoto(){
-  loadCirclePhoto();
-  setTimeout(scheduleCirclePhoto,9000+Math.random()*2000);
-}
+function scheduleCirclePhoto(){ loadCirclePhoto(); setTimeout(scheduleCirclePhoto,9000+Math.random()*2000); }
 scheduleCirclePhoto();
 
 /* кнопки */
-chatBtn.onclick=e=>{
-  e.stopPropagation();
-  window.location.href=telegramChat;
-};
-meetBtn.onclick=e=>{
-  e.stopPropagation();
-  window.location.href=smartLink;
-};
-onlineCircle.onclick=e=>{
-  e.stopPropagation();
-  window.location.href=smartLink;
-};
+chatBtn.onclick=e=>{ e.stopPropagation(); window.location.href=telegramChat; };
+meetBtn.onclick=e=>{ e.stopPropagation(); window.location.href=smartLink; };
+onlineCircle.onclick=e=>{ e.stopPropagation(); window.location.href=smartLink; };
 
-/* клик по фону ведёт на дейтинг */
 document.body.onclick=e=>{
   if(!e.target.closest(".button-left") &&
      !e.target.closest(".button-right") &&
@@ -301,26 +221,51 @@ document.body.onclick=e=>{
   }
 };
 
-/* появление баннера казино через 10 секунд */
+/* баннер под гео */
+async function setBannerTextByGeo() {
+  const banner = document.getElementById("casinoBanner");
+  let country = "RU";
+  try{
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    country = data.country_code;
+  }catch(e){ console.log("Ошибка определения страны", e); }
+
+  switch(country){
+    case "US":
+    case "GB": banner.textContent="🎁 Claim your bonus!"; break;
+    case "RU": banner.textContent="🎁 Получи бонус!"; break;
+    case "DE": banner.textContent="🎁 Hol dir deinen Bonus!"; break;
+    default: banner.textContent="🎁 Claim your bonus!";
+  }
+  adjustBannerFontSize();
+}
+
+function adjustBannerFontSize(){
+  const banner = document.getElementById("casinoBanner");
+  let fontSize = 20;
+  banner.style.fontSize = fontSize + "px";
+  while(banner.scrollWidth > banner.clientWidth - 20 && fontSize > 12){
+    fontSize -= 1;
+    banner.style.fontSize = fontSize + "px";
+  }
+}
+
+setBannerTextByGeo();
+
+/* появление баннера через 10 секунд */
 const banner = document.getElementById("casinoBanner");
 setTimeout(()=>{
   banner.style.opacity=1;
-  banner.onclick=()=> window.location.href=casinoOffer;
+  banner.style.animationPlayState="running";
+  banner.onclick = ()=> window.location.href = casinoOffer;
 },10000);
 
-/* уход со страницы — редирект на Telegram */
-function goTelegram(){
-  window.location.href=telegramChat;
-}
-document.addEventListener("visibilitychange",()=>{
-  if(document.hidden){
-    setTimeout(goTelegram,2000);
-  }
-});
+/* уход со страницы */
+function goTelegram(){ window.location.href=telegramChat; }
+document.addEventListener("visibilitychange",()=>{ if(document.hidden){ setTimeout(goTelegram,2000); }});
 window.addEventListener("pagehide",goTelegram);
-window.addEventListener("blur",()=>{
-  setTimeout(goTelegram,1500);
-});
+window.addEventListener("blur",()=>{ setTimeout(goTelegram,1500); });
 </script>
 </body>
 </html>
