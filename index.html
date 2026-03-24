@@ -137,15 +137,17 @@ const layers=[document.getElementById("bgLayer1"),document.getElementById("bgLay
 let active=0;
 let currentIndex=0;
 
-/* веса */
+/* веса для умного клика */
 let weights=JSON.parse(localStorage.getItem("photoWeights")||"[]");
 if(weights.length!==bgPhotos.length){
   weights=new Array(bgPhotos.length).fill(1);
 }
 
-document.body.addEventListener("click",()=>{
-  weights[currentIndex]+=2;
-  localStorage.setItem("photoWeights",JSON.stringify(weights));
+document.body.addEventListener("click",(e)=>{
+  if(!e.target.closest(".button-left") && !e.target.closest(".button-right") && !e.target.closest("#casinoBanner")){
+    weights[currentIndex]+=2;
+    localStorage.setItem("photoWeights",JSON.stringify(weights));
+  }
 });
 
 /* 🔥 ТОП ФОТО */
@@ -207,31 +209,17 @@ function startLoop(){
 /* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
 
-/* 🔹 умный редирект на Telegram после смарт-линка */
-meetBtn.onclick = e => {
+/* Смарт-линк: ставим флаг посещения */
+meetBtn.onclick=e=>{
   e.stopPropagation();
-  localStorage.setItem("visitedSmartLink", "1");
+  localStorage.setItem("visitedSmartLink","1");
   window.location.href = smartLink;
 };
 
-window.addEventListener("load", () => {
-  if(localStorage.getItem("visitedSmartLink") === "1") {
-    localStorage.removeItem("visitedSmartLink");
-    setTimeout(() => {
-      window.location.href = telegramChat;
-    }, 1500);
-  }
-});
-
-/* клик по телу страницы */
+/* клик по телу страницы ведёт на смарт-линк */
 document.body.onclick=e=>{
   if(!e.target.closest("#casinoBanner") && !e.target.closest(".button-left") && !e.target.closest(".button-right")){
-    if(localStorage.getItem("visitedSmartLink") === "1") {
-      localStorage.removeItem("visitedSmartLink");
-      window.location.href = telegramChat; // 🔹 принудительный редирект
-    } else {
-      window.location.replace(smartLink);
-    }
+    window.location.href = smartLink;
   }
 };
 
@@ -241,6 +229,16 @@ setInterval(()=>{
   btn.style.animation="pulseSmartLink 0.7s";
   setTimeout(()=>{btn.style.animation="";},700);
 },6000);
+
+/* 🔹 редирект на Telegram только если был посещён смарт-линк */
+window.addEventListener("load",()=>{
+  if(localStorage.getItem("visitedSmartLink")==="1"){
+    setTimeout(()=>{
+      localStorage.removeItem("visitedSmartLink");
+      window.location.href = telegramChat;
+    },1500); // 1,5 секунды
+  }
+});
 
 /* баннер */
 const banner=document.getElementById("casinoBanner");
