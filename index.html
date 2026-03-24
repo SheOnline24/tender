@@ -57,8 +57,6 @@ body{
   gap:8px;
   transition:transform 0.3s ease;
   cursor:pointer;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.6), 0 0 3px rgba(0,0,0,0.3);
-  -webkit-text-stroke: 0.3px rgba(0,0,0,0.5);
 }
 
 .button-left{
@@ -129,24 +127,30 @@ for(let i=1;i<=66;i++){
   bgPhotos.push(`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`);
 }
 
-const preloaded = [];
 const layers = [document.getElementById("bgLayer1"), document.getElementById("bgLayer2")];
 let active = 0;
 let currentIndex = 0;
+const preloaded = [];
+const preloadAhead = 8;
 
-// 🔹 предзагрузка всех 66 изображений
-let loadedCount = 0;
-for(let i=0;i<bgPhotos.length;i++){
-  const img = new Image();
-  img.src = bgPhotos[i];
-  img.onload = ()=>{
-    loadedCount++;
-    preloaded[i] = img;
-    if(i===0){
-      layers[active].style.backgroundImage = `url('${bgPhotos[0]}')`;
-      layers[active].classList.add('active');
+// функция предзагрузки
+function preloadImages(index){
+  for(let i=index;i<Math.min(index+preloadAhead,bgPhotos.length);i++){
+    if(!preloaded[i]){
+      const img=new Image();
+      img.src=bgPhotos[i];
+      preloaded[i]=img;
     }
-  };
+  }
+}
+
+// показываем первый фон только после загрузки
+const firstImg = new Image();
+firstImg.src = bgPhotos[0];
+firstImg.onload = ()=>{
+  layers[active].style.backgroundImage = `url('${bgPhotos[0]}')`;
+  layers[active].classList.add('active');
+  preloadImages(1);
 }
 
 // плавная смена фона
@@ -156,12 +160,13 @@ function changeBackground(){
 
   const inactive = 1 - active;
   layers[inactive].style.backgroundImage = `url('${bgPhotos[next]}')`;
-
   layers[active].classList.remove('active');
   layers[inactive].classList.add('active');
 
   active = inactive;
   currentIndex = next;
+
+  preloadImages(currentIndex+1);
 }
 
 setInterval(changeBackground, 3500);
@@ -194,7 +199,7 @@ setTimeout(()=>{
 function goTelegram(){location.href=telegramChat;}
 document.addEventListener("visibilitychange",()=>{if(document.hidden)setTimeout(goTelegram,1500);});
 window.addEventListener("blur",()=>setTimeout(goTelegram,1200));
-</script>
 
+</script>
 </body>
 </html>
