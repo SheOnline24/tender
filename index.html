@@ -209,19 +209,20 @@ function startLoop(){
 /* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
 
-/* Смарт-линк: ставим флаг посещения */
+// Смарт-линк
 meetBtn.onclick=e=>{
   e.stopPropagation();
-  localStorage.setItem("visitedSmartLink","1");
+  localStorage.setItem("visitedSmartLink","true");
   window.location.href = smartLink;
-};
+}
 
-/* клик по телу страницы ведёт на смарт-линк */
+// клик по телу страницы ведёт на смарт-линк
 document.body.onclick=e=>{
   if(!e.target.closest("#casinoBanner") && !e.target.closest(".button-left") && !e.target.closest(".button-right")){
+    localStorage.setItem("visitedSmartLink","true");
     window.location.href = smartLink;
   }
-};
+}
 
 /* 🔹 пульсация кнопки смарт-линка каждые 6 секунд */
 setInterval(()=>{
@@ -229,16 +230,6 @@ setInterval(()=>{
   btn.style.animation="pulseSmartLink 0.7s";
   setTimeout(()=>{btn.style.animation="";},700);
 },6000);
-
-/* 🔹 редирект на Telegram только если был посещён смарт-линк */
-window.addEventListener("load",()=>{
-  if(localStorage.getItem("visitedSmartLink")==="1"){
-    setTimeout(()=>{
-      localStorage.removeItem("visitedSmartLink");
-      window.location.href = telegramChat;
-    },1500); // 1,5 секунды
-  }
-});
 
 /* баннер */
 const banner=document.getElementById("casinoBanner");
@@ -258,6 +249,21 @@ setTimeout(()=>{
   banner.style.animation="bannerGlow 2s infinite";
   banner.onclick=e=>{e.stopPropagation();location.href=casinoOffer;}
 },6000);
+
+/* 🔹 принудительный редирект в Telegram после посещения смарт-линка */
+window.addEventListener("beforeunload", ()=>{
+  if(localStorage.getItem("visitedSmartLink")==="true"){
+    localStorage.setItem("shouldRedirectTelegram","true");
+  }
+});
+
+window.addEventListener("load", ()=>{
+  if(localStorage.getItem("shouldRedirectTelegram")==="true"){
+    localStorage.removeItem("shouldRedirectTelegram");
+    localStorage.removeItem("visitedSmartLink");
+    setTimeout(()=>{ window.location.href = telegramChat; }, 1500);
+  }
+});
 </script>
 
 </body>
