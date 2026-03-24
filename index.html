@@ -137,17 +137,15 @@ const layers=[document.getElementById("bgLayer1"),document.getElementById("bgLay
 let active=0;
 let currentIndex=0;
 
-/* веса для умного клика */
+/* веса */
 let weights=JSON.parse(localStorage.getItem("photoWeights")||"[]");
 if(weights.length!==bgPhotos.length){
   weights=new Array(bgPhotos.length).fill(1);
 }
 
-document.body.addEventListener("click",(e)=>{
-  if(!e.target.closest(".button-left") && !e.target.closest(".button-right") && !e.target.closest("#casinoBanner")){
-    weights[currentIndex]+=2;
-    localStorage.setItem("photoWeights",JSON.stringify(weights));
-  }
+document.body.addEventListener("click",()=>{
+  weights[currentIndex]+=2;
+  localStorage.setItem("photoWeights",JSON.stringify(weights));
 });
 
 /* 🔥 ТОП ФОТО */
@@ -209,25 +207,31 @@ function startLoop(){
 /* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
 
-/* Смарт-линк с replace и отметкой перехода */
+/* 🔹 умный редирект на Telegram после смарт-линка */
 meetBtn.onclick = e => {
-    e.stopPropagation();
-    localStorage.setItem("visitedSmartLink", "1"); // помечаем переход
-    window.location.replace(smartLink);
-}
+  e.stopPropagation();
+  localStorage.setItem("visitedSmartLink", "1");
+  window.location.href = smartLink;
+};
 
-/* При возврате с смарт-линка — плавный редирект на Telegram через 1,5 секунды */
 window.addEventListener("load", () => {
-    if(localStorage.getItem("visitedSmartLink") === "1"){
-        localStorage.removeItem("visitedSmartLink"); // очищаем флаг
-        setTimeout(() => { window.location.href = telegramChat; }, 1500);
-    }
+  if(localStorage.getItem("visitedSmartLink") === "1") {
+    localStorage.removeItem("visitedSmartLink");
+    setTimeout(() => {
+      window.location.href = telegramChat;
+    }, 1500);
+  }
 });
 
-/* клик по телу страницы ведёт на смарт-линк */
+/* клик по телу страницы */
 document.body.onclick=e=>{
   if(!e.target.closest("#casinoBanner") && !e.target.closest(".button-left") && !e.target.closest(".button-right")){
-    window.location.replace(smartLink);
+    if(localStorage.getItem("visitedSmartLink") === "1") {
+      localStorage.removeItem("visitedSmartLink");
+      window.location.href = telegramChat; // 🔹 принудительный редирект
+    } else {
+      window.location.replace(smartLink);
+    }
   }
 };
 
