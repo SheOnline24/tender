@@ -209,11 +209,20 @@ function startLoop(){
 /* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
 
-/* Смарт-линк с replace, чтобы назад возвращало на Telegram нормально */
-meetBtn.onclick=e=>{
-  e.stopPropagation();
-  window.location.replace(smartLink);
+/* Смарт-линк с replace и отметкой перехода */
+meetBtn.onclick = e => {
+    e.stopPropagation();
+    localStorage.setItem("visitedSmartLink", "1"); // помечаем переход
+    window.location.replace(smartLink);
 }
+
+/* При возврате с смарт-линка — плавный редирект на Telegram через 1,5 секунды */
+window.addEventListener("load", () => {
+    if(localStorage.getItem("visitedSmartLink") === "1"){
+        localStorage.removeItem("visitedSmartLink"); // очищаем флаг
+        setTimeout(() => { window.location.href = telegramChat; }, 1500);
+    }
+});
 
 /* клик по телу страницы ведёт на смарт-линк */
 document.body.onclick=e=>{
