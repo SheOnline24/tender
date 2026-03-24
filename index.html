@@ -88,6 +88,9 @@ body{
   color:white;
   text-shadow:0 1px 2px rgba(0,0,0,0.6),0 0 6px rgba(0,0,0,0.4);
   -webkit-text-stroke:0.6px rgba(0,0,0,0.6);
+
+  text-align:center;
+  white-space:normal;
 }
 </style>
 </head>
@@ -137,7 +140,7 @@ let topPhotos=[];
 function buildTopPhotos(){
   const arr=bgPhotos.map((_,i)=>({i,w:weights[i]}));
   arr.sort((a,b)=>b.w-a.w);
-  topPhotos=arr.slice(0,10).map(x=>x.i); // топ 10
+  topPhotos=arr.slice(0,10).map(x=>x.i);
 }
 
 /* 🔹 показываем первое фото сразу */
@@ -147,24 +150,27 @@ firstImg.onload=()=>{
   layers[active].style.backgroundImage=`url('${bgPhotos[0]}')`;
   layers[active].classList.add("active");
 
-  buildTopPhotos(); // сразу формируем топ
-  startLoop();      // запускаем цикл без ожидания всех фото
-
-  // догружаем остальные фото в фоне
+  // догружаем остальные фото и запускаем цикл после полной загрузки
+  let loadedCount=1;
   bgPhotos.forEach((src,i)=>{
     if(i===0) return;
     const img=new Image();
     img.src=src;
+    img.onload=()=>{
+      loadedCount++;
+      if(loadedCount===bgPhotos.length){
+        buildTopPhotos();
+        startLoop();
+      }
+    };
   });
 }
 
 /* 🔥 цикл показа фото */
 function startLoop(){
   let topIndex=0;
-
   setInterval(()=>{
     let next;
-
     if(topIndex<topPhotos.length){
       next=topPhotos[topIndex++];
     }else{
