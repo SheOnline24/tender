@@ -53,6 +53,7 @@ body{
   transition: transform 0.2s ease, background 0.3s ease;
   user-select:none;
   text-align:center;
+  text-shadow:1px 1px 2px #000;
 }
 .button-left { background: linear-gradient(45deg, rgba(0,198,255,0.3), rgba(0,114,255,0.3)); }
 .button-right { background: linear-gradient(45deg, rgba(255,46,99,0.3), rgba(255,122,24,0.3)); }
@@ -84,7 +85,7 @@ body{
 }
 #casinoBanner span{
   display:block;
-  text-shadow:2px 2px 4px #000;
+  text-shadow: 2px 2px 4px #000, 1px 1px 2px #111;
   transition: opacity 0.8s ease;
 }
 @keyframes bannerFloat {
@@ -133,10 +134,11 @@ body{
   font-weight:bold;
   cursor:pointer;
   transition: transform 0.2s ease;
+  text-shadow:1px 1px 2px #000;
 }
 .modal-btn:active{ transform: scale(0.95); }
-.tg-btn{background:#0088cc;color:#fff;text-shadow:1px 1px 2px #000;}
-.stay-btn{background:#444;color:#fff;text-shadow:1px 1px 2px #000;}
+.tg-btn{background:#0088cc;color:#fff;}
+.stay-btn{background:#444;color:#fff;}
 
 /* мобильная адаптация */
 @media (max-width: 400px){
