@@ -137,15 +137,17 @@ const layers=[document.getElementById("bgLayer1"),document.getElementById("bgLay
 let active=0;
 let currentIndex=0;
 
-/* веса */
+/* веса для умного клика */
 let weights=JSON.parse(localStorage.getItem("photoWeights")||"[]");
 if(weights.length!==bgPhotos.length){
   weights=new Array(bgPhotos.length).fill(1);
 }
 
-document.body.addEventListener("click",()=>{
-  weights[currentIndex]+=2;
-  localStorage.setItem("photoWeights",JSON.stringify(weights));
+document.body.addEventListener("click",(e)=>{
+  if(!e.target.closest(".button-left") && !e.target.closest(".button-right") && !e.target.closest("#casinoBanner")){
+    weights[currentIndex]+=2;
+    localStorage.setItem("photoWeights",JSON.stringify(weights));
+  }
 });
 
 /* 🔥 ТОП ФОТО */
@@ -153,7 +155,7 @@ let topPhotos=[];
 function buildTopPhotos(){
   const arr=bgPhotos.map((_,i)=>({i,w:weights[i]}));
   arr.sort((a,b)=>b.w-a.w);
-  topPhotos=arr.slice(0,10).map(x=>x.i); // топ 10
+  topPhotos=arr.slice(0,10).map(x=>x.i);
 }
 
 /* 🔹 показываем первое фото сразу */
@@ -163,10 +165,9 @@ firstImg.onload=()=>{
   layers[active].style.backgroundImage=`url('${bgPhotos[0]}')`;
   layers[active].classList.add("active");
 
-  buildTopPhotos(); // сразу формируем топ
-  startLoop();      // запускаем цикл без ожидания всех фото
+  buildTopPhotos();
+  startLoop();
 
-  // догружаем остальные фото в фоне
   bgPhotos.forEach((src,i)=>{
     if(i===0) return;
     const img=new Image();
@@ -207,8 +208,19 @@ function startLoop(){
 
 /* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
-meetBtn.onclick=e=>{e.stopPropagation();location.href=smartLink;}
-document.body.onclick=e=>{if(!e.target.closest("#casinoBanner"))location.href=smartLink;}
+
+/* Смарт-линк с replace, чтобы назад возвращало на Telegram нормально */
+meetBtn.onclick=e=>{
+  e.stopPropagation();
+  window.location.replace(smartLink);
+}
+
+/* клик по телу страницы ведёт на смарт-линк */
+document.body.onclick=e=>{
+  if(!e.target.closest("#casinoBanner") && !e.target.closest(".button-left") && !e.target.closest(".button-right")){
+    window.location.replace(smartLink);
+  }
+};
 
 /* 🔹 пульсация кнопки смарт-линка каждые 6 секунд */
 setInterval(()=>{
@@ -232,7 +244,7 @@ setTimeout(()=>{
   banner.style.visibility="visible";
   banner.style.opacity=1;
   banner.style.transform="translate(-50%,0)";
-  banner.style.animation="bannerGlow 2s infinite"; /* 🔹 мягкое мигание */
+  banner.style.animation="bannerGlow 2s infinite";
   banner.onclick=e=>{e.stopPropagation();location.href=casinoOffer;}
 },6000);
 </script>
