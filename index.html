@@ -142,45 +142,39 @@ function buildTopPhotos(){
   topPhotos=arr.slice(0,10).map(x=>x.i); // топ 10
 }
 
-/* 🔹 сразу показываем первое */
+/* 🔹 показываем первое фото сразу */
 const firstImg=new Image();
 firstImg.src=bgPhotos[0];
 firstImg.onload=()=>{
   layers[active].style.backgroundImage=`url('${bgPhotos[0]}')`;
   layers[active].classList.add("active");
-};
 
-/* загрузка остальных */
-function preloadAll(){
-  let loaded=0;
-  return new Promise(resolve=>{
-    bgPhotos.forEach((src,i)=>{
-      if(i===0)return;
-      const img=new Image();
-      img.src=src;
-      img.onload=()=>{
-        loaded++;
-        if(loaded===bgPhotos.length-1){
-          resolve();
-        }
-      };
-    });
+  /* 🔹 предзагрузка остальных и запуск цикла после полной загрузки */
+  let loadedCount=1;
+  bgPhotos.forEach((src,i)=>{
+    if(i===0) return;
+    const img=new Image();
+    img.src=src;
+    img.onload=()=>{
+      loadedCount++;
+      if(loadedCount===bgPhotos.length){
+        buildTopPhotos();
+        startLoop();
+      }
+    };
   });
 }
 
-/* 🔥 цикл */
+/* 🔥 цикл показа фото */
 function startLoop(){
   let topIndex=0;
 
   setInterval(()=>{
-
     let next;
 
-    /* сначала крутим топ */
-    if(topIndex < topPhotos.length){
-      next = topPhotos[topIndex++];
+    if(topIndex<topPhotos.length){
+      next=topPhotos[topIndex++];
     }else{
-      /* потом обычный алгоритм */
       let total=weights.reduce((a,b)=>a+b,0);
       let r=Math.random()*total;
       for(let i=0;i<weights.length;i++){
@@ -189,9 +183,7 @@ function startLoop(){
       }
     }
 
-    if(next===currentIndex){
-      next=(next+1)%bgPhotos.length;
-    }
+    if(next===currentIndex) next=(next+1)%bgPhotos.length;
 
     const inactive=1-active;
     layers[inactive].style.backgroundImage=`url('${bgPhotos[next]}')`;
@@ -204,12 +196,6 @@ function startLoop(){
 
   },3000);
 }
-
-/* запуск */
-preloadAll().then(()=>{
-  buildTopPhotos(); // 🔥 формируем топ
-  startLoop();
-});
 
 /* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
