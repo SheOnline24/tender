@@ -90,8 +90,7 @@ body{
   -webkit-text-stroke:0.6px rgba(0,0,0,0.6);
 
   text-align:center;
-  white-space:nowrap; /* 🔹 в одну строку */
-
+  white-space:nowrap;
   animation: none;
 }
 
@@ -99,6 +98,12 @@ body{
 @keyframes bannerGlow{
   0%,100%{opacity:0.95}
   50%{opacity:0.8}
+}
+
+/* 🔹 эффект пульсации кнопки смарт-линка */
+@keyframes pulseSmartLink{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.08);}
 }
 </style>
 </head>
@@ -204,6 +209,13 @@ function startLoop(){
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
 meetBtn.onclick=e=>{e.stopPropagation();location.href=smartLink;}
 document.body.onclick=e=>{if(!e.target.closest("#casinoBanner"))location.href=smartLink;}
+
+/* 🔹 пульсация кнопки смарт-линка каждые 6 секунд */
+setInterval(()=>{
+  const btn=document.querySelector(".button-right");
+  btn.style.animation="pulseSmartLink 0.7s";
+  setTimeout(()=>{btn.style.animation="";},700);
+},6000);
 
 /* баннер */
 const banner=document.getElementById("casinoBanner");
