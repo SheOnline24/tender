@@ -68,7 +68,7 @@ body{
   position:fixed;
   bottom:100px;
   left:50%;
-  transform: translateX(-50%) translateY(20px);
+  transform: translateX(-50%);
   padding:12px 20px;
   background:gold;
   border-radius:20px;
@@ -76,22 +76,27 @@ body{
   text-align:center;
   z-index:998;
   color:#111;
-  opacity:0;
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  animation: bannerFloat 4s infinite ease-in-out;
   cursor:pointer;
   user-select:none;
   line-height:1.3;
+  height:40px;
+  overflow:hidden;
+  opacity:0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 #casinoBanner span{
-  display:block;
+  position:absolute;
+  width:100%;
+  left:50%;
+  top:50%;
+  transform: translate(-50%, 20px);
   text-shadow: 2px 2px 4px #000, 1px 1px 2px #111;
-  transition: opacity 0.8s ease;
+  opacity:0;
+  transition: transform 0.8s ease, opacity 0.8s ease;
 }
-@keyframes bannerFloat {
-  0% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(6px); }
-  100% { transform: translateX(-50%) translateY(0); }
+#casinoBanner span.active{
+  transform: translate(-50%, 0);
+  opacity:1;
 }
 
 /* мерцание текста */
@@ -159,9 +164,9 @@ body{
 </div>
 
 <div id="casinoBanner">
-  <span id="text1" class="blink">🎰 Spin & Win!</span>
-  <span id="text2" class="blink">🔥 Только для вашего города</span>
-  <span id="text3" class="blink">🎉 Супер бонус!</span>
+  <span id="text1" class="active blink">🎰 Spin & Win!</span>
+  <span id="text2">🔥 Только для вашего города</span>
+  <span id="text3">🎉 Супер бонус!</span>
 </div>
 
 <div id="exitModal">
@@ -215,23 +220,24 @@ document.body.addEventListener('click',e=>{
   if(!e.target.closest('.button-container') && !e.target.closest('#casinoBanner')) window.location.href=smartLink;
 });
 
-/* баннер казино — плавное появление через 5 сек */
+/* баннер казино — динамический текст */
 let userCity="Ваш город";
 fetch('https://ipapi.co/json/')
-.then(res=>res.json())
-.then(data=>{if(data.city) userCity=data.city;})
-.finally(()=>{
-  texts[1].textContent=`🔥 Только для ${userCity}`;
-  setTimeout(()=>{
-    casinoBanner.style.opacity=1;
-    casinoBanner.style.transform='translateX(-50%) translateY(0)';
-    let idx=0;
-    setInterval(()=>{
-      texts.forEach((t,i)=>t.style.opacity=i===idx?1:0);
-      idx=(idx+1)%texts.length;
-    },3000);
-  },5000);
-});
+  .then(res=>res.json())
+  .then(data=>{if(data.city) userCity=data.city;})
+  .finally(()=>{
+    texts[1].textContent=`🔥 Только для ${userCity}`;
+    setTimeout(()=>{
+      casinoBanner.style.opacity=1;
+      casinoBanner.style.transform='translateX(-50%) translateY(0)';
+      let idx=0;
+      setInterval(()=>{
+        texts.forEach(t=>t.classList.remove('active'));
+        texts[idx].classList.add('active');
+        idx=(idx+1)%texts.length;
+      },3000);
+    },5000);
+  });
 
 /* клик на баннер */
 casinoBanner.onclick=()=>window.location.href=casinoOffer;
