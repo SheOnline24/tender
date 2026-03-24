@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Find Someone Tonight</title>
-
 <style>
 body{
   margin:0;
@@ -135,7 +134,6 @@ document.body.addEventListener("click",()=>{
 
 /* 🔥 ТОП ФОТО */
 let topPhotos=[];
-
 function buildTopPhotos(){
   const arr=bgPhotos.map((_,i)=>({i,w:weights[i]}));
   arr.sort((a,b)=>b.w-a.w);
@@ -149,19 +147,14 @@ firstImg.onload=()=>{
   layers[active].style.backgroundImage=`url('${bgPhotos[0]}')`;
   layers[active].classList.add("active");
 
-  /* 🔹 предзагрузка остальных и запуск цикла после полной загрузки */
-  let loadedCount=1;
+  buildTopPhotos(); // сразу формируем топ
+  startLoop();      // запускаем цикл без ожидания всех фото
+
+  // догружаем остальные фото в фоне
   bgPhotos.forEach((src,i)=>{
     if(i===0) return;
     const img=new Image();
     img.src=src;
-    img.onload=()=>{
-      loadedCount++;
-      if(loadedCount===bgPhotos.length){
-        buildTopPhotos();
-        startLoop();
-      }
-    };
   });
 }
 
@@ -187,7 +180,6 @@ function startLoop(){
 
     const inactive=1-active;
     layers[inactive].style.backgroundImage=`url('${bgPhotos[next]}')`;
-
     layers[active].classList.remove("active");
     layers[inactive].classList.add("active");
 
