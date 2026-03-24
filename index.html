@@ -19,7 +19,6 @@ body{
   padding-bottom:20px;
 }
 
-/* 🔹 Два слоя для плавной смены фона */
 .bgLayer{
   position:fixed;
   top:0; left:0;
@@ -35,7 +34,6 @@ body{
   transform:scale(1);
 }
 
-/* кнопки */
 .button-container{
   display:flex;
   width:90%;
@@ -59,8 +57,6 @@ body{
   gap:8px;
   transition:transform 0.3s ease;
   cursor:pointer;
-
-  /* 🔹 обводка и тень, как на казино */
   text-shadow:0 1px 2px rgba(0,0,0,0.6), 0 0 6px rgba(0,0,0,0.4);
   -webkit-text-stroke: 0.6px rgba(0,0,0,0.6);
 }
@@ -77,7 +73,6 @@ body{
 .button-right:hover { transform:scale(1.05); }
 .button-right:active { transform:scale(0.95); }
 
-/* 🔥 Казино баннер */
 #casinoBanner{
   position:fixed;
   bottom:100px;
@@ -99,7 +94,6 @@ body{
   overflow:hidden;
   text-overflow:ellipsis;
   z-index:50;
-
   color:white;
   text-shadow:0 1px 2px rgba(0,0,0,0.6),0 0 6px rgba(0,0,0,0.4);
   -webkit-text-stroke: 0.6px rgba(0,0,0,0.6);
@@ -141,42 +135,54 @@ let active = 0;
 let currentIndex = 0;
 const preloadCount = 10;
 
-// предзагрузка всех фоновых изображений
-function preloadAll(start, count){
-  for(let i=start;i<Math.min(start+count,bgPhotos.length);i++){
-    if(!preloaded[i]){
-      const img=new Image();
-      img.src = bgPhotos[i];
-      preloaded[i]=img;
+// 🔹 полностью предзагружаем первые N картинок, потом показываем первый фон
+function preloadAndStart(count){
+  let loaded = 0;
+  for(let i=0;i<count;i++){
+    const img = new Image();
+    img.src = bgPhotos[i];
+    img.onload = ()=>{
+      preloaded[i] = img;
+      loaded++;
+      if(i===0){ // для первого слоя гарантируем отображение сразу после загрузки первой картинки
+        layers[active].style.backgroundImage = `url('${bgPhotos[0]}')`;
+        layers[active].classList.add('active');
+      }
+      if(loaded===count){
+        // когда все первые count картинок загружены, можно запускать смену фонов
+        startBackgroundLoop();
+      }
     }
   }
 }
-preloadAll(0, preloadCount);
 
-// показываем первый фон только после полной загрузки
-preloaded[0].onload = ()=>{
-  layers[active].style.backgroundImage = `url('${bgPhotos[0]}')`;
-  layers[active].classList.add('active');
-  preloadAll(1, preloadCount-1);
+// 🔹 плавная смена фонов
+function startBackgroundLoop(){
+  setInterval(()=>{
+    let next;
+    do{ next = Math.floor(Math.random()*bgPhotos.length); } while(next===currentIndex);
+    
+    const inactive = 1 - active;
+    layers[inactive].style.backgroundImage = `url('${bgPhotos[next]}')`;
+    
+    layers[active].classList.remove('active');
+    layers[inactive].classList.add('active');
+
+    active = inactive;
+    currentIndex = next;
+    
+    // подгружаем следующий фон для очереди
+    const nextPreload = (currentIndex+1)%bgPhotos.length;
+    if(!preloaded[nextPreload]){
+      const img = new Image();
+      img.src = bgPhotos[nextPreload];
+      preloaded[nextPreload] = img;
+    }
+  },3500);
 }
 
-// плавная смена фонов
-function changeBackground(){
-  let next;
-  do{ next = Math.floor(Math.random()*bgPhotos.length); } while(next===currentIndex);
-  
-  const inactive = 1 - active;
-  layers[inactive].style.backgroundImage = `url('${bgPhotos[next]}')`;
-  
-  layers[active].classList.remove('active');
-  layers[inactive].classList.add('active');
-
-  active = inactive;
-  currentIndex = next;
-
-  preloadAll(currentIndex+1,1);
-}
-setInterval(changeBackground,3500);
+// запускаем предзагрузку и старт
+preloadAndStart(preloadCount);
 
 // кнопки
 document.getElementById("chatBtn").onclick = e => { e.stopPropagation(); location.href = telegramChat; }
@@ -186,7 +192,7 @@ document.body.onclick = e => { if(!e.target.closest("#casinoBanner")) location.h
 // pulse для кнопки Meet
 setInterval(()=>{
   const btn=document.querySelector(".button-right");
-  btn.style.transform="scale(1.08)";
+  btn.style.transform="scale(1.08");
   setTimeout(()=>{btn.style.transform="scale(1)";},350);
 },6000);
 
@@ -200,7 +206,7 @@ async function setBannerText(){
 setBannerText();
 
 setTimeout(()=>{
-  banner.style.visibility = "visible";
+  banner.style.visibility="visible";
   banner.style.opacity = 1;
   banner.style.transform = "translate(-50%,0)";
   banner.style.animation = "bannerGlow 2s infinite";
