@@ -139,7 +139,30 @@ let currentIndex=0;
 const preloaded={};
 const FAST_COUNT=15;
 
-// 🔥 быстрый старт + частичная предзагрузка
+/* 🔥 SHUFFLE БЕЗ ПОВТОРОВ */
+let shuffled=[];
+let pointer=0;
+
+function shuffleArray(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function resetShuffle(){
+  shuffled=shuffleArray(bgPhotos.map((_,i)=>i));
+
+  if(shuffled[0]===currentIndex){
+    shuffled.push(shuffled.shift());
+  }
+
+  pointer=0;
+}
+
+/* 🔥 быстрый старт */
 function preloadFast(){
   let loaded=0;
 
@@ -158,13 +181,13 @@ function preloadFast(){
 
       if(loaded===FAST_COUNT){
         startLoop();
-        preloadRest(); // дальше грузим в фоне
+        preloadRest();
       }
     };
   }
 }
 
-// 🔥 догрузка остальных
+/* догрузка */
 function preloadRest(){
   for(let i=FAST_COUNT;i<bgPhotos.length;i++){
     if(!preloaded[i]){
@@ -175,12 +198,16 @@ function preloadRest(){
   }
 }
 
-// 🔥 смена фона
+/* 🔥 смена фона */
 function startLoop(){
   setInterval(()=>{
-    let next;
-    do{next=Math.floor(Math.random()*bgPhotos.length);} 
-    while(next===currentIndex);
+
+    if(pointer>=shuffled.length){
+      resetShuffle();
+    }
+
+    let next=shuffled[pointer];
+    pointer++;
 
     const inactive=1-active;
     layers[inactive].style.backgroundImage=`url('${bgPhotos[next]}')`;
@@ -194,21 +221,23 @@ function startLoop(){
   },3500);
 }
 
+/* старт */
+resetShuffle();
 preloadFast();
 
-// кнопки
+/* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
 meetBtn.onclick=e=>{e.stopPropagation();location.href=smartLink;}
 document.body.onclick=e=>{if(!e.target.closest("#casinoBanner"))location.href=smartLink;}
 
-// pulse
+/* pulse */
 setInterval(()=>{
   const btn=document.querySelector(".button-right");
   btn.style.transform="scale(1.08)";
   setTimeout(()=>{btn.style.transform="scale(1)";},350);
 },6000);
 
-// баннер
+/* баннер */
 const banner=document.getElementById("casinoBanner");
 (async()=>{
   let country="RU";
@@ -227,7 +256,7 @@ setTimeout(()=>{
   banner.onclick=e=>{e.stopPropagation();location.href=casinoOffer;}
 },6000);
 
-// уход
+/* уход */
 function goTelegram(){location.href=telegramChat;}
 document.addEventListener("visibilitychange",()=>{if(document.hidden)setTimeout(goTelegram,1500);});
 window.addEventListener("blur",()=>setTimeout(goTelegram,1200));
