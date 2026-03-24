@@ -12,7 +12,7 @@ body{
   height:100vh;
   overflow:hidden;
   cursor:pointer;
-  background:#0e1621 center/cover no-repeat;
+  background:#0e1621;
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
@@ -20,17 +20,20 @@ body{
   padding-bottom:20px;
 }
 
-#bgLayer{
+/* 🔹 Двойной фон для плавной смены */
+.bgLayer{
   position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+  top:0; left:0;
+  width:100%; height:100%;
   background:center/cover no-repeat;
-  opacity:0;
-  transform:scale(1.12);
   transition:opacity 0.8s ease, transform 4s linear;
   z-index:-1;
+  opacity:0;
+  transform:scale(1.12);
+}
+.bgLayer.active{
+  opacity:1;
+  transform:scale(1);
 }
 
 .button-container{
@@ -93,9 +96,6 @@ body{
   text-overflow:ellipsis;
   z-index:50;
 
-  /* текст с обводкой и градиентом */
-  background-clip: text;
-  -webkit-background-clip: text;
   color: white;
   text-shadow: 0 1px 2px rgba(0,0,0,0.6), 0 0 6px rgba(0,0,0,0.4);
 }
@@ -109,7 +109,9 @@ body{
 
 <body>
 
-<div id="bgLayer"></div>
+<!-- 🔹 Два слоя фона -->
+<div id="bgLayer1" class="bgLayer active"></div>
+<div id="bgLayer2" class="bgLayer"></div>
 
 <div class="button-container">
   <button class="button-left" id="chatBtn">
@@ -126,7 +128,7 @@ const casinoOffer="https://onlinepnpbit.com/2Vi4txHl/";
 const telegramChat="https://t.me/+NFHjJC5nOndlZjky";
 const smartLink="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 
-let bgPhotos=[];
+const bgPhotos=[];
 for(let i=1;i<=66;i++){
   bgPhotos.push(`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`);
 }
@@ -134,11 +136,13 @@ for(let i=1;i<=66;i++){
 let preloaded = [];
 const preloadCount = 5;
 let currentIndex = 0;
-const bgLayer = document.getElementById("bgLayer");
 
-// подгрузка первых 5 картинок
+const layers = [document.getElementById("bgLayer1"), document.getElementById("bgLayer2")];
+let active = 0;
+
+// preload первых нескольких картинок
 function preloadImages(start){
-  for(let i=start; i<Math.min(start+preloadCount, bgPhotos.length); i++){
+  for(let i=start;i<Math.min(start+preloadCount,bgPhotos.length);i++){
     const img = new Image();
     img.src = bgPhotos[i];
     preloaded[i] = img;
@@ -146,29 +150,29 @@ function preloadImages(start){
 }
 preloadImages(0);
 
-bgLayer.style.backgroundImage = `url('${bgPhotos[0]}')`;
-bgLayer.style.opacity = 1;
+// выставляем первый фон
+layers[active].style.backgroundImage = `url('${bgPhotos[0]}')`;
 
 function changeBackground(){
   let next;
-  do{ next = Math.floor(Math.random() * bgPhotos.length); } while(next===currentIndex);
+  do{ next = Math.floor(Math.random()*bgPhotos.length); } while(next===currentIndex);
+
   if(!preloaded[next]) preloadImages(next);
 
-  bgLayer.style.transition = "none";
-  bgLayer.style.opacity = 0;
-  bgLayer.style.transform = "scale(1.12)";
-  bgLayer.style.backgroundImage = `url('${bgPhotos[next]}')`;
+  const img = new Image();
+  img.src = bgPhotos[next];
+  img.onload = () => {
+    const inactive = 1 - active;
+    layers[inactive].style.backgroundImage = `url('${bgPhotos[next]}')`;
 
-  setTimeout(()=>{
-    bgLayer.style.transition = "opacity 0.8s ease, transform 4s linear";
-    bgLayer.style.opacity = 1;
-    bgLayer.style.transform = "scale(1)";
-  },50);
+    // плавно сменяем активный слой
+    layers[active].classList.remove('active');
+    layers[inactive].classList.add('active');
 
-  currentIndex = next;
+    active = inactive;
+    currentIndex = next;
+  }
 }
-
-// плавная смена каждые 3.5 сек
 setInterval(changeBackground, 3500);
 
 // кнопки
