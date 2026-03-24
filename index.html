@@ -84,7 +84,6 @@ body{
 
 /* 🔥 PREMIUM БАННЕР */
 #casinoBanner{
-  position:fixed;
   bottom:100px;
   left:50%;
   transform:translate(-50%,30px);
@@ -113,7 +112,8 @@ body{
   text-overflow:ellipsis;
   z-index:50;
 
-  position:fixed;
+  position: fixed; /* фиксированное положение на экране */
+  position: relative; /* для псевдоэлемента блика */
 }
 
 /* ✨ золотой текст */
@@ -125,6 +125,8 @@ body{
   text-shadow:
     0 2px 4px rgba(0,0,0,0.6),
     0 0 10px rgba(255,215,0,0.6);
+  position: relative; /* чтобы текст был над бликом */
+  z-index: 2;
 }
 
 /* ✨ блик */
@@ -137,6 +139,7 @@ body{
   height:100%;
   background:linear-gradient(120deg,transparent,rgba(255,255,255,0.5),transparent);
   animation:shine 3s infinite;
+  z-index:1; /* над фоном, под текстом */
 }
 
 @keyframes shine{
