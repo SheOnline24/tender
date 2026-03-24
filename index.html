@@ -201,18 +201,28 @@ fetch('https://ipapi.co/json/')
 
 casinoBanner.onclick=()=>window.location.href=casinoOffer;
 
-/* exit modal */
+/* exit modal: с поддержкой мобильников */
 let modalShown=false;
-history.pushState({},"",location.href);
-window.addEventListener("popstate",()=>{
+function showExitModal(){
   if(modalShown) return;
   modalShown=true;
-  setTimeout(()=>modal.classList.add("active"),50);
-  setTimeout(()=>history.pushState({},"",location.href),100);
+  modal.classList.add("active");
+}
+
+history.pushState({},"",location.href);
+
+// ПК: попытка вернуться назад
+window.addEventListener("popstate",()=>{ showExitModal(); setTimeout(()=>history.pushState({},"",location.href),100); });
+
+// Мобильные: сворачивание вкладки или уход с сайта
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState === "hidden") showExitModal();
 });
+
 goTG.onclick=()=>window.location.href=telegramChat;
 stay.onclick=()=>modal.classList.remove("active");
 modal.addEventListener("click",e=>{if(e.target===modal) modal.classList.remove("active");});
+
 </script>
 
 </body>
