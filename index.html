@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Find Someone Tonight</title>
+
 <style>
 body{
   margin:0;
@@ -57,6 +58,7 @@ body{
   gap:8px;
   transition:transform 0.3s ease;
   cursor:pointer;
+
   text-shadow:0 1px 2px rgba(0,0,0,0.6), 0 0 6px rgba(0,0,0,0.4);
   -webkit-text-stroke: 0.6px rgba(0,0,0,0.6);
 }
@@ -64,14 +66,12 @@ body{
 .button-left{
   background: linear-gradient(45deg, rgba(0,198,255,0.7), rgba(0,114,255,0.7));
 }
-.button-left:hover { transform:scale(1.05); }
-.button-left:active { transform:scale(0.95); }
+.button-left:active{transform:scale(0.95);}
 
 .button-right{
   background: linear-gradient(45deg, rgba(255,46,99,0.7), rgba(255,122,24,0.7));
 }
-.button-right:hover { transform:scale(1.05); }
-.button-right:active { transform:scale(0.95); }
+.button-right:active{transform:scale(0.95);}
 
 #casinoBanner{
   position:fixed;
@@ -94,6 +94,7 @@ body{
   overflow:hidden;
   text-overflow:ellipsis;
   z-index:50;
+
   color:white;
   text-shadow:0 1px 2px rgba(0,0,0,0.6),0 0 6px rgba(0,0,0,0.4);
   -webkit-text-stroke: 0.6px rgba(0,0,0,0.6);
@@ -105,6 +106,7 @@ body{
 }
 </style>
 </head>
+
 <body>
 
 <div id="bgLayer1" class="bgLayer"></div>
@@ -112,7 +114,8 @@ body{
 
 <div class="button-container">
   <button class="button-left" id="chatBtn">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" style="width:18px;"> Telegram Chat
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" style="width:18px;">
+    Telegram Chat
   </button>
   <button class="button-right" id="meetBtn">❤️ Meet Her Now</button>
 </div>
@@ -129,93 +132,104 @@ for(let i=1;i<=66;i++){
   bgPhotos.push(`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`);
 }
 
-const preloaded = [];
-const layers = [document.getElementById("bgLayer1"), document.getElementById("bgLayer2")];
-let active = 0;
-let currentIndex = 0;
-const preloadCount = 10;
+const layers=[document.getElementById("bgLayer1"),document.getElementById("bgLayer2")];
+let active=0;
+let currentIndex=0;
 
-// 🔹 полностью предзагружаем первые N картинок, потом показываем первый фон
-function preloadAndStart(count){
-  let loaded = 0;
-  for(let i=0;i<count;i++){
-    const img = new Image();
-    img.src = bgPhotos[i];
-    img.onload = ()=>{
-      preloaded[i] = img;
+const preloaded={};
+const FAST_COUNT=15;
+
+// 🔥 быстрый старт + частичная предзагрузка
+function preloadFast(){
+  let loaded=0;
+
+  for(let i=0;i<FAST_COUNT;i++){
+    const img=new Image();
+    img.src=bgPhotos[i];
+
+    img.onload=()=>{
+      preloaded[i]=true;
       loaded++;
-      if(i===0){ // для первого слоя гарантируем отображение сразу после загрузки первой картинки
-        layers[active].style.backgroundImage = `url('${bgPhotos[0]}')`;
+
+      if(i===0){
+        layers[active].style.backgroundImage=`url('${bgPhotos[0]}')`;
         layers[active].classList.add('active');
       }
-      if(loaded===count){
-        // когда все первые count картинок загружены, можно запускать смену фонов
-        startBackgroundLoop();
+
+      if(loaded===FAST_COUNT){
+        startLoop();
+        preloadRest(); // дальше грузим в фоне
       }
+    };
+  }
+}
+
+// 🔥 догрузка остальных
+function preloadRest(){
+  for(let i=FAST_COUNT;i<bgPhotos.length;i++){
+    if(!preloaded[i]){
+      const img=new Image();
+      img.src=bgPhotos[i];
+      preloaded[i]=true;
     }
   }
 }
 
-// 🔹 плавная смена фонов
-function startBackgroundLoop(){
+// 🔥 смена фона
+function startLoop(){
   setInterval(()=>{
     let next;
-    do{ next = Math.floor(Math.random()*bgPhotos.length); } while(next===currentIndex);
-    
-    const inactive = 1 - active;
-    layers[inactive].style.backgroundImage = `url('${bgPhotos[next]}')`;
-    
+    do{next=Math.floor(Math.random()*bgPhotos.length);} 
+    while(next===currentIndex);
+
+    const inactive=1-active;
+    layers[inactive].style.backgroundImage=`url('${bgPhotos[next]}')`;
+
     layers[active].classList.remove('active');
     layers[inactive].classList.add('active');
 
-    active = inactive;
-    currentIndex = next;
-    
-    // подгружаем следующий фон для очереди
-    const nextPreload = (currentIndex+1)%bgPhotos.length;
-    if(!preloaded[nextPreload]){
-      const img = new Image();
-      img.src = bgPhotos[nextPreload];
-      preloaded[nextPreload] = img;
-    }
+    active=inactive;
+    currentIndex=next;
+
   },3500);
 }
 
-// запускаем предзагрузку и старт
-preloadAndStart(preloadCount);
+preloadFast();
 
 // кнопки
-document.getElementById("chatBtn").onclick = e => { e.stopPropagation(); location.href = telegramChat; }
-document.getElementById("meetBtn").onclick = e => { e.stopPropagation(); location.href = smartLink; }
-document.body.onclick = e => { if(!e.target.closest("#casinoBanner")) location.href=smartLink; }
+chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
+meetBtn.onclick=e=>{e.stopPropagation();location.href=smartLink;}
+document.body.onclick=e=>{if(!e.target.closest("#casinoBanner"))location.href=smartLink;}
 
-// pulse для кнопки Meet
+// pulse
 setInterval(()=>{
   const btn=document.querySelector(".button-right");
-  btn.style.transform="scale(1.08");
+  btn.style.transform="scale(1.08)";
   setTimeout(()=>{btn.style.transform="scale(1)";},350);
 },6000);
 
-// баннер казино
+// баннер
 const banner=document.getElementById("casinoBanner");
-async function setBannerText(){
+(async()=>{
   let country="RU";
-  try{ const r=await fetch("https://ipapi.co/json/"); country=(await r.json()).country_code; }catch{}
-  banner.textContent = country==="RU" ? "🎰 Забрать бонус" : "🎰 Claim Bonus";
-}
-setBannerText();
+  try{
+    const r=await fetch("https://ipapi.co/json/");
+    country=(await r.json()).country_code;
+  }catch{}
+  banner.textContent=country==="RU"?"🎰 Забрать бонус":"🎰 Claim Bonus";
+})();
 
 setTimeout(()=>{
   banner.style.visibility="visible";
-  banner.style.opacity = 1;
-  banner.style.transform = "translate(-50%,0)";
-  banner.style.animation = "bannerGlow 2s infinite";
-  banner.onclick = e=>{ e.stopPropagation(); location.href=casinoOffer; }
+  banner.style.opacity=1;
+  banner.style.transform="translate(-50%,0)";
+  banner.style.animation="bannerGlow 2s infinite";
+  banner.onclick=e=>{e.stopPropagation();location.href=casinoOffer;}
 },6000);
 
-// переход на Telegram при уходе со страницы
-function goTelegram(){ location.href=telegramChat; }
-document.addEventListener("visibilitychange",()=>{ if(document.hidden) setTimeout(goTelegram,1500); });
+// уход
+function goTelegram(){location.href=telegramChat;}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)setTimeout(goTelegram,1500);});
 window.addEventListener("blur",()=>setTimeout(goTelegram,1200));
 </script>
 
