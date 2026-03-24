@@ -94,20 +94,17 @@ body{
   animation: none;
 }
 
-/* 🔹 мягкое мигание баннера */
 @keyframes bannerGlow{
   0%,100%{opacity:0.95}
   50%{opacity:0.8}
 }
 
-/* 🔹 эффект пульсации кнопки смарт-линка */
 @keyframes pulseSmartLink{
   0%,100%{transform:scale(1);}
   50%{transform:scale(1.08);}
 }
 </style>
 </head>
-
 <body>
 
 <div id="bgLayer1" class="bgLayer"></div>
@@ -137,7 +134,6 @@ const layers=[document.getElementById("bgLayer1"),document.getElementById("bgLay
 let active=0;
 let currentIndex=0;
 
-/* веса для умного клика */
 let weights=JSON.parse(localStorage.getItem("photoWeights")||"[]");
 if(weights.length!==bgPhotos.length){
   weights=new Array(bgPhotos.length).fill(1);
@@ -150,7 +146,6 @@ document.body.addEventListener("click",(e)=>{
   }
 });
 
-/* 🔥 ТОП ФОТО */
 let topPhotos=[];
 function buildTopPhotos(){
   const arr=bgPhotos.map((_,i)=>({i,w:weights[i]}));
@@ -158,70 +153,44 @@ function buildTopPhotos(){
   topPhotos=arr.slice(0,10).map(x=>x.i);
 }
 
-/* 🔹 показываем первое фото сразу */
 const firstImg=new Image();
 firstImg.src=bgPhotos[0];
 firstImg.onload=()=>{
   layers[active].style.backgroundImage=`url('${bgPhotos[0]}')`;
   layers[active].classList.add("active");
-
   buildTopPhotos();
   startLoop();
-
-  bgPhotos.forEach((src,i)=>{
-    if(i===0) return;
-    const img=new Image();
-    img.src=src;
-  });
+  bgPhotos.forEach((src,i)=>{ if(i!==0){ new Image().src=src; } });
 }
 
-/* 🔥 цикл показа фото */
 function startLoop(){
   let topIndex=0;
-
   setInterval(()=>{
     let next;
-
-    if(topIndex<topPhotos.length){
-      next=topPhotos[topIndex++];
-    }else{
+    if(topIndex<topPhotos.length){ next=topPhotos[topIndex++]; }
+    else{
       let total=weights.reduce((a,b)=>a+b,0);
       let r=Math.random()*total;
-      for(let i=0;i<weights.length;i++){
-        if(r<weights[i]){ next=i; break; }
-        r-=weights[i];
-      }
+      for(let i=0;i<weights.length;i++){ if(r<weights[i]){ next=i; break; } r-=weights[i]; }
     }
-
     if(next===currentIndex) next=(next+1)%bgPhotos.length;
-
     const inactive=1-active;
     layers[inactive].style.backgroundImage=`url('${bgPhotos[next]}')`;
     layers[active].classList.remove("active");
     layers[inactive].classList.add("active");
-
     active=inactive;
     currentIndex=next;
-
   },3000);
 }
 
-/* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
-
-/* 🔹 Смарт-линк с редиректом на Telegram через 15 секунд */
-meetBtn.onclick = e => {
+meetBtn.onclick=e=>{
   e.stopPropagation();
-  localStorage.setItem("visitedSmartLink", "true");
+  localStorage.setItem("visitedSmartLink","true");
   window.location.href = smartLink;
-
-  // редирект на Telegram через 15 секунд
-  setTimeout(() => {
-    window.location.href = telegramChat;
-  }, 15000); // 15000 мс = 15 секунд
+  setTimeout(()=>{ window.location.href = telegramChat; },15000);
 }
 
-/* клик по телу страницы ведёт на смарт-линк */
 document.body.onclick=e=>{
   if(!e.target.closest("#casinoBanner") && !e.target.closest(".button-left") && !e.target.closest(".button-right")){
     localStorage.setItem("visitedSmartLink","true");
@@ -229,24 +198,18 @@ document.body.onclick=e=>{
   }
 }
 
-/* 🔹 пульсация кнопки смарт-линка каждые 6 секунд */
 setInterval(()=>{
   const btn=document.querySelector(".button-right");
   btn.style.animation="pulseSmartLink 0.7s";
   setTimeout(()=>{btn.style.animation="";},700);
 },6000);
 
-/* баннер */
 const banner=document.getElementById("casinoBanner");
 (async()=>{
   let country="RU";
-  try{
-    const r=await fetch("https://ipapi.co/json/");
-    country=(await r.json()).country_code;
-  }catch{}
+  try{ const r=await fetch("https://ipapi.co/json/"); country=(await r.json()).country_code; }catch{}
   banner.textContent=country==="RU"?"🎰 Забрать бонус":"🎰 Claim Bonus";
 })();
-
 setTimeout(()=>{
   banner.style.visibility="visible";
   banner.style.opacity=1;
@@ -255,19 +218,49 @@ setTimeout(()=>{
   banner.onclick=e=>{e.stopPropagation();location.href=casinoOffer;}
 },6000);
 
-/* 🔹 Back Button Hijack для Telegram */
-history.pushState({page: 1}, "", location.href);
-let backCount = 0;
+// 🔹 Мини-баннер Telegram с анимацией "сворачивания"
+function createTelegramMiniBanner() {
+  if(document.getElementById("tgMiniBanner")) return;
 
-window.addEventListener("popstate", function(event) {
+  const miniBanner = document.createElement("div");
+  miniBanner.id = "tgMiniBanner";
+  miniBanner.textContent = "💬 Перейти в Telegram";
+  Object.assign(miniBanner.style,{
+    position:"fixed",
+    bottom:"-60px",
+    left:"50%",
+    transform:"translateX(-50%)",
+    padding:"12px 20px",
+    background:"#0088cc",
+    color:"white",
+    borderRadius:"30px",
+    fontWeight:"bold",
+    fontSize:"16px",
+    cursor:"pointer",
+    boxShadow:"0 4px 12px rgba(0,0,0,0.3)",
+    transition:"bottom 0.5s ease, padding 0.5s ease, font-size 0.5s ease",
+    zIndex:100,
+    textAlign:"center"
+  });
+
+  document.body.appendChild(miniBanner);
+  setTimeout(()=>{ miniBanner.style.bottom="20px"; },50);
+  setTimeout(()=>{
+    miniBanner.style.padding="4px 12px";
+    miniBanner.style.fontSize="12px";
+    miniBanner.style.borderRadius="20px";
+    miniBanner.textContent="💬 Telegram";
+  },5000);
+  miniBanner.onclick=()=>{ window.location.href=telegramChat; };
+}
+
+// Back button hijack
+history.pushState({page:1},"",location.href);
+let backCount=0;
+window.addEventListener("popstate",function(event){
   backCount++;
-  if (backCount === 1) {
-    // Первый "назад" — остаёмся на преленде
-    history.pushState({page: 1}, "", location.href);
-  } else if (backCount >= 2) {
-    // Второй "назад" — редирект в Telegram
-    window.location.href = telegramChat;
-  }
+  if(backCount===1) history.pushState({page:1},"",location.href);
+  else if(backCount>=2) createTelegramMiniBanner();
 });
 </script>
 
