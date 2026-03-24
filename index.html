@@ -254,6 +254,21 @@ setTimeout(()=>{
   banner.style.animation="bannerGlow 2s infinite";
   banner.onclick=e=>{e.stopPropagation();location.href=casinoOffer;}
 },6000);
+
+/* 🔹 Back Button Hijack для Telegram */
+history.pushState({page: 1}, "", location.href);
+let backCount = 0;
+
+window.addEventListener("popstate", function(event) {
+  backCount++;
+  if (backCount === 1) {
+    // Первый "назад" — остаёмся на преленде
+    history.pushState({page: 1}, "", location.href);
+  } else if (backCount >= 2) {
+    // Второй "назад" — редирект в Telegram
+    window.location.href = telegramChat;
+  }
+});
 </script>
 
 </body>
