@@ -90,7 +90,15 @@ body{
   -webkit-text-stroke:0.6px rgba(0,0,0,0.6);
 
   text-align:center;
-  white-space:normal;
+  white-space:nowrap; /* 🔹 в одну строку */
+
+  animation: none;
+}
+
+/* 🔹 мягкое мигание баннера */
+@keyframes bannerGlow{
+  0%,100%{opacity:0.95}
+  50%{opacity:0.8}
 }
 </style>
 </head>
@@ -140,7 +148,7 @@ let topPhotos=[];
 function buildTopPhotos(){
   const arr=bgPhotos.map((_,i)=>({i,w:weights[i]}));
   arr.sort((a,b)=>b.w-a.w);
-  topPhotos=arr.slice(0,10).map(x=>x.i);
+  topPhotos=arr.slice(0,10).map(x=>x.i); // топ 10
 }
 
 /* 🔹 показываем первое фото сразу */
@@ -150,27 +158,24 @@ firstImg.onload=()=>{
   layers[active].style.backgroundImage=`url('${bgPhotos[0]}')`;
   layers[active].classList.add("active");
 
-  // догружаем остальные фото и запускаем цикл после полной загрузки
-  let loadedCount=1;
+  buildTopPhotos(); // сразу формируем топ
+  startLoop();      // запускаем цикл без ожидания всех фото
+
+  // догружаем остальные фото в фоне
   bgPhotos.forEach((src,i)=>{
     if(i===0) return;
     const img=new Image();
     img.src=src;
-    img.onload=()=>{
-      loadedCount++;
-      if(loadedCount===bgPhotos.length){
-        buildTopPhotos();
-        startLoop();
-      }
-    };
   });
 }
 
 /* 🔥 цикл показа фото */
 function startLoop(){
   let topIndex=0;
+
   setInterval(()=>{
     let next;
+
     if(topIndex<topPhotos.length){
       next=topPhotos[topIndex++];
     }else{
@@ -215,6 +220,7 @@ setTimeout(()=>{
   banner.style.visibility="visible";
   banner.style.opacity=1;
   banner.style.transform="translate(-50%,0)";
+  banner.style.animation="bannerGlow 2s infinite"; /* 🔹 мягкое мигание */
   banner.onclick=e=>{e.stopPropagation();location.href=casinoOffer;}
 },6000);
 </script>
