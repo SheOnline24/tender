@@ -42,7 +42,7 @@ body{
   z-index:10;
 }
 
-.button-left{
+.button-left, .button-right{
   flex:1;
   padding:14px 0;
   border-radius:30px;
@@ -50,80 +50,59 @@ body{
   font-weight:bold;
   color:white;
   border:none;
-  animation:flash 1.5s infinite;
-  transition:transform 0.3s ease;
-  background: linear-gradient(45deg, rgba(0,198,255,0.7), rgba(0,114,255,0.7));
   display:flex;
   justify-content:center;
   align-items:center;
   gap:8px;
+  transition:transform 0.3s ease;
+  cursor:pointer;
 }
+
+.button-left{
+  background: linear-gradient(45deg, rgba(0,198,255,0.7), rgba(0,114,255,0.7));
+}
+.button-left:hover { transform:scale(1.05); }
+.button-left:active { transform:scale(0.95); }
 
 .button-right{
-  flex:1;
-  padding:14px 0;
-  border-radius:30px;
-  font-size:18px;
-  font-weight:bold;
-  color:white;
-  border:none;
-  animation:flash 1.5s infinite;
-  transition:transform 0.3s ease;
   background: linear-gradient(45deg, rgba(255,46,99,0.7), rgba(255,122,24,0.7));
 }
+.button-right:hover { transform:scale(1.05); }
+.button-right:active { transform:scale(0.95); }
 
-@keyframes flash{
-  0%,50%,100%{opacity:1}
-  25%,75%{opacity:.65}
-}
-
-.button-left:active,
-.button-right:active{
-  transform:scale(0.95);
-}
-
-/* БАННЕР */
+/* 🔥 Казино баннер */
 #casinoBanner{
   position:fixed;
   bottom:100px;
   left:50%;
   transform:translate(-50%,30px);
   padding:15px 25px;
-
-  background:linear-gradient(45deg, rgba(255,215,0,0.65), rgba(255,183,0,0.65));
+  background:linear-gradient(45deg, rgba(255,215,0,0.55), rgba(255,183,0,0.55));
   backdrop-filter: blur(6px);
-
-  color:#000;
+  border-radius:25px;
   font-size:20px;
   font-weight:bold;
-
-  /* 🔥 читаемость */
-  -webkit-text-stroke: 0.6px rgba(0,0,0,0.6);
-  text-shadow:
-    0 1px 2px rgba(0,0,0,0.6),
-    0 0 6px rgba(0,0,0,0.4);
-
-  border-radius:25px;
   cursor:pointer;
-
   opacity:0;
   visibility:hidden;
-
   transition:all 0.6s ease;
-
-  animation:bannerGlow 2s infinite;
-  animation-play-state:paused;
-
+  text-align:center;
   max-width:90%;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
   z-index:50;
+
+  /* текст с обводкой и градиентом */
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6), 0 0 6px rgba(0,0,0,0.4);
 }
 
 @keyframes bannerGlow{
-  0%,100%{opacity:.9}
-  50%{opacity:.75}
+  0%,100%{opacity:.95}
+  50%{opacity:.8}
 }
 </style>
 </head>
@@ -134,11 +113,9 @@ body{
 
 <div class="button-container">
   <button class="button-left" id="chatBtn">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" 
-         style="width:18px;">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" style="width:18px;">
     Telegram Chat
   </button>
-
   <button class="button-right" id="meetBtn">❤️ Meet Her Now</button>
 </div>
 
@@ -149,105 +126,86 @@ const casinoOffer="https://onlinepnpbit.com/2Vi4txHl/";
 const telegramChat="https://t.me/+NFHjJC5nOndlZjky";
 const smartLink="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 
-const bgPhotos=[];
+let bgPhotos=[];
 for(let i=1;i<=66;i++){
   bgPhotos.push(`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`);
 }
 
-bgPhotos.forEach(src=>{
-  const img=new Image();
-  img.src=src;
-});
+let preloaded = [];
+const preloadCount = 5;
+let currentIndex = 0;
+const bgLayer = document.getElementById("bgLayer");
 
-const bgLayer=document.getElementById("bgLayer");
-let currentIndex=0;
+// подгрузка первых 5 картинок
+function preloadImages(start){
+  for(let i=start; i<Math.min(start+preloadCount, bgPhotos.length); i++){
+    const img = new Image();
+    img.src = bgPhotos[i];
+    preloaded[i] = img;
+  }
+}
+preloadImages(0);
 
-bgLayer.style.backgroundImage=`url('${bgPhotos[0]}')`;
-bgLayer.style.opacity=1;
+bgLayer.style.backgroundImage = `url('${bgPhotos[0]}')`;
+bgLayer.style.opacity = 1;
 
 function changeBackground(){
   let next;
-  do{ next=Math.floor(Math.random()*bgPhotos.length); } while(next===currentIndex);
+  do{ next = Math.floor(Math.random() * bgPhotos.length); } while(next===currentIndex);
+  if(!preloaded[next]) preloadImages(next);
 
-  const img=new Image();
-  img.src=bgPhotos[next];
-  img.onload=()=>{
-    bgLayer.style.transition="none";
-    bgLayer.style.opacity=0;
-    bgLayer.style.transform="scale(1.12)";
-    bgLayer.style.backgroundImage=`url('${bgPhotos[next]}')`;
+  bgLayer.style.transition = "none";
+  bgLayer.style.opacity = 0;
+  bgLayer.style.transform = "scale(1.12)";
+  bgLayer.style.backgroundImage = `url('${bgPhotos[next]}')`;
 
-    setTimeout(()=>{
-      bgLayer.style.transition="opacity 0.8s ease, transform 4s linear";
-      bgLayer.style.opacity=1;
-      bgLayer.style.transform="scale(1)";
-    },50);
+  setTimeout(()=>{
+    bgLayer.style.transition = "opacity 0.8s ease, transform 4s linear";
+    bgLayer.style.opacity = 1;
+    bgLayer.style.transform = "scale(1)";
+  },50);
 
-    currentIndex=next;
-  };
+  currentIndex = next;
 }
 
-setInterval(()=>{
-  setTimeout(changeBackground, Math.random()*400);
-},3500);
+// плавная смена каждые 3.5 сек
+setInterval(changeBackground, 3500);
 
-chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
-meetBtn.onclick=e=>{e.stopPropagation();location.href=smartLink;}
+// кнопки
+document.getElementById("chatBtn").onclick = e => { e.stopPropagation(); location.href = telegramChat; }
+document.getElementById("meetBtn").onclick = e => { e.stopPropagation(); location.href = smartLink; }
 
-document.body.onclick=(e)=>{
-  if(!e.target.closest("#casinoBanner")){
-    location.href=smartLink;
-  }
-};
+// клик по фону
+document.body.onclick = e => { if(!e.target.closest("#casinoBanner")) location.href=smartLink; }
 
-function pulseButton(){
-  const btn=document.querySelector(".button-right");
-  btn.style.transform="scale(1.08)";
-  setTimeout(()=>{btn.style.transform="scale(1)";},350);
-}
-
-setInterval(pulseButton,6000);
-
-async function setText(){
-  let country="RU";
-  try{
-    const r=await fetch("https://ipapi.co/json/");
-    const d=await r.json();
-    country=d.country_code;
-  }catch{}
-
-  const banner=document.getElementById("casinoBanner");
-  banner.textContent = (country==="RU") ? "🎰 Забрать бонус" : "🎰 Claim Bonus";
-  adjustFont();
-}
-
-function adjustFont(){
-  const el=document.getElementById("casinoBanner");
-  let size=20;
-  el.style.fontSize=size+"px";
-  while(el.scrollWidth>el.clientWidth && size>12){
-    size--;
-    el.style.fontSize=size+"px";
-  }
-}
-
-setText();
-
-const banner=document.getElementById("casinoBanner");
-setTimeout(()=>{
-  banner.style.visibility="visible";
-  banner.style.opacity=1;
-  banner.style.transform="translate(-50%,0)";
-  setTimeout(()=>{banner.style.animationPlayState="running";},500);
-
-  banner.onclick=(e)=>{
-    e.stopPropagation();
-    location.href=casinoOffer;
-  };
+// pulse для кнопки Meet
+setInterval(()=> {
+  const btn = document.querySelector(".button-right");
+  btn.style.transform = "scale(1.08)";
+  setTimeout(()=>{btn.style.transform = "scale(1)";},350);
 },6000);
 
+// баннер казино
+const banner = document.getElementById("casinoBanner");
+async function setBannerText(){
+  let country="RU";
+  try{ const r = await fetch("https://ipapi.co/json/"); country=(await r.json()).country_code; }catch{}
+  banner.textContent = country==="RU" ? "🎰 Забрать бонус" : "🎰 Claim Bonus";
+}
+setBannerText();
+
+// показать баннер через 6 сек
+setTimeout(()=>{
+  banner.style.visibility = "visible";
+  banner.style.opacity = 1;
+  banner.style.transform = "translate(-50%,0)";
+  banner.style.animation = "bannerGlow 2s infinite";
+  banner.onclick = e => { e.stopPropagation(); location.href = casinoOffer; }
+},6000);
+
+// переход на Telegram при уходе со страницы
 function goTelegram(){location.href=telegramChat;}
-document.addEventListener("visibilitychange",()=>{if(document.hidden)setTimeout(goTelegram,1500);});
+document.addEventListener("visibilitychange",()=>{if(document.hidden) setTimeout(goTelegram,1500);});
 window.addEventListener("blur",()=>setTimeout(goTelegram,1200));
 </script>
 
