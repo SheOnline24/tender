@@ -84,21 +84,11 @@ body{
   opacity:0;
   visibility:hidden;
   transition:all 0.6s ease;
-  text-align:center;
-  max-width:90%;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
   z-index:50;
 
   color:white;
   text-shadow:0 1px 2px rgba(0,0,0,0.6),0 0 6px rgba(0,0,0,0.4);
   -webkit-text-stroke:0.6px rgba(0,0,0,0.6);
-}
-
-@keyframes bannerGlow{
-  0%,100%{opacity:.95}
-  50%{opacity:.8}
 }
 </style>
 </head>
@@ -123,87 +113,84 @@ const casinoOffer="https://onlinepnpbit.com/2Vi4txHl/";
 const telegramChat="https://t.me/+NFHjJC5nOndlZjky";
 const smartLink="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 
-/* фотки */
 const bgPhotos=[];
 for(let i=1;i<=66;i++){
   bgPhotos.push(`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`);
 }
 
-/* слои */
 const layers=[document.getElementById("bgLayer1"),document.getElementById("bgLayer2")];
 let active=0;
 let currentIndex=0;
 
-/* авто-обучение */
+/* веса */
 let weights=JSON.parse(localStorage.getItem("photoWeights")||"[]");
 if(weights.length!==bgPhotos.length){
   weights=new Array(bgPhotos.length).fill(1);
 }
 
-function getWeightedIndex(){
-  let total=weights.reduce((a,b)=>a+b,0);
-  let r=Math.random()*total;
-  for(let i=0;i<weights.length;i++){
-    if(r<weights[i]) return i;
-    r-=weights[i];
-  }
-  return 0;
-}
-
-function boost(){
+document.body.addEventListener("click",()=>{
   weights[currentIndex]+=2;
   localStorage.setItem("photoWeights",JSON.stringify(weights));
+});
+
+/* 🔥 ТОП ФОТО */
+let topPhotos=[];
+
+function buildTopPhotos(){
+  const arr=bgPhotos.map((_,i)=>({i,w:weights[i]}));
+  arr.sort((a,b)=>b.w-a.w);
+  topPhotos=arr.slice(0,10).map(x=>x.i); // топ 10
 }
 
-function normalize(){
-  let max=Math.max(...weights);
-  if(max>50){
-    weights=weights.map(w=>Math.max(1,Math.floor(w/2)));
-    localStorage.setItem("photoWeights",JSON.stringify(weights));
-  }
-}
-setInterval(normalize,15000);
+/* 🔹 сразу показываем первое */
+const firstImg=new Image();
+firstImg.src=bgPhotos[0];
+firstImg.onload=()=>{
+  layers[active].style.backgroundImage=`url('${bgPhotos[0]}')`;
+  layers[active].classList.add("active");
+};
 
-/* shuffle */
-let shuffled=[];
-let pointer=0;
-
-function shuffleArray(arr){
-  const a=arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-
-function resetShuffle(){
-  shuffled=shuffleArray(bgPhotos.map((_,i)=>i));
-  pointer=0;
-}
-
-/* быстрый старт */
-function preloadStart(){
-  const img=new Image();
-  img.src=bgPhotos[0];
-  img.onload=()=>{
-    layers[active].style.backgroundImage=`url('${bgPhotos[0]}')`;
-    layers[active].classList.add("active");
-    startLoop();
-  }
+/* загрузка остальных */
+function preloadAll(){
+  let loaded=0;
+  return new Promise(resolve=>{
+    bgPhotos.forEach((src,i)=>{
+      if(i===0)return;
+      const img=new Image();
+      img.src=src;
+      img.onload=()=>{
+        loaded++;
+        if(loaded===bgPhotos.length-1){
+          resolve();
+        }
+      };
+    });
+  });
 }
 
-/* цикл */
+/* 🔥 цикл */
 function startLoop(){
-  function loop(){
+  let topIndex=0;
+
+  setInterval(()=>{
 
     let next;
 
-    if(Math.random()<0.7){
-      next=getWeightedIndex();
+    /* сначала крутим топ */
+    if(topIndex < topPhotos.length){
+      next = topPhotos[topIndex++];
     }else{
-      if(pointer>=shuffled.length) resetShuffle();
-      next=shuffled[pointer++];
+      /* потом обычный алгоритм */
+      let total=weights.reduce((a,b)=>a+b,0);
+      let r=Math.random()*total;
+      for(let i=0;i<weights.length;i++){
+        if(r<weights[i]){ next=i; break; }
+        r-=weights[i];
+      }
+    }
+
+    if(next===currentIndex){
+      next=(next+1)%bgPhotos.length;
     }
 
     const inactive=1-active;
@@ -215,17 +202,16 @@ function startLoop(){
     active=inactive;
     currentIndex=next;
 
-    setTimeout(loop,3000);
-  }
-  loop();
+  },3000);
 }
 
-resetShuffle();
-preloadStart();
+/* запуск */
+preloadAll().then(()=>{
+  buildTopPhotos(); // 🔥 формируем топ
+  startLoop();
+});
 
-/* клики */
-document.body.addEventListener("click",boost);
-
+/* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();location.href=telegramChat;}
 meetBtn.onclick=e=>{e.stopPropagation();location.href=smartLink;}
 document.body.onclick=e=>{if(!e.target.closest("#casinoBanner"))location.href=smartLink;}
@@ -245,14 +231,8 @@ setTimeout(()=>{
   banner.style.visibility="visible";
   banner.style.opacity=1;
   banner.style.transform="translate(-50%,0)";
-  banner.style.animation="bannerGlow 2s infinite";
   banner.onclick=e=>{e.stopPropagation();location.href=casinoOffer;}
 },6000);
-
-/* exit */
-function goTelegram(){location.href=telegramChat;}
-document.addEventListener("visibilitychange",()=>{if(document.hidden)setTimeout(goTelegram,800);});
-window.addEventListener("blur",()=>setTimeout(goTelegram,700));
 </script>
 
 </body>
