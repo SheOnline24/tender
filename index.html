@@ -45,11 +45,11 @@ body{
   padding: 14px;
   border-radius: 30px;
   font-size: 18px;
-  font-weight: bold;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
+  font-weight:bold;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
   transition: transform 0.2s ease, background 0.3s ease;
   user-select:none;
   text-align:center;
@@ -63,12 +63,12 @@ body{
 @keyframes meetPulse { 0% { transform: scale(1); } 100% { transform: scale(1.08); } }
 .button-left:active, .button-right:active { transform: scale(0.95); }
 
-/* баннер казино — теперь кнопка */
+/* баннер казино как кнопка */
 #casinoBanner{
   position:fixed;
   bottom:100px;
   left:50%;
-  transform: translateX(-50%);
+  transform:translateX(-50%);
   padding:12px 20px;
   background:gold;
   border-radius:20px;
@@ -82,19 +82,19 @@ body{
   display:inline-flex;
   justify-content:center;
   align-items:center;
-  min-height:40px;
   opacity:0;
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition: opacity 0.8s ease, transform 0.8s ease, width 0.5s ease;
   border:none;
+  white-space:nowrap;
+  overflow:hidden;
 }
 
-/* текст внутри баннера */
+/* фразы */
 #casinoBanner span{
   position:absolute;
   opacity:0;
-  transform: translateY(20px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  text-shadow: 2px 2px 4px #000, 1px 1px 2px #111;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  text-shadow: 2px 2px 4px #000,1px 1px 2px #111;
 }
 #casinoBanner span.active{
   opacity:1;
@@ -165,7 +165,6 @@ body{
   <button class="button-right" id="meetBtn">❤️ Meet Now</button>
 </div>
 
-<!-- баннер казино как кнопка -->
 <button id="casinoBanner">
   <span id="text1" class="blink active">🎰 Spin & Win!</span>
   <span id="text2">🔥 Только для вашего города</span>
@@ -194,7 +193,7 @@ const goTG=document.getElementById("goTG");
 const stay=document.getElementById("stay");
 const modal=document.getElementById("exitModal");
 const casinoBanner=document.getElementById("casinoBanner");
-const texts=[document.getElementById("text1"), document.getElementById("text2"), document.getElementById("text3")];
+const texts=[document.getElementById("text1"),document.getElementById("text2"),document.getElementById("text3")];
 
 /* фон */
 const photos=[];
@@ -214,7 +213,7 @@ function startBg(){
 }
 startBg();
 
-/* кнопки Telegram / Meet */
+/* кнопки */
 chatBtn.onclick=e=>{e.stopPropagation();window.location.href=telegramChat;};
 meetBtn.onclick=e=>{e.stopPropagation();window.location.href=smartLink;};
 
@@ -223,23 +222,24 @@ document.body.addEventListener('click',e=>{
   if(!e.target.closest('.button-container') && !e.target.closest('#casinoBanner')) window.location.href=smartLink;
 });
 
-/* баннер казино — динамический текст */
+/* баннер казино — по одной фразе */
 let userCity="Ваш город";
 fetch('https://ipapi.co/json/')
   .then(res=>res.json())
   .then(data=>{if(data.city) userCity=data.city;})
   .finally(()=>{
     texts[1].textContent=`🔥 Только для ${userCity}`;
-    setTimeout(()=>{
-      casinoBanner.style.opacity=1;
-      casinoBanner.style.transform='translateX(-50%) translateY(0)';
-      let idx=0;
-      setInterval(()=>{
-        texts.forEach(t=>t.classList.remove('active'));
-        texts[idx].classList.add('active');
-        idx=(idx+1)%texts.length;
-      },3000);
-    },5000);
+    casinoBanner.style.opacity=1;
+    let idx=0;
+    setInterval(()=>{
+      texts.forEach(t=>{
+        t.classList.remove('active','blink');
+      });
+      const activeText=texts[idx];
+      activeText.classList.add('active','blink');
+      casinoBanner.style.width=activeText.offsetWidth + 40 + 'px'; // подстраиваем кнопку под текст
+      idx=(idx+1)%texts.length;
+    },3000);
   });
 
 /* клик на баннер */
