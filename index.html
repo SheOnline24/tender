@@ -59,7 +59,7 @@ body{
 .button-right { background: linear-gradient(45deg, rgba(255,46,99,0.3), rgba(255,122,24,0.3)); animation: meetPulse 1.2s infinite alternate;}
 .casino-btn{
   background: rgba(255,215,0,0.25);
-  color:#111;
+  color:#fff; /* исправлено */
   opacity:0;
   pointer-events:none;
 }
@@ -148,7 +148,7 @@ const meetBtn=document.getElementById("meetBtn");
 const goTG=document.getElementById("goTG");
 const stay=document.getElementById("stay");
 const casinoBanner=document.getElementById("casinoBanner");
-const modal = document.getElementById("exitModal"); // исправлено
+const modal = document.getElementById("exitModal");
 
 /* фон */
 const photos=[];
@@ -181,7 +181,7 @@ document.body.addEventListener('click',e=>{
   if(!e.target.closest('.button-container') && e.target !== casinoBanner) window.location.href=smartLink;
 });
 
-/* казино кнопка с текстом через 5 сек */
+/* казино кнопка */
 let userCity="Ваш город";
 fetch('https://ipapi.co/json/')
   .then(res=>res.json())
@@ -190,7 +190,7 @@ fetch('https://ipapi.co/json/')
   .finally(()=>{
     const phrases=[
       "🎰 Spin & Win!",
-      `🔥 Только для ${userCity}`,
+      "🔥 Горячий бонус для тебя", /* исправлено */
       "🎉 Супер бонус!"
     ];
     let idx=0;
@@ -217,13 +217,11 @@ function showExitModal(){
 
 history.pushState({},"",location.href);
 
-// ПК: попытка вернуться назад
 window.addEventListener("popstate",()=>{ 
   showExitModal();
   setTimeout(()=>history.pushState({},"",location.href),100); 
 });
 
-// Мобильные: сворачивание вкладки или уход с сайта
 document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState === "hidden") showExitModal();
 });
