@@ -173,7 +173,6 @@ async function detectLang() {
     const countryCode = data.country_code ? data.country_code.toLowerCase() : null;
     const browserLang = (navigator.language || navigator.userLanguage).split('-')[0];
 
-    // simple mapping country -> language
     const geoLangMap = { "de":"de", "fr":"fr", "es":"es", "us":"en", "gb":"en", "ru":"ru" };
     let lang = geoLangMap[countryCode] || browserLang || "en";
     if(!["ru","en","de","fr","es"].includes(lang)) lang="en";
@@ -231,6 +230,10 @@ detectLang().then(lang=>{
   setTimeout(()=>{
     casinoBanner.style.opacity=1;
     casinoBanner.style.pointerEvents="auto";
+
+    // ---- надёжный клик, не ломается при смене текста ----
+    casinoBanner.addEventListener('click',()=> window.location.href = casinoOffer);
+
     casinoBanner.textContent = phrases[idx];
     setInterval(()=>{
       idx=(idx+1)%phrases.length;
