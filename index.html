@@ -1,3 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Someone Tonight</title>
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  height:100vh;
+  overflow:hidden;
+  background:#0e1621;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  padding-bottom:20px;
+  cursor:pointer;
+}
+
+.bgLayer{
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:center/cover no-repeat;
+  transition:opacity 1s ease, transform 4s linear;
+  z-index:-1;
+  opacity:0;
+  transform:scale(1.12);
+}
+.bgLayer.active{opacity:1;transform:scale(1);}
+
+.button-container{
+  display:flex;
+  width:90%;
+  max-width:600px;
+  gap:20px;
+  z-index:999;
+}
+.button-left, .button-right, .casino-btn{
+  flex:1;
+  padding:14px;
+  border-radius:30px;
+  font-size:18px;
+  font-weight:bold;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  transition: transform 0.2s ease, background 0.3s ease;
+  user-select:none;
+  text-align:center;
+  text-shadow:1px 1px 2px #000;
+}
+.button-left { background: linear-gradient(45deg, rgba(0,198,255,0.3), rgba(0,114,255,0.3)); }
+.button-right { background: linear-gradient(45deg, rgba(255,46,99,0.3), rgba(255,122,24,0.3)); animation: meetPulse 1.2s infinite alternate;}
+.casino-btn{
+  background: rgba(255,215,0,0.25);
+  color:#fff;
+  opacity:0;
+  pointer-events:none;
+}
+@keyframes meetPulse {0%{transform:scale(1);}100%{transform:scale(1.08);}}
+.button-left:hover, .button-right:hover, .casino-btn:hover {transform: scale(1.05);}
+.button-left:active, .button-right:active, .casino-btn:active {transform: scale(0.95);}
+
+#exitModal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  visibility:hidden;
+  opacity:0;
+  transition:0.3s;
+  z-index:999;
+}
+#exitModal.active{visibility:visible;opacity:1;}
+.modal-box{
+  background:#111;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+  max-width:300px;
+}
+.modal-box h3{color:#fff;margin-bottom:10px;text-shadow:1px 1px 2px #000;}
+.modal-btn{
+  margin-top:10px;
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:20px;
+  font-weight:bold;
+  cursor:pointer;
+  transition: transform 0.2s ease;
+  text-shadow:1px 1px 2px #000;
+}
+.modal-btn:active{ transform: scale(0.95); }
+.tg-btn{background:#0088cc;color:#fff;}
+.stay-btn{background:#444;color:#fff;}
+
+@media (max-width: 400px){
+  .button-container{gap:10px;}
+  .button-left,.button-right,.casino-btn{font-size:16px;padding:10px;border-radius:20px;}
+}
+</style>
+</head>
+<body>
+
+<div id="bgLayer1" class="bgLayer"></div>
+<div id="bgLayer2" class="bgLayer"></div>
+
+<div class="button-container" style="margin-bottom:10px;">
+  <button class="casino-btn" id="casinoBanner"></button>
+</div>
+
+<div class="button-container">
+  <button class="button-left" id="chatBtn"></button>
+  <button class="button-right" id="meetBtn"></button>
+</div>
+
+<div id="exitModal">
+  <div class="modal-box">
+    <h3 id="modalTitle"></h3>
+    <p id="modalText" style="color:#ccc;font-size:14px;"></p>
+    <button class="modal-btn tg-btn" id="goTG"></button>
+    <button class="modal-btn stay-btn" id="stay"></button>
+  </div>
+</div>
+
 <script>
 const telegramChat="https://t.me/+NFHjJC5nOndlZjky";
 const smartLink="https://prev.affomelody.com/click?pid=6350&offer_id=25";
@@ -135,3 +267,6 @@ stay.onclick=()=>modal.classList.remove("active");
 modal.addEventListener("click",e=>{if(e.target===modal) modal.classList.remove("active");});
 
 </script>
+
+</body>
+</html>
