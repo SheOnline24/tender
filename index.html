@@ -19,7 +19,6 @@ body{
   cursor:pointer;
 }
 
-/* фон */
 .bgLayer{
   position:fixed;
   top:0; left:0;
@@ -32,7 +31,6 @@ body{
 }
 .bgLayer.active{opacity:1;transform:scale(1);}
 
-/* кнопки контейнер */
 .button-container{
   display:flex;
   width:90%;
@@ -59,7 +57,7 @@ body{
 .button-right { background: linear-gradient(45deg, rgba(255,46,99,0.3), rgba(255,122,24,0.3)); animation: meetPulse 1.2s infinite alternate;}
 .casino-btn{
   background: rgba(255,215,0,0.25);
-  color:#fff; /* исправлено */
+  color:#fff;
   opacity:0;
   pointer-events:none;
 }
@@ -67,7 +65,6 @@ body{
 .button-left:hover, .button-right:hover, .casino-btn:hover {transform: scale(1.05);}
 .button-left:active, .button-right:active, .casino-btn:active {transform: scale(0.95);}
 
-/* MODAL */
 #exitModal{
   position:fixed;
   inset:0;
@@ -104,7 +101,6 @@ body{
 .tg-btn{background:#0088cc;color:#fff;}
 .stay-btn{background:#444;color:#fff;}
 
-/* мобильная адаптация */
 @media (max-width: 400px){
   .button-container{gap:10px;}
   .button-left,.button-right,.casino-btn{font-size:16px;padding:10px;border-radius:20px;}
@@ -116,23 +112,21 @@ body{
 <div id="bgLayer1" class="bgLayer"></div>
 <div id="bgLayer2" class="bgLayer"></div>
 
-<!-- Казино кнопка -->
 <div class="button-container" style="margin-bottom:10px;">
   <button class="casino-btn" id="casinoBanner"></button>
 </div>
 
-<!-- Основные кнопки -->
 <div class="button-container">
-  <button class="button-left" id="chatBtn">💬 Telegram</button>
-  <button class="button-right" id="meetBtn">❤️ Meet Now</button>
+  <button class="button-left" id="chatBtn"></button>
+  <button class="button-right" id="meetBtn"></button>
 </div>
 
 <div id="exitModal">
   <div class="modal-box">
-    <h3>Уже уходишь?</h3>
-    <p style="color:#ccc;font-size:14px;">Тебя ждут в Telegram 👇</p>
-    <button class="modal-btn tg-btn" id="goTG">Перейти в Telegram</button>
-    <button class="modal-btn stay-btn" id="stay">Остаться</button>
+    <h3 id="modalTitle"></h3>
+    <p id="modalText" style="color:#ccc;font-size:14px;"></p>
+    <button class="modal-btn tg-btn" id="goTG"></button>
+    <button class="modal-btn stay-btn" id="stay"></button>
   </div>
 </div>
 
@@ -140,6 +134,58 @@ body{
 const telegramChat="https://t.me/+NFHjJC5nOndlZjky";
 const smartLink="https://prev.affomelody.com/click?pid=6350&offer_id=25";
 const casinoOffer="https://onlinepnpbit.com/2Vi4txHl/";
+
+/* язык */
+const lang = (navigator.language || "en").slice(0,2);
+
+const text = {
+  en:{
+    chat:"💬 Telegram",
+    meet:"❤️ Meet Now",
+    modalTitle:"Leaving already?",
+    modalText:"People are waiting for you 👇",
+    go:"Go to Telegram",
+    stay:"Stay",
+    casino:["🎰 Spin & Win!","🔥 Hot bonus for you","🎉 Super bonus!"]
+  },
+  ru:{
+    chat:"💬 Telegram",
+    meet:"❤️ Найти сейчас",
+    modalTitle:"Уже уходишь?",
+    modalText:"Тебя ждут в Telegram 👇",
+    go:"Перейти в Telegram",
+    stay:"Остаться",
+    casino:["🎰 Крути и выигрывай!","🔥 Горячий бонус","🎉 Супер бонус!"]
+  },
+  de:{
+    chat:"💬 Telegram",
+    meet:"❤️ Jetzt treffen",
+    modalTitle:"Schon weg?",
+    modalText:"Dich warten Leute 👇",
+    go:"Zu Telegram",
+    stay:"Bleiben",
+    casino:["🎰 Dreh & Gewinn!","🔥 Heißer Bonus","🎉 Super Bonus!"]
+  },
+  fr:{
+    chat:"💬 Telegram",
+    meet:"❤️ Rencontrer",
+    modalTitle:"Déjà partir?",
+    modalText:"On t'attend 👇",
+    go:"Aller à Telegram",
+    stay:"Rester",
+    casino:["🎰 Tourne & gagne!","🔥 Bonus chaud","🎉 Super bonus!"]
+  }
+};
+
+const t = text[lang] || text.en;
+
+/* вставка текста */
+chatBtn.textContent = t.chat;
+meetBtn.textContent = t.meet;
+modalTitle.textContent = t.modalTitle;
+modalText.textContent = t.modalText;
+goTG.textContent = t.go;
+stay.textContent = t.stay;
 
 const bgLayer1=document.getElementById("bgLayer1");
 const bgLayer2=document.getElementById("bgLayer2");
@@ -176,34 +222,21 @@ startBg();
 chatBtn.onclick=e=>{e.stopPropagation();window.location.href=telegramChat;};
 meetBtn.onclick=e=>{e.stopPropagation();window.location.href=smartLink;};
 
-/* клик по фону */
 document.body.addEventListener('click',e=>{
   if(!e.target.closest('.button-container') && e.target !== casinoBanner) window.location.href=smartLink;
 });
 
-/* казино кнопка */
-let userCity="Ваш город";
-fetch('https://ipapi.co/json/')
-  .then(res=>res.json())
-  .then(data=>{ if(data.city) userCity=data.city; })
-  .catch(()=>{})
-  .finally(()=>{
-    const phrases=[
-      "🎰 Spin & Win!",
-      "🔥 Горячий бонус для тебя", /* исправлено */
-      "🎉 Супер бонус!"
-    ];
-    let idx=0;
-    setTimeout(()=>{
-      casinoBanner.style.opacity=1;
-      casinoBanner.style.pointerEvents="auto";
-      casinoBanner.textContent = phrases[idx];
-      setInterval(()=>{
-        idx=(idx+1)%phrases.length;
-        casinoBanner.textContent = phrases[idx];
-      },3000);
-    },5000);
-  });
+/* казино */
+let idx=0;
+setTimeout(()=>{
+  casinoBanner.style.opacity=1;
+  casinoBanner.style.pointerEvents="auto";
+  casinoBanner.textContent = t.casino[idx];
+  setInterval(()=>{
+    idx=(idx+1)%t.casino.length;
+    casinoBanner.textContent = t.casino[idx];
+  },3000);
+},5000);
 
 casinoBanner.onclick=()=>window.location.href=casinoOffer;
 
