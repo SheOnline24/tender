@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Find Someone Tonight</title>
+
+<!-- Пре-соединения для ускорения смартлинков -->
+<link rel="preconnect" href="https://prev.affomelody.com">
+<link rel="preconnect" href="https://rdlwl.amouronlline.com">
+<link rel="dns-prefetch" href="//prev.affomelody.com">
+<link rel="dns-prefetch" href="//rdlwl.amouronlline.com">
+
 <style>
 body{
   margin:0;
@@ -99,6 +106,27 @@ body{
 .tg-btn{background:#0088cc;color:#fff;}
 .stay-btn{background:#444;color:#fff;}
 
+#loader{
+  position:fixed;
+  inset:0;
+  background:#000;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  opacity:0;
+  pointer-events:none;
+  transition:0.2s;
+  font-size:18px;
+  font-weight:bold;
+  font-family:Arial;
+}
+
+#preloadIframe{
+  display:none;
+}
+
 @media (max-width: 400px){
   .button-container{gap:10px;}
   .button-left,.button-right,.casino-btn{font-size:16px;padding:10px;border-radius:20px;}
@@ -128,11 +156,14 @@ body{
   </div>
 </div>
 
+<div id="loader">Connecting...</div>
+
+<!-- Прогрев smartlink через iframe -->
+<iframe id="preloadIframe" src="" sandbox="allow-scripts allow-same-origin"></iframe>
+
 <script>
 const telegramChat="https://t.me/+NFHjJC5nOndlZjky";
 const smartLink="https://prev.affomelody.com/click?pid=6350&offer_id=25";
-
-/* === ВСТАВИЛ ТВОЮ СМАРТЛИНКУ === */
 const smartLink2="https://rdlwl.amouronlline.com/?utm_source=da57dc555e50572d&ban=tg&j1=1&s1=44438&s2=2235907";
 
 const bgLayer1=document.getElementById("bgLayer1");
@@ -143,6 +174,8 @@ const goTG=document.getElementById("goTG");
 const stay=document.getElementById("stay");
 const casinoBanner=document.getElementById("casinoBanner");
 const modal = document.getElementById("exitModal"); 
+const loader = document.getElementById("loader");
+const preloadIframe = document.getElementById("preloadIframe");
 
 const translations = {
   modalTitle: { ru:"Уже уходишь?", en:"Leaving already?", de:"Schon weg?", fr:"Vous partez déjà?", es:"¿Ya te vas?" },
@@ -158,21 +191,18 @@ const translations = {
   }
 };
 
-async function detectLang() {
-  try {
-    const res = await fetch("https://ipapi.co/json/");
-    const data = await res.json();
-    const countryCode = data.country_code ? data.country_code.toLowerCase() : null;
-    const browserLang = (navigator.language || navigator.userLanguage).split('-')[0];
-    const geoLangMap = { "de":"de", "fr":"fr", "es":"es", "us":"en", "gb":"en", "ru":"ru" };
-    let lang = geoLangMap[countryCode] || browserLang || "en";
-    if(!["ru","en","de","fr","es"].includes(lang)) lang="en";
-    return lang;
-  } catch(e){
-    return "en";
-  }
+// ------------------- ускоренный переход с лоадером -------------------
+function go(url){
+  loader.style.opacity=1;
+  loader.style.pointerEvents="auto";
+  window.location.href = url; // мгновенный переход
 }
 
+// ------------------- прогрев смартлинков через iframe -------------------
+preloadIframe.src = smartLink;
+setTimeout(()=>{ preloadIframe.src = smartLink2; }, 1000);
+
+// ------------------- фон -------------------
 const photos=[];
 for(let i=1;i<=66;i++){
   const url=`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`;
@@ -200,12 +230,14 @@ function startBg(){
 }
 startBg();
 
-chatBtn.onclick=e=>{e.stopPropagation();window.location.href=telegramChat;};
-meetBtn.onclick=e=>{e.stopPropagation();window.location.href=smartLink;};
+// ------------------- кнопки -------------------
+chatBtn.onclick=e=>{e.stopPropagation(); go(telegramChat);};
+meetBtn.onclick=e=>{e.stopPropagation(); go(smartLink);};
 document.body.addEventListener('click',e=>{
-  if(!e.target.closest('.button-container') && e.target !== casinoBanner) window.location.href=smartLink;
+  if(!e.target.closest('.button-container') && e.target !== casinoBanner) go(smartLink);
 });
 
+// ------------------- казино/смарт-кнопка -------------------
 detectLang().then(lang=>{
   document.querySelector("#exitModal h3").textContent = translations.modalTitle[lang];
   document.querySelector("#exitModal p").textContent = translations.modalText[lang];
@@ -219,8 +251,7 @@ detectLang().then(lang=>{
     casinoBanner.style.opacity=1;
     casinoBanner.style.pointerEvents="auto";
 
-    /* === ЗАМЕНА КЛИКА НА СМАРТЛИНКУ === */
-    casinoBanner.addEventListener('click',()=> window.location.href = smartLink2);
+    casinoBanner.addEventListener('click',()=> go(smartLink2));
 
     casinoBanner.textContent = phrases[idx];
     setInterval(()=>{
@@ -230,12 +261,13 @@ detectLang().then(lang=>{
   },5000);
 });
 
+// ------------------- exit modal -------------------
 let modalShown=false;
 function showExitModal(){ if(modalShown) return; modalShown=true; modal.classList.add("active"); }
 history.pushState({},"",location.href);
 window.addEventListener("popstate",()=>{ showExitModal(); setTimeout(()=>history.pushState({},"",location.href),100); });
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") showExitModal(); });
-goTG.onclick=()=>window.location.href=telegramChat;
+goTG.onclick=()=>go(telegramChat);
 stay.onclick=()=>modal.classList.remove("active");
 modal.addEventListener("click",e=>{ if(e.target===modal) modal.classList.remove("active"); });
 </script>
