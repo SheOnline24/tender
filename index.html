@@ -5,26 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Find Someone Tonight</title>
 <style>
-body{ margin:0; font-family:Arial; height:100vh; overflow:hidden; background:#0e1621; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; padding-bottom:20px; cursor:pointer;}
-.bgLayer{ position:fixed; top:0; left:0; width:100%; height:100%; background:center/cover no-repeat; transition:opacity 1s ease, transform 4s linear; z-index:-1; opacity:0; transform:scale(1.12);}
-.bgLayer.active{opacity:1; transform:scale(1);}
-.button-container{ display:flex; width:90%; max-width:600px; gap:20px; z-index:999;}
-.button-left, .button-right, .casino-btn{ flex:1; padding:14px; border-radius:30px; font-size:18px; font-weight:bold; color:#fff; border:none; cursor:pointer; backdrop-filter:blur(10px); transition: transform 0.2s ease, background 0.3s ease; user-select:none; text-align:center; text-shadow:1px 1px 2px #000;}
+body{margin:0;font-family:Arial;height:100vh;overflow:hidden;background:#0e1621;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:20px;cursor:pointer;}
+.bgLayer{position:fixed;top:0;left:0;width:100%;height:100%;background:center/cover no-repeat;transition:opacity 1s ease, transform 4s linear;z-index:-1;opacity:0;transform:scale(1.12);}
+.bgLayer.active{opacity:1;transform:scale(1);}
+.button-container{display:flex;width:90%;max-width:600px;gap:20px;z-index:999;}
+.button-left, .button-right, .casino-btn{flex:1;padding:14px;border-radius:30px;font-size:18px;font-weight:bold;color:#fff;border:none;cursor:pointer;backdrop-filter:blur(10px);transition: transform 0.2s ease, background 0.3s ease;user-select:none;text-align:center;text-shadow:1px 1px 2px #000;}
 .button-left { background: linear-gradient(45deg, rgba(0,198,255,0.3), rgba(0,114,255,0.3)); }
 .button-right { background: linear-gradient(45deg, rgba(255,46,99,0.3), rgba(255,122,24,0.3)); animation: meetPulse 1.2s infinite alternate;}
-.casino-btn{ background: rgba(255,215,0,0.25); color:#fff; opacity:0; pointer-events:none;}
+.casino-btn{background: rgba(255,215,0,0.25); color:#fff; opacity:0; pointer-events:none;}
 @keyframes meetPulse {0%{transform:scale(1);}100%{transform:scale(1.08);}}
 .button-left:hover, .button-right:hover, .casino-btn:hover {transform: scale(1.05);}
 .button-left:active, .button-right:active, .casino-btn:active {transform: scale(0.95);}
-#exitModal{ position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; justify-content:center; align-items:center; visibility:hidden; opacity:0; transition:0.3s; z-index:999;}
+#exitModal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;visibility:hidden;opacity:0;transition:0.3s;z-index:999;}
 #exitModal.active{visibility:visible;opacity:1;}
-.modal-box{ background:#111; padding:20px; border-radius:15px; text-align:center; max-width:300px;}
+.modal-box{background:#111;padding:20px;border-radius:15px;text-align:center;max-width:300px;}
 .modal-box h3{color:#fff;margin-bottom:10px;text-shadow:1px 1px 2px #000;}
-.modal-btn{ margin-top:10px; width:100%; padding:10px; border:none; border-radius:20px; font-weight:bold; cursor:pointer; transition: transform 0.2s ease; text-shadow:1px 1px 2px #000;}
-.modal-btn:active{ transform: scale(0.95); }
+.modal-btn{margin-top:10px;width:100%;padding:10px;border:none;border-radius:20px;font-weight:bold;cursor:pointer;transition: transform 0.2s ease;text-shadow:1px 1px 2px #000;}
+.modal-btn:active{transform: scale(0.95);}
 .tg-btn{background:#0088cc;color:#fff;}
 .stay-btn{background:#444;color:#fff;}
-@media (max-width: 400px){ .button-container{gap:10px;} .button-left,.button-right,.casino-btn{font-size:16px;padding:10px;border-radius:20px;}}
+@media (max-width: 400px){.button-container{gap:10px;}.button-left,.button-right,.casino-btn{font-size:16px;padding:10px;border-radius:20px;}}
 </style>
 </head>
 <body>
@@ -62,7 +62,7 @@ const meetBtn=document.getElementById("meetBtn");
 const goTG=document.getElementById("goTG");
 const stay=document.getElementById("stay");
 const casinoBanner=document.getElementById("casinoBanner");
-const modal = document.getElementById("exitModal"); 
+const modal = document.getElementById("exitModal");
 
 const translations = {
   modalTitle: { ru:"Уже уходишь?", en:"Leaving already?", de:"Schon weg?", fr:"Vous partez déjà?", es:"¿Ya te vas?" },
@@ -78,27 +78,30 @@ const translations = {
   }
 };
 
-// ------------------- функция определения языка -------------------
-async function detectLang() {
-  try {
-    const res = await fetch("https://ipapi.co/json/");
-    const data = await res.json();
-    const countryCode = data.country_code ? data.country_code.toLowerCase() : null;
-    const browserLang = (navigator.language || navigator.userLanguage).split('-')[0];
-    const geoLangMap = { "de":"de", "fr":"fr", "es":"es", "us":"en", "gb":"en", "ru":"ru" };
-    let lang = geoLangMap[countryCode] || browserLang || "en";
-    if(!["ru","en","de","fr","es"].includes(lang)) lang="en";
-    return lang;
-  } catch(e){ return "en"; }
-}
-
-// ------------------- фон -------------------
+// ================== фон ==================
 const photos=[];
-for(let i=1;i<=66;i++){ 
+const preloadedImages = [];
+
+// первые 5 фото загружаем сразу
+for(let i=1;i<=5;i++){
   const url=`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`;
   photos.push(url);
-  new Image().src=url;
+  const img = new Image();
+  img.src = url;
+  preloadedImages.push(img);
 }
+
+// остальные фото подгружаем постепенно
+for(let i=6;i<=66;i++){
+  const url=`https://SheOnline24.github.io/tender/photos/FindGirl${i}.jpg`;
+  photos.push(url);
+  setTimeout(()=>{
+    const img = new Image();
+    img.src = url;
+    preloadedImages.push(img);
+  }, (i-5)*50);
+}
+
 let active=0;
 function startBg(){
   let order = [...Array(photos.length).keys()];
@@ -107,6 +110,7 @@ function startBg(){
   let currentIndex=0;
   bgLayer1.style.backgroundImage = `url('${photos[order[0]]}')`;
   bgLayer1.classList.add("active");
+
   setInterval(()=>{
     currentIndex++;
     if(currentIndex>=order.length){ shuffle(order); currentIndex=0; }
@@ -120,29 +124,27 @@ function startBg(){
 }
 startBg();
 
-// ------------------- ускоренный переход и прогрев смартлинков -------------------
-function prefetchSmartLinks() {
-  try {
-    fetch(smartLink, {mode:'no-cors'});
-    fetch(smartLink2, {mode:'no-cors'});
-    new Image().src = smartLink;
-    new Image().src = smartLink2;
-  } catch(e){}
-}
-setTimeout(prefetchSmartLinks, 2000);
-
-function go(url){
-  window.location.href = url;
-}
-
-// ------------------- кнопки -------------------
-chatBtn.onclick = e => { e.stopPropagation(); go(telegramChat); };
-meetBtn.onclick = e => { e.stopPropagation(); go(smartLink); };
-document.body.addEventListener('click', e => {
-  if(!e.target.closest('.button-container') && e.target !== casinoBanner) go(smartLink);
+// ================== кнопки ==================
+chatBtn.onclick=e=>{e.stopPropagation(); window.location.href=telegramChat;};
+meetBtn.onclick=e=>{e.stopPropagation(); window.location.href=smartLink;};
+document.body.addEventListener('click',e=>{
+  if(!e.target.closest('.button-container') && e.target !== casinoBanner) window.location.href=smartLink;
 });
 
-// ------------------- казино-кнопка -------------------
+// ================== казино/смарт-кнопка ==================
+async function detectLang(){
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+    const countryCode = data.country_code ? data.country_code.toLowerCase() : null;
+    const browserLang = (navigator.language || navigator.userLanguage).split('-')[0];
+    const geoLangMap = { "de":"de", "fr":"fr", "es":"es", "us":"en", "gb":"en", "ru":"ru" };
+    let lang = geoLangMap[countryCode] || browserLang || "en";
+    if(!["ru","en","de","fr","es"].includes(lang)) lang="en";
+    return lang;
+  } catch(e){ return "en"; }
+}
+
 detectLang().then(lang=>{
   document.querySelector("#exitModal h3").textContent = translations.modalTitle[lang];
   document.querySelector("#exitModal p").textContent = translations.modalText[lang];
@@ -155,25 +157,22 @@ detectLang().then(lang=>{
   setTimeout(()=>{
     casinoBanner.style.opacity=1;
     casinoBanner.style.pointerEvents="auto";
-    casinoBanner.addEventListener('click',()=> go(smartLink2));
+    casinoBanner.addEventListener('click',()=> window.location.href = smartLink2);
     casinoBanner.textContent = phrases[idx];
-    setInterval(()=>{
-      idx=(idx+1)%phrases.length;
-      casinoBanner.textContent = phrases[idx];
-    },3000);
+    setInterval(()=>{ idx=(idx+1)%phrases.length; casinoBanner.textContent = phrases[idx]; },3000);
   },5000);
 });
 
-// ------------------- exit modal -------------------
+// ================== exit modal ==================
 let modalShown=false;
 function showExitModal(){ if(modalShown) return; modalShown=true; modal.classList.add("active"); }
 history.pushState({},"",location.href);
 window.addEventListener("popstate",()=>{ showExitModal(); setTimeout(()=>history.pushState({},"",location.href),100); });
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") showExitModal(); });
-goTG.onclick=()=>go(telegramChat);
+goTG.onclick=()=>window.location.href=telegramChat;
 stay.onclick=()=>modal.classList.remove("active");
 modal.addEventListener("click",e=>{ if(e.target===modal) modal.classList.remove("active"); });
-</script>
 
+</script>
 </body>
 </html>
